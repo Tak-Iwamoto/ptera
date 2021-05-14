@@ -1,4 +1,4 @@
-export type DateArg = Date | number | string
+export type DateArg = Date | number | string;
 
 export type Timezone =
   | "Etc/GMT+12"
@@ -97,4 +97,4 @@ export type Timezone =
   | "Pacific/Auckland"
   | "Pacific/Tongatapu"
   | "Pacific/Apia"
-  | 'UTC'
+  | "UTC";

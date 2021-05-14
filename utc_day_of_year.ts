@@ -1,7 +1,6 @@
+import { MILLISECONDS_IN_DAY } from "./constants.ts";
 import { parseDate } from "./parse_date.ts";
 import { DateArg } from "./types.ts";
-
-const MILLISECONDS_IN_DAY = 86400000;
 
 export function utcDayOfYear(dateArg: DateArg): number {
   const date = parseDate(dateArg);
