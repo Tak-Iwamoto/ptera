@@ -165,13 +165,13 @@ Deno.test("parseFormat 'hh 'aaa' WWW'", () => {
 });
 
 Deno.test("formatDate MMMM yyyy", () => {
-  const date = parseDate('2021-06-01T09:00:00')
-  const result = formatDate(date, 'MMMM YYYY')
-  assertEquals(result, "June 2021")
-})
+  const date = parseDate("2021-06-01T09:00:00");
+  const result = formatDate(date, "MMMM YYYY");
+  assertEquals(result, "June 2021");
+});
 
 Deno.test("formatDate d hh", () => {
-  const date = parseDate('2021-06-01T09:00:00')
-  const result = formatDate(date, 'd hh')
-  assertEquals(result, "1 09")
-})
+  const date = parseDate("2021-06-01T09:00:00");
+  const result = formatDate(date, "d hh");
+  assertEquals(result, "1 09");
+});
