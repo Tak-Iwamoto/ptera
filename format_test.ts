@@ -1,5 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { format } from "./format.ts";
+import { format, formatDate, parseFormat } from "./format.ts";
+import { parseDate } from "./parse_date.ts";
 
 Deno.test("format: YY", () => {
   const formatted = format(new Date(2021, 1, 1), "YY");
@@ -140,3 +141,37 @@ Deno.test("format: a", () => {
 //   assertEquals(Sun, "Sunday")
 //   assertEquals(Sat, "Saturday")
 // })
+
+Deno.test("parseFormat 'MMMM yyyy'", () => {
+  const result = parseFormat("MMMM yyyy");
+  assertEquals(result, [{ value: "MMMM", isLiteral: false }, {
+    value: " ",
+    isLiteral: false,
+  }, { value: "yyyy", isLiteral: false }]);
+});
+
+Deno.test("parseFormat 'hh 'aaa' WWW'", () => {
+  const result = parseFormat("hh 'aaa' WWW");
+  assertEquals(result, [
+    { value: "hh", isLiteral: false },
+    {
+      value: " ",
+      isLiteral: false,
+    },
+    { value: "aaa", isLiteral: true },
+    { value: " ", isLiteral: false },
+    { value: "WWW", isLiteral: false },
+  ]);
+});
+
+Deno.test("formatDate MMMM yyyy", () => {
+  const date = parseDate("2021-06-01T09:00:00");
+  const result = formatDate(date, "MMMM YYYY");
+  assertEquals(result, "June 2021");
+});
+
+Deno.test("formatDate d hh", () => {
+  const date = parseDate("2021-06-01T09:00:00");
+  const result = formatDate(date, "d hh");
+  assertEquals(result, "1 09");
+});
