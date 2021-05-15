@@ -6,7 +6,7 @@ import { DateArg, Timezone } from "./types.ts";
 export function zonedTime(dateArg: DateArg, tz: Timezone) {
   const date = parseDate(dateArg);
   const offset = millisecondsOffset(date, tz);
-  console.log(offset / MILLISECONDS_IN_HOUR)
+  console.log(offset / MILLISECONDS_IN_HOUR);
   const d = new Date(date.getTime() - offset);
 
   return new Date(

@@ -1,72 +1,43 @@
-import { parseDate } from "./parse_date.ts";
-import { DateArg } from "./types.ts";
 import { utcDayOfYear } from "./utc_day_of_year.ts";
 
-type FormatDateType =
-  | "YY"
-  | "YYYY"
-  | "M"
-  | "MM"
-  | "MMM"
-  | "MMMM"
-  | "d"
-  | "dd"
-  | "D"
-  | "DD"
-  | "H"
-  | "HH"
-  | "h"
-  | "hh"
-  | "m"
-  | "mm"
-  | "WWW"
-  | "WWWW"
-  | "a";
+const dateFormatType = [
+  "YY",
+  "YYYY",
+  "M",
+  "MM",
+  "MMM",
+  "MMMM",
+  "d",
+  "dd",
+  "D",
+  "DD",
+  "H",
+  "HH",
+  "h",
+  "hh",
+  "m",
+  "mm",
+  "WWW",
+  "WWWW",
+  "a",
+] as const;
 
-type MonthString =
-  | "January"
-  | "February"
-  | "March"
-  | "April"
-  | "May"
-  | "June"
-  | "July"
-  | "August"
-  | "September"
-  | "October"
-  | "November"
-  | "December";
+type DateFormatType = typeof dateFormatType[number];
 
-function monthsStr(month: number): MonthString {
-  switch (month) {
-    case 1:
-      return "January";
-    case 2:
-      return "February";
-    case 3:
-      return "March";
-    case 4:
-      return "April";
-    case 5:
-      return "May";
-    case 6:
-      return "June";
-    case 7:
-      return "July";
-    case 8:
-      return "August";
-    case 9:
-      return "September";
-    case 10:
-      return "October";
-    case 11:
-      return "November";
-    case 12:
-      return "December";
-    default:
-      throw new Error("Invalid month");
-  }
-}
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
 
 const weekdays = [
   "Sunday",
@@ -76,14 +47,13 @@ const weekdays = [
   "Thursday",
   "Friday",
   "Saturday",
-];
+] as const;
 
 function formatToTwoDigits(n: number): string {
   return n <= 9 ? `0${n}` : n.toString();
 }
-export function format(dateArg: DateArg, formatStr: FormatDateType): string {
-  const date = parseDate(dateArg);
 
+export function format(date: Date, formatStr: DateFormatType): string {
   const year = date.getUTCFullYear();
   const month = date.getUTCMonth() + 1;
   const day = date.getUTCDate();
@@ -102,17 +72,17 @@ export function format(dateArg: DateArg, formatStr: FormatDateType): string {
     case "MM":
       return month <= 9 ? `0${month}` : month.toString();
     case "MMM":
-      return monthsStr(month).slice(0, 3);
+      return months[month - 1].slice(0, 3);
     case "MMMM":
-      return monthsStr(month);
+      return months[month - 1];
     case "d":
       return day.toString();
     case "dd":
       return formatToTwoDigits(day);
     case "D":
-      return utcDayOfYear(dateArg).toString();
+      return utcDayOfYear(date).toString();
     case "DD":
-      const dayOfYear = utcDayOfYear(dateArg);
+      const dayOfYear = utcDayOfYear(date);
       return formatToTwoDigits(dayOfYear);
     case "H":
       return hours.toString();
@@ -171,5 +141,25 @@ export function parseFormat(
     result.push({ value: currentValue, isLiteral: isLiteral });
   }
 
+  return result;
+}
+
+function isFormatDateType(format: string): format is DateFormatType {
+  return dateFormatType.includes(format as DateFormatType);
+}
+
+export function formatDate(date: Date, formatStr: string) {
+  const parsedFormat = parseFormat(formatStr);
+  let result = "";
+
+  for (const f of parsedFormat) {
+    if (f.isLiteral) {
+      result += f.value;
+    } else if (isFormatDateType(f.value)) {
+      result += format(date, f.value);
+    } else {
+      result += f.value;
+    }
+  }
   return result;
 }

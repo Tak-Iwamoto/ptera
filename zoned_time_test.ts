@@ -8,7 +8,7 @@ import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 
 Deno.test("zonedTime Asia/Tokyo", () => {
   const zTime = zonedTime(new Date("2021-05-13T12:15:30Z"), "Asia/Tokyo");
-  assertEquals(zTime.toISOString(), '2021-05-13T21:15:30.000Z');
+  assertEquals(zTime.toISOString(), "2021-05-13T21:15:30.000Z");
 });
 
 // Deno.test("zonedTime America/NewYork", () => {
