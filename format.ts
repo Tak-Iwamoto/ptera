@@ -136,3 +136,40 @@ export function format(dateArg: DateArg, formatStr: FormatDateType): string {
       throw new TypeError("Please input valid format.");
   }
 }
+
+export function parseFormat(
+  format: string,
+): { value: string; isLiteral: boolean }[] {
+  const result = [];
+
+  let currentValue = "";
+  let previousChar = null;
+  let isLiteral = false;
+
+  for (const char of format) {
+    if (char === "'") {
+      if (currentValue !== "") {
+        result.push({ value: currentValue, isLiteral: isLiteral });
+      }
+      currentValue = "";
+      previousChar = null;
+      isLiteral = !isLiteral;
+    } else if (isLiteral) {
+      currentValue += char;
+    } else if (char === previousChar) {
+      currentValue += char;
+    } else {
+      if (currentValue !== "") {
+        result.push({ value: currentValue, isLiteral: isLiteral });
+      }
+      currentValue = char;
+      previousChar = char;
+    }
+  }
+
+  if (currentValue !== "") {
+    result.push({ value: currentValue, isLiteral: isLiteral });
+  }
+
+  return result;
+}
