@@ -1,4 +1,4 @@
-import { utcDayOfYear } from "./utc_day_of_year.ts";
+import { MILLISECONDS_IN_DAY } from "./constants.ts";
 
 const dateFormatType = [
   "YY",
@@ -162,4 +162,15 @@ export function formatDate(date: Date, formatStr: string) {
     }
   }
   return result;
+}
+
+function utcDayOfYear(date: Date): number {
+  const timestamp = date.getTime();
+
+  date.setUTCMonth(0, 1);
+  date.setUTCHours(0, 0, 0, 0);
+
+  const startOfYearTimestamp = date.getTime();
+  const diff = timestamp - startOfYearTimestamp;
+  return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
 }
