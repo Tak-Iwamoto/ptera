@@ -1,4 +1,4 @@
-import { DateArg, Timezone } from "./types.ts";
+import { Timezone } from "./types.ts";
 
 type TokenizeDate = {
   year: number;
