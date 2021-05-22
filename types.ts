@@ -1,3 +1,4 @@
+export type TimeStamp = Date | number | string;
 export type Timezone =
   | "Etc/GMT+12"
   | "Etc/GMT+11"
