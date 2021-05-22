@@ -1,8 +1,8 @@
-import { millisecondsOffset } from "./timezone_offset.ts";
+import { tzOffset } from "./timezone_offset.ts";
 import { Timezone } from "./types.ts";
 
 export function zonedTime(date: Date, tz: Timezone) {
-  const offset = millisecondsOffset(date, tz);
+  const offset = tzOffset(date, tz);
   const d = new Date(date.getTime() - offset);
 
   return new Date(

@@ -1,6 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { format, formatDate, parseFormat } from "./format.ts";
-import { parseDate } from "./parse_date.ts";
 
 Deno.test("format: YY", () => {
   const formatted = format(new Date(2021, 1, 1), "YY");
@@ -165,13 +164,7 @@ Deno.test("parseFormat 'hh 'aaa' WWW'", () => {
 });
 
 Deno.test("formatDate MMMM yyyy", () => {
-  const date = parseDate("2021-06-01T09:00:00");
+  const date = new Date("2021-06-01T09:00:00");
   const result = formatDate(date, "MMMM YYYY");
   assertEquals(result, "June 2021");
-});
-
-Deno.test("formatDate d hh", () => {
-  const date = parseDate("2021-06-01T09:00:00");
-  const result = formatDate(date, "d hh");
-  assertEquals(result, "1 09");
 });
