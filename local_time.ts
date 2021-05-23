@@ -1,16 +1,18 @@
 import { MILLISECONDS_IN_MINUTE } from "./constants.ts";
-import { DateArg } from "./types.ts";
+import { DateInfo } from "./types.ts";
+import { dateInfoToJSDate, jsDateToDateInfo } from "./utils.ts";
 
 export function getLocalName(): string {
   return new Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
-export function getLocalOffset(dateArg: DateArg): number {
-  return -new Date(dateArg).getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
+export function getLocalOffset(dateInfo: DateInfo): number {
+  return -dateInfoToJSDate(dateInfo).getTimezoneOffset() *
+    MILLISECONDS_IN_MINUTE;
 }
 
-export function utcToLocalTime(dateArg: DateArg): Date {
-  const utcDate = new Date(dateArg).getTime() +
-    getLocalOffset(dateArg);
-  return new Date(utcDate);
+export function utcToLocalTime(dateInfo: DateInfo): DateInfo {
+  const ts = dateInfoToJSDate(dateInfo).getTime() +
+    getLocalOffset(dateInfo);
+  return jsDateToDateInfo(new Date(ts));
 }

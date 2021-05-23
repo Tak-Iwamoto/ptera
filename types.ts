@@ -13,8 +13,6 @@ export type DateInfo = {
   milliseconds?: number;
 };
 
-export type DateArg = Date | number | string;
-
 export type Timezone =
   | "Etc/GMT+12"
   | "Etc/GMT+11"
