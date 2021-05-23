@@ -1,4 +1,10 @@
-export type Timestamp = Date | number | string;
+export interface Datetime {
+  offset(): number;
+  utc(): string;
+}
+
+export type DateArg = Date | number | string;
+
 export type Timezone =
   | "Etc/GMT+12"
   | "Etc/GMT+11"

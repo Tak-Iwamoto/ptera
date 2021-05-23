@@ -1,5 +1,5 @@
-import { tzOffset } from "./timezone_offset.ts";
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
+import { tzOffset } from "./timezone_offset.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { Timezone } from "./types.ts";
 

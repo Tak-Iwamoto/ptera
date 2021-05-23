@@ -1,10 +1,10 @@
 import { tzOffset } from "./timezone_offset.ts";
 import { Timezone } from "./types.ts";
-import { getLocalTime } from "./local_time.ts";
+import { utcToLocalTime } from "./local_time.ts";
 
-export function zonedTime(date: Date, tz: Timezone): Date {
+export function utcToZonedTime(date: Date, tz: Timezone): Date {
   const offset = tzOffset(date, tz);
-  const d = new Date(getLocalTime(date).getTime() + offset);
+  const d = new Date(utcToLocalTime(date).getTime() + offset);
 
   return new Date(
     d.getUTCFullYear(),

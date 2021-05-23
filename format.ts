@@ -165,12 +165,12 @@ export function formatDate(date: Date, formatStr: string) {
 }
 
 function utcDayOfYear(date: Date): number {
-  const timestamp = date.getTime();
+  const utc = date.getTime();
 
   date.setUTCMonth(0, 1);
   date.setUTCHours(0, 0, 0, 0);
 
-  const startOfYearTimestamp = date.getTime();
-  const diff = timestamp - startOfYearTimestamp;
+  const startOfYear = date.getTime();
+  const diff = utc - startOfYear;
   return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
 }
