@@ -3,6 +3,16 @@ export interface Datetime {
   utc(): string;
 }
 
+export type DateInfo = {
+  year: number;
+  month: number;
+  day?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
+};
+
 export type DateArg = Date | number | string;
 
 export type Timezone =

@@ -1,4 +1,12 @@
-export function utcTime(year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, millisecond?: number): Date {
+export function utcTime(
+  year: number,
+  month: number,
+  day?: number,
+  hour?: number,
+  minute?: number,
+  second?: number,
+  millisecond?: number,
+): Date {
   const ts = Date.UTC(
     year,
     month - 1,

@@ -1,13 +1,13 @@
-import { utcToZonedTime } from "./zoned_time.ts"
-import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts"
-import { Timezone } from "./types.ts"
-import { utcTime } from "./utc_time.ts"
+import { utcToZonedTime } from "./zoned_time.ts";
+import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
+import { Timezone } from "./types.ts";
+import { utcTime } from "./utc_time.ts";
 
 type Test = {
-  date: Date
-  tz: Timezone
-  expected: string
-}
+  date: Date;
+  tz: Timezone;
+  expected: string;
+};
 
 Deno.test("utcToZonedTime", () => {
   const tests: Test[] = [
@@ -31,9 +31,9 @@ Deno.test("utcToZonedTime", () => {
       tz: "America/Los_Angeles",
       expected: "2020-10-31T23:45:00.000Z",
     },
-  ]
+  ];
 
   tests.forEach((t) => {
-    assertEquals(utcToZonedTime(t.date, t.tz).toISOString(), t.expected)
-  })
-})
+    assertEquals(utcToZonedTime(t.date, t.tz).toISOString(), t.expected);
+  });
+});

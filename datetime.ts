@@ -1,5 +1,5 @@
 import { Timezone } from "./types.ts";
-import { zonedTime } from "./zoned_time.ts";
+import { utcToZonedTime } from "./zoned_time.ts";
 
 type Config = {
   tz?: Timezone;
@@ -29,7 +29,7 @@ export default class DD {
   }
 
   tz(tz: Timezone): DD {
-    return newInstance(zonedTime(this.#ddDateTime, tz), { tz });
+    return newInstance(utcToZonedTime(this.#ddDateTime, tz), { tz });
   }
 
   startOfDay(): Date {
