@@ -1,4 +1,6 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
+import { DateInfo, OptionalNumber } from "./types.ts";
+import { dateInfoToJSDate } from "./utils.ts";
 
 const dateFormatType = [
   "YY",
@@ -49,18 +51,16 @@ const weekdays = [
   "Saturday",
 ] as const;
 
-function formatToTwoDigits(n: number): string {
+function formatToTwoDigits(n: Number): string {
   return n <= 9 ? `0${n}` : n.toString();
 }
 
-export function format(date: Date, formatStr: DateFormatType): string {
-  const year = date.getUTCFullYear();
-  const month = date.getUTCMonth() + 1;
-  const day = date.getUTCDate();
-  const hours = date.getUTCHours();
-  const twelveHours = date.getUTCHours() % 12;
-  const minutes = date.getUTCMinutes();
-  const weekNumber = date.getUTCDay();
+export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
+  const { year, month, day, hours, minutes } = dateInfo;
+  const twelveHours = (hours || 0) % 12;
+
+  const jsDate = dateInfoToJSDate(dateInfo);
+  const weekNumber = jsDate.getUTCDay();
 
   switch (formatStr) {
     case "YY":
@@ -76,32 +76,32 @@ export function format(date: Date, formatStr: DateFormatType): string {
     case "MMMM":
       return months[month - 1];
     case "d":
-      return day.toString();
+      return day ? day.toString() : "0";
     case "dd":
-      return formatToTwoDigits(day);
+      return day ? formatToTwoDigits(day) : "00";
     case "D":
-      return utcDayOfYear(date).toString();
+      return utcDayOfYear(jsDate).toString();
     case "DD":
-      const dayOfYear = utcDayOfYear(date);
+      const dayOfYear = utcDayOfYear(jsDate);
       return formatToTwoDigits(dayOfYear);
     case "H":
-      return hours.toString();
+      return String(hours);
     case "HH":
-      return formatToTwoDigits(hours);
+      return hours ? formatToTwoDigits(hours) : "00";
     case "h":
       return (twelveHours || 12).toString();
     case "hh":
       return formatToTwoDigits(twelveHours || 12).toString();
     case "m":
-      return minutes.toString();
+      return minutes ? minutes.toString() : "0";
     case "mm":
-      return formatToTwoDigits(minutes).toString();
+      return minutes ? formatToTwoDigits(minutes).toString() : "00";
     case "WWW":
       return weekdays[weekNumber].slice(0, 3);
     case "WWWW":
       return weekdays[weekNumber];
     case "a":
-      return hours / 12 <= 1 ? "AM" : "PM";
+      return (hours || 0) / 12 <= 1 ? "AM" : "PM";
     default:
       throw new TypeError("Please input valid format.");
   }
@@ -148,7 +148,7 @@ function isFormatDateType(format: string): format is DateFormatType {
   return dateFormatType.includes(format as DateFormatType);
 }
 
-export function formatDate(date: Date, formatStr: string) {
+export function formatDate(dateInfo: DateInfo, formatStr: string) {
   const parsedFormat = parseFormat(formatStr);
   let result = "";
 
@@ -156,7 +156,7 @@ export function formatDate(date: Date, formatStr: string) {
     if (f.isLiteral) {
       result += f.value;
     } else if (isFormatDateType(f.value)) {
-      result += format(date, f.value);
+      result += format(dateInfo, f.value);
     } else {
       result += f.value;
     }

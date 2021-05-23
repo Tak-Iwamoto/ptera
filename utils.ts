@@ -1,8 +1,6 @@
-import { DateInfo } from "./types.ts";
+import { DateInfo, OptionalNumber } from "./types.ts";
 
 type DateTimeArg = DateInfo | string;
-
-type OptionalNumber = number | undefined;
 
 function isDateInfo(arg: DateTimeArg): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;

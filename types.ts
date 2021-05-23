@@ -13,6 +13,8 @@ export type DateInfo = {
   milliseconds?: number;
 };
 
+export type OptionalNumber = number | undefined;
+
 export type Timezone =
   | "Etc/GMT+12"
   | "Etc/GMT+11"
