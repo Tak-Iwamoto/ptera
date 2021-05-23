@@ -1,39 +1,195 @@
-import { utcToZonedTime } from "./zoned_time.ts";
+import { utcToZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { Timezone } from "./types.ts";
-import { utcTime } from "./utc_time.ts";
+import { DateInfo, Timezone } from "./types.ts";
 
 type Test = {
-  date: Date;
+  date: DateInfo;
   tz: Timezone;
-  expected: string;
+  expected: DateInfo;
 };
 
 Deno.test("utcToZonedTime", () => {
   const tests: Test[] = [
     {
-      date: utcTime(2021, 5, 13, 12, 15, 30),
+      date: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
       tz: "UTC",
-      expected: "2021-05-13T12:15:30.000Z",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
     },
     {
-      date: utcTime(2021, 5, 13, 12, 15, 30),
+      date: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
       tz: "Asia/Tokyo",
-      expected: "2021-05-13T21:15:30.000Z",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 21,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
     },
     {
-      date: utcTime(2021, 5, 13, 12, 15, 30),
+      date: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
       tz: "America/New_York",
-      expected: "2021-05-13T08:15:30.000Z",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 8,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
     },
     {
-      date: new Date("Sun Nov 1 2020 06:45:00 GMT-0000 (Greenwich Mean Time)"),
-      tz: "America/Los_Angeles",
-      expected: "2020-10-31T23:45:00.000Z",
+      date: {
+        year: 2021,
+        month: 11,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+      tz: "America/New_York",
+      expected: {
+        year: 2021,
+        month: 11,
+        day: 13,
+        hours: 7,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
     },
   ];
 
   tests.forEach((t) => {
-    assertEquals(utcToZonedTime(t.date, t.tz).toISOString(), t.expected);
+    assertEquals(utcToZonedTime(t.date, t.tz), t.expected);
+  });
+});
+
+Deno.test("zonedTimeToUTC", () => {
+  const tests: Test[] = [
+    {
+      date: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+      tz: "UTC",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+    },
+    {
+      date: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 21,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+      tz: "Asia/Tokyo",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+    },
+    {
+      date: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 8,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+      tz: "America/New_York",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+    },
+    {
+      date: {
+        year: 2021,
+        month: 11,
+        day: 13,
+        hours: 7,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+      tz: "America/New_York",
+      expected: {
+        year: 2021,
+        month: 11,
+        day: 13,
+        hours: 12,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 0,
+      },
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(zonedTimeToUTC(t.date, t.tz), t.expected);
   });
 });
