@@ -1,20 +1,5 @@
 import { DateInfo, OptionalNumber } from "./types.ts";
 
-type DateTimeArg = DateInfo | string;
-
-function isDateInfo(arg: DateTimeArg): arg is DateInfo {
-  return (arg as DateInfo).year !== undefined;
-}
-
-export function toDateInfo(date: DateInfo | string) {
-  if (isDateInfo(date)) {
-    return date;
-  } else {
-    const d = new Date(date);
-    return jsDateToDateInfo(d);
-  }
-}
-
 function dateInfoToArray(
   dateInfo: DateInfo,
 ): [
