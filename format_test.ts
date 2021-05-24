@@ -222,26 +222,29 @@ Deno.test("format: a", () => {
   });
 });
 
-// Deno.test("format: WWW", () => {
-//   const tests = [
-//     { input: { year: 2021, month: 1, day: 2}, expected: "Sat" },
-//   ];
-//   tests.forEach((t) => {
-//     assertEquals(format(t.input, "WWW"), t.expected);
-//   });
-// });
+Deno.test("format: WWW", () => {
+  const tests = [
+    { input: { year: 2021, month: 1, day: 2 }, expected: "Sat" },
+    { input: { year: 2021, month: 1, day: 3 }, expected: "Sun" },
+    { input: { year: 2021, month: 5, day: 3 }, expected: "Mon" },
+    { input: { year: 2021, month: 5, day: 7 }, expected: "Fri" },
+  ];
+  tests.forEach((t) => {
+    assertEquals(format(t.input, "WWW"), t.expected);
+  });
+});
 
-// Deno.test("format: WWWW", () => {
-//   const tests = [
-//     { input: utcToLocalTime(new Date(2021, 0, 2)), expected: "Saturday" },
-//     { input: utcToLocalTime(new Date(2021, 0, 3)), expected: "Sunday" },
-//     { input: utcToLocalTime(new Date(2021, 4, 3)), expected: "Monday" },
-//     { input: utcToLocalTime(new Date(2021, 4, 7)), expected: "Friday" },
-//   ];
-//   tests.forEach((t) => {
-//     assertEquals(format(t.input, "WWWW"), t.expected);
-//   });
-// });
+Deno.test("format: WWWW", () => {
+  const tests = [
+    { input: { year: 2021, month: 1, day: 2 }, expected: "Saturday" },
+    { input: { year: 2021, month: 1, day: 3 }, expected: "Sunday" },
+    { input: { year: 2021, month: 5, day: 3 }, expected: "Monday" },
+    { input: { year: 2021, month: 5, day: 7 }, expected: "Friday" },
+  ];
+  tests.forEach((t) => {
+    assertEquals(format(t.input, "WWWW"), t.expected);
+  });
+});
 
 Deno.test("parseFormat 'MMMM yyyy'", () => {
   const result = parseFormat("MMMM yyyy");

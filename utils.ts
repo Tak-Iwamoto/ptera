@@ -27,7 +27,15 @@ function dateInfoToArray(
   OptionalNumber,
 ] {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
-  return [year, month - 1, day, hours, minutes, seconds, milliseconds];
+  return [
+    year,
+    month - 1,
+    day ?? 0,
+    hours ?? 0,
+    minutes ?? 0,
+    seconds ?? 0,
+    milliseconds ?? 0,
+  ];
 }
 
 export function dateInfoToTS(date: DateInfo) {
