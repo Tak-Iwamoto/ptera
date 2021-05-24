@@ -1,7 +1,7 @@
 import { tzOffset } from "./timezone_offset.ts";
 import { DateInfo, Timezone } from "./types.ts";
 import { jsDateToDateInfo } from "./utils.ts";
-import { zonedTimeToUTC } from "./zoned_time.ts";
+import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 
 type Config = {
   timezone: Timezone;
@@ -59,6 +59,15 @@ export class Datetime {
   toUTC(): Datetime {
     const utcDateInfo = zonedTimeToUTC(this.toDateInfo(), this.timezone);
     return new Datetime(utcDateInfo, { timezone: "UTC" });
+  }
+
+  toZonedTime(tz: Timezone): Datetime {
+    const zonedDateInfo = toOtherZonedTime(
+      this.toDateInfo(),
+      this.timezone,
+      tz,
+    );
+    return new Datetime(zonedDateInfo, { timezone: tz });
   }
 
   offset(): number {

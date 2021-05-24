@@ -1,6 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { Datetime } from "./datetime.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
+import { Timezone } from "./types.ts";
 
 Deno.test("toDateInfo", () => {
   const tests = [
@@ -137,5 +138,41 @@ Deno.test("offset", () => {
 
   tests.forEach((t) => {
     assertEquals(t.input / MILLISECONDS_IN_HOUR, t.expected);
+  });
+});
+
+Deno.test("toZonedTime", () => {
+  type Test = {
+    input: Datetime;
+    tz: Timezone;
+    expected: Datetime;
+  };
+  const tests: Test[] = [
+    {
+      input: new Datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "Asia/Tokyo",
+      }),
+      tz: "America/New_York",
+      expected: new Datetime("2020-12-31T22:30:30.000Z", {
+        timezone: "America/New_York",
+      }),
+    },
+    {
+      input: new Datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "UTC",
+      }),
+      tz: "Asia/Tokyo",
+      expected: new Datetime("2021-01-01T21:30:30.000Z", {
+        timezone: "Asia/Tokyo",
+      }),
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(t.input.toZonedTime(t.tz).timezone, t.expected.timezone);
+    assertEquals(
+      t.input.toZonedTime(t.tz).toDateInfo(),
+      t.expected.toDateInfo(),
+    );
   });
 });
