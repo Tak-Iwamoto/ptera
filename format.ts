@@ -1,5 +1,5 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
-import { DateInfo, OptionalNumber } from "./types.ts";
+import { DateInfo } from "./types.ts";
 import { dateInfoToJSDate } from "./utils.ts";
 
 const dateFormatType = [
@@ -51,7 +51,7 @@ const weekdays = [
   "Saturday",
 ] as const;
 
-function formatToTwoDigits(n: Number): string {
+function formatToTwoDigits(n: number): string {
   return n <= 9 ? `0${n}` : n.toString();
 }
 
@@ -82,8 +82,7 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
     case "D":
       return utcDayOfYear(jsDate).toString();
     case "DD":
-      const dayOfYear = utcDayOfYear(jsDate);
-      return formatToTwoDigits(dayOfYear);
+      return formatToTwoDigits(utcDayOfYear(jsDate));
     case "H":
       return String(hours);
     case "HH":

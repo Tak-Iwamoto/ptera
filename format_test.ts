@@ -1,6 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { format, formatDate, parseFormat } from "./format.ts";
-import { utcToLocalTime } from "./local_time.ts";
 
 Deno.test("format: YY", () => {
   const tests = [

@@ -17,7 +17,7 @@ export function tzTokenizeDate(date: Date, tz: Timezone) {
 function partsOffset(dtf: Intl.DateTimeFormat, date: Date): TokenizeDate {
   const formatted = dtf.formatToParts(date);
 
-  let hash: { [key: string]: number } = {};
+  const hash: { [key: string]: number } = {};
 
   for (const f of formatted) {
     hash[f.type] = parseInt(f.value, 10);
