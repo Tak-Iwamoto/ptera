@@ -1,6 +1,6 @@
 import { tzOffset } from "./timezone_offset.ts";
 import { DateInfo, Timezone } from "./types.ts";
-import { jsDateToDateInfo } from "./utils.ts";
+import { dateInfoToJSDate, jsDateToDateInfo } from "./utils.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 
 type Config = {
@@ -68,6 +68,10 @@ export class Datetime {
       tz,
     );
     return new Datetime(zonedDateInfo, { timezone: tz });
+  }
+
+  toJSDate(): Date {
+    return dateInfoToJSDate(this.toDateInfo());
   }
 
   offset(): number {
