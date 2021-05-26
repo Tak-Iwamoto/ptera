@@ -19,7 +19,6 @@ function parseArg(date: DateInfo | string) {
     return jsDateToDateInfo(d);
   }
 }
-
 export class Datetime {
   readonly year: number;
   readonly month: number;
@@ -41,6 +40,15 @@ export class Datetime {
     this.seconds = seconds;
     this.milliseconds = milliseconds;
     this.timezone = config?.timezone ?? "UTC";
+  }
+
+  static isValidZone(tz: string): boolean {
+    try {
+      new Intl.DateTimeFormat("en-US", { timeZone: tz }).format();
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   toDateInfo(): DateInfo {

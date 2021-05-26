@@ -3,6 +3,20 @@ import { Datetime } from "./datetime.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { Timezone } from "./types.ts";
 
+Deno.test("isValidZone", () => {
+  const tests = [
+    { input: "Asia/Tokyo", expected: true },
+    { input: "Fantasia/Castle", expected: false },
+    { input: "America/New_York", expected: true },
+    { input: "dummy", expected: false },
+    { input: "Osaka", expected: false },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(Datetime.isValidZone(t.input), t.expected);
+  });
+});
+
 Deno.test("toDateInfo", () => {
   const tests = [
     {
