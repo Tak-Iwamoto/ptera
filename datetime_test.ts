@@ -17,6 +17,20 @@ Deno.test("isValidZone", () => {
   });
 });
 
+Deno.test("isValid", () => {
+  const tests = [
+    { input: { year: 2021, month: 1, day: 1 }, expected: true },
+    { input: { year: 2020, month: 2, day: 29 }, expected: true },
+    { input: { year: 2021, month: 2, day: 29 }, expected: false },
+    { input: { year: 2021, month: 4, day: 31 }, expected: false },
+    { input: { year: 2021, month: 11, day: 31 }, expected: false },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(new Datetime(t.input).isValid(), t.expected);
+  });
+});
+
 Deno.test("toDateInfo", () => {
   const tests = [
     {

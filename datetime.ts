@@ -1,6 +1,6 @@
 import { tzOffset } from "./timezone_offset.ts";
 import { DateInfo, Timezone } from "./types.ts";
-import { dateInfoToJSDate, jsDateToDateInfo } from "./utils.ts";
+import { dateInfoToJSDate, isValidDate, jsDateToDateInfo } from "./utils.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 
 type Config = {
@@ -15,6 +15,7 @@ function parseArg(date: DateInfo | string) {
   if (isDateInfo(date)) {
     return date;
   } else {
+    // TODO: 2021-04-31T12:30:30.000Z を入力した時に5/1になるので、修正する
     const d = new Date(date);
     return jsDateToDateInfo(d);
   }
@@ -49,6 +50,10 @@ export class Datetime {
     } catch {
       return false;
     }
+  }
+
+  isValid(): boolean {
+    return isValidDate(this.toDateInfo());
   }
 
   toDateInfo(): DateInfo {
