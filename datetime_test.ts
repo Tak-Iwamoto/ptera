@@ -225,3 +225,77 @@ Deno.test("toJSDate", () => {
     assertEquals(t.input.toJSDate(), t.expected);
   });
 });
+
+Deno.test("toISODate", () => {
+  type Test = {
+    input: Datetime;
+    expected: string;
+  };
+  const tests: Test[] = [
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 5,
+        day: 15,
+        hours: 12,
+        minutes: 30,
+        seconds: 30,
+        milliseconds: 0,
+      }),
+      expected: "2021-05-15",
+    },
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 7,
+        day: 21,
+        hours: 12,
+        minutes: 30,
+        seconds: 30,
+        milliseconds: 0,
+      }),
+      expected: "2021-07-21",
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(t.input.toISODate(), t.expected);
+  });
+});
+
+Deno.test("toISODate", () => {
+  type Test = {
+    input: Datetime;
+    expected: string;
+  };
+  const tests: Test[] = [
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 5,
+        day: 15,
+        hours: 12,
+        minutes: 30,
+        seconds: 30,
+        milliseconds: 999,
+      }),
+      expected: "12-30-30.999",
+    },
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 7,
+        day: 21,
+        hours: 23,
+        minutes: 0,
+        seconds: 59,
+        milliseconds: 0,
+      }),
+      expected: "23-00-59.000",
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(t.input.toISOTime(), t.expected);
+  });
+});

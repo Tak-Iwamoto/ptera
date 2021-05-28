@@ -1,3 +1,4 @@
+import { formatDate } from "./format.ts";
 import { tzOffset } from "./timezone_offset.ts";
 import { DateInfo, Timezone } from "./types.ts";
 import { dateInfoToJSDate, isValidDate, jsDateToDateInfo } from "./utils.ts";
@@ -67,6 +68,14 @@ export class Datetime {
       seconds,
       milliseconds,
     };
+  }
+
+  toISODate(): string {
+    return formatDate(this.toDateInfo(), "YYYY-MM-dd");
+  }
+
+  toISOTime(): string {
+    return formatDate(this.toDateInfo(), "HH-mm-ss.S");
   }
 
   toUTC(): Datetime {

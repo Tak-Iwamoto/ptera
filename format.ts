@@ -19,6 +19,10 @@ const dateFormatType = [
   "hh",
   "m",
   "mm",
+  "s",
+  "ss",
+  "S",
+  "SSS",
   "WWW",
   "WWWW",
   "a",
@@ -56,7 +60,7 @@ function formatToTwoDigits(n: number): string {
 }
 
 export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
-  const { year, month, day, hours, minutes } = dateInfo;
+  const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   const twelveHours = (hours || 0) % 12;
 
   const jsDate = dateInfoToJSDate(dateInfo);
@@ -95,6 +99,14 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
       return minutes ? minutes.toString() : "0";
     case "mm":
       return minutes ? formatToTwoDigits(minutes).toString() : "00";
+    case "s":
+      return seconds ? seconds.toString() : "0";
+    case "ss":
+      return seconds ? formatToTwoDigits(seconds).toString() : "00";
+    case "S":
+      return milliseconds
+        ? milliseconds <= 99 ? "0${milliseconds}" : milliseconds.toString()
+        : "000";
     case "WWW":
       return weekdays[weekNumber].slice(0, 3);
     case "WWWW":
