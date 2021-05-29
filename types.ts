@@ -13,6 +13,10 @@ export type DateInfo = {
   milliseconds?: number;
 };
 
+export type Config = {
+  timezone: Timezone;
+};
+
 export type OptionalNumber = number | undefined;
 
 export type Timezone =

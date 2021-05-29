@@ -1,5 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { format, formatDate, parseFormat } from "./format.ts";
+import { format, formatDate, isoToDateInfo, parseFormat } from "./format.ts";
+import { DateInfo } from "./types.ts";
 
 Deno.test("format: YY", () => {
   const tests = [
@@ -271,4 +272,77 @@ Deno.test("formatDate MMMM yyyy", () => {
   const dateInfo = { year: 2021, month: 6, day: 1, hours: 9 };
   const result = formatDate(dateInfo, "MMMM YYYY");
   assertEquals(result, "June 2021");
+});
+
+Deno.test("isoToDateInfo", () => {
+  type Test = {
+    input: string;
+    expected: DateInfo;
+  };
+  const tests: Test[] = [
+    {
+      input: "2021-05-25T09:08:34",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 25,
+        hours: 9,
+        minutes: 8,
+        seconds: 34,
+        milliseconds: undefined,
+      },
+    },
+    {
+      input: "2021-11-01T09:08:34.123",
+      expected: {
+        year: 2021,
+        month: 11,
+        day: 1,
+        hours: 9,
+        minutes: 8,
+        seconds: 34,
+        milliseconds: 123,
+      },
+    },
+    {
+      input: "2021-11-01T09:08:34Z",
+      expected: {
+        year: 2021,
+        month: 11,
+        day: 1,
+        hours: 9,
+        minutes: 8,
+        seconds: 34,
+        milliseconds: undefined,
+      },
+    },
+    {
+      input: "2021-11-01T09:08:34+09:00",
+      expected: {
+        year: 2021,
+        month: 11,
+        day: 1,
+        hours: 9,
+        minutes: 8,
+        seconds: 34,
+        milliseconds: undefined,
+      },
+    },
+    {
+      input: "2021-11-01T09:08:34-04:00",
+      expected: {
+        year: 2021,
+        month: 11,
+        day: 1,
+        hours: 9,
+        minutes: 8,
+        seconds: 34,
+        milliseconds: undefined,
+      },
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(isoToDateInfo(t.input), t.expected);
+  });
 });

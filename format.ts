@@ -1,6 +1,6 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
 import { DateInfo } from "./types.ts";
-import { dateInfoToJSDate } from "./utils.ts";
+import { dateInfoToJSDate, formatToTwoDigits, parseInteger } from "./utils.ts";
 
 const dateFormatType = [
   "YY",
@@ -54,10 +54,6 @@ const weekdays = [
   "Friday",
   "Saturday",
 ] as const;
-
-function formatToTwoDigits(n: number): string {
-  return n <= 9 ? `0${n}` : n.toString();
-}
 
 export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
@@ -184,4 +180,38 @@ function utcDayOfYear(date: Date): number {
   const startOfYear = date.getTime();
   const diff = utc - startOfYear;
   return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
+}
+
+// const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;
+// const isoWeekRegex = /(\d{4})-W(\d{2})/;
+// const weekDayRegex = /[1-7]/;
+const isoDateRegex = /(\d{4})-?(\d{2})-?(\d{2})/;
+const isoTimeRegex = /(\d{2}):?(\d{2}):?(\d{2})(?:.)?(\d{3})?/;
+const isoOffsetRegex = /(?:(Z)|([+-]\d\d)(?::?(\d\d))?)?/;
+const isoRegex = RegExp(
+  `${isoDateRegex.source}T${isoTimeRegex.source}${isoOffsetRegex.source}`,
+);
+
+function regexArrayToDateInfo(
+  regexArray: RegExpExecArray,
+): DateInfo | undefined {
+  const year = parseInteger(regexArray[1]);
+  const month = parseInteger(regexArray[2]);
+  if (!year) return undefined;
+  if (!month) return undefined;
+  return {
+    year,
+    month,
+    day: parseInteger(regexArray[3]),
+    hours: parseInteger(regexArray[4]),
+    minutes: parseInteger(regexArray[5]),
+    seconds: parseInteger(regexArray[6]),
+    milliseconds: parseInteger(regexArray[7]),
+  };
+}
+
+export function isoToDateInfo(isoFormat: string): DateInfo | undefined {
+  const matches = isoRegex.exec(isoFormat);
+  if (!matches) return undefined;
+  return regexArrayToDateInfo(matches);
 }

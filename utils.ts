@@ -111,3 +111,13 @@ export function isValidDate(dateInfo: DateInfo): boolean {
 
   return true;
 }
+
+export function parseInteger(value: string): number | undefined {
+  const isValid = Boolean(value);
+  if (!isValid) return undefined;
+  return parseInt(value, 10);
+}
+
+export function formatToTwoDigits(n: number): string {
+  return n <= 9 ? `0${n}` : n.toString();
+}

@@ -1,24 +1,23 @@
+import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { formatDate } from "./format.ts";
+import { isoToDateInfo } from "./format.ts";
 import { tzOffset } from "./timezone_offset.ts";
-import { DateInfo, Timezone } from "./types.ts";
-import { dateInfoToJSDate, isValidDate, jsDateToDateInfo } from "./utils.ts";
+import { Config, DateInfo, Timezone } from "./types.ts";
+import { dateInfoToJSDate, formatToTwoDigits, isValidDate } from "./utils.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
-
-type Config = {
-  timezone: Timezone;
-};
 
 function isDateInfo(arg: DateInfo | string): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;
 }
 
-function parseArg(date: DateInfo | string) {
+function parseArg(date: DateInfo | string): DateInfo {
   if (isDateInfo(date)) {
     return date;
   } else {
-    // TODO: 2021-04-31T12:30:30.000Z を入力した時に5/1になるので、修正する
-    const d = new Date(date);
-    return jsDateToDateInfo(d);
+    // TODO: 現状iso8601のみ
+    const parsed = isoToDateInfo(date);
+    if (!parsed) throw new Error("Invalid format");
+    return parsed;
   }
 }
 export class Datetime {
@@ -70,12 +69,20 @@ export class Datetime {
     };
   }
 
+  toISO(): string {
+    const offset = this.offsetHours() >= 0
+      ? `+${formatToTwoDigits(this.offsetHours())}:00`
+      : `-${formatToTwoDigits(this.offsetHours() * -1)}:00`;
+    const tz = this.timezone === "UTC" ? "Z" : offset;
+    return `${this.toISODate()}T${this.toISOTime()}${tz}`;
+  }
+
   toISODate(): string {
     return formatDate(this.toDateInfo(), "YYYY-MM-dd");
   }
 
   toISOTime(): string {
-    return formatDate(this.toDateInfo(), "HH-mm-ss.S");
+    return formatDate(this.toDateInfo(), "HH:mm:ss.S");
   }
 
   toUTC(): Datetime {
@@ -109,5 +116,9 @@ export class Datetime {
       ),
       this?.timezone ?? "UTC",
     );
+  }
+
+  offsetHours(): number {
+    return this.offset() / MILLISECONDS_IN_HOUR;
   }
 }
