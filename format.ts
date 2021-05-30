@@ -264,9 +264,3 @@ export function isoToDateInfo(isoFormat: string): DateInfo | undefined {
     milliseconds: isoTime.milliseconds,
   };
 }
-
-// console.log(extractIsoDate('2017-04-20T11:32:59.999-04:00'))
-// console.log(extractIsoTime('2017-04-20T11:32:59.999-04:00'))
-// console.log(extractIsoOffset('2017-04-20T11:32:00.000-04:00'))
-// console.log(extractIsoOffset('2017-04-20T11:32:00.000Z'))
-// console.log(extractIsoOffset('2017-04-20T11:32:00.000+09:00'))
