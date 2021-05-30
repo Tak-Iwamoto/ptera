@@ -4,7 +4,12 @@ import {
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
-import { dateInfoToJSDate, formatToTwoDigits, parseInteger } from "./utils.ts";
+import {
+  dateInfoToJSDate,
+  formatToThreeDigits,
+  formatToTwoDigits,
+  parseInteger,
+} from "./utils.ts";
 
 const dateFormatType = [
   "YY",
@@ -16,7 +21,7 @@ const dateFormatType = [
   "d",
   "dd",
   "D",
-  "DD",
+  "DDD",
   "H",
   "HH",
   "h",
@@ -27,8 +32,9 @@ const dateFormatType = [
   "ss",
   "S",
   "SSS",
-  "WWW",
-  "WWWW",
+  "w",
+  "www",
+  "wwww",
   "a",
 ] as const;
 
@@ -50,21 +56,18 @@ const months = [
 ] as const;
 
 const weekdays = [
-  "Sunday",
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
+  "Sunday",
 ] as const;
 
 export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   const twelveHours = (hours || 0) % 12;
-
-  const jsDate = dateInfoToJSDate(dateInfo);
-  const weekNumber = jsDate.getUTCDay();
 
   switch (formatStr) {
     case "YY":
@@ -84,9 +87,9 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
     case "dd":
       return day ? formatToTwoDigits(day) : "00";
     case "D":
-      return utcDayOfYear(jsDate).toString();
-    case "DD":
-      return formatToTwoDigits(utcDayOfYear(jsDate));
+      return dayOfYear(dateInfo).toString();
+    case "DDD":
+      return formatToThreeDigits(dayOfYear(dateInfo));
     case "H":
       return String(hours);
     case "HH":
@@ -107,10 +110,12 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
       return milliseconds
         ? milliseconds <= 99 ? "0${milliseconds}" : milliseconds.toString()
         : "000";
-    case "WWW":
-      return weekdays[weekNumber].slice(0, 3);
-    case "WWWW":
-      return weekdays[weekNumber];
+    case "w":
+      return weekNumber(dateInfo).toString();
+    case "www":
+      return weekdays[weekNumber(dateInfo) - 1].slice(0, 3);
+    case "wwww":
+      return weekdays[weekNumber(dateInfo) - 1];
     case "a":
       return (hours || 0) / 12 <= 1 ? "AM" : "PM";
     default:
@@ -175,13 +180,21 @@ export function formatDate(dateInfo: DateInfo, formatStr: string) {
   return result;
 }
 
-function utcDayOfYear(date: Date): number {
-  const utc = date.getTime();
+function weekNumber(dateInfo: DateInfo): number {
+  const jsDate = dateInfoToJSDate(dateInfo);
+  const jsWeekNumber = jsDate.getUTCDay();
+  if (jsWeekNumber === 0) return 7;
+  return jsWeekNumber;
+}
 
-  date.setUTCMonth(0, 1);
-  date.setUTCHours(0, 0, 0, 0);
+function dayOfYear(dateInfo: DateInfo): number {
+  const jsDate = dateInfoToJSDate(dateInfo);
+  const utc = jsDate.getTime();
 
-  const startOfYear = date.getTime();
+  jsDate.setUTCMonth(0, 1);
+  jsDate.setUTCHours(0, 0, 0, 0);
+  const startOfYear = jsDate.getTime();
+
   const diff = utc - startOfYear;
   return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
 }

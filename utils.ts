@@ -121,3 +121,9 @@ export function parseInteger(value: string | undefined): number | undefined {
 export function formatToTwoDigits(n: number): string {
   return n <= 9 ? `0${n}` : n.toString();
 }
+
+export function formatToThreeDigits(n: number): string {
+  if (n <= 9) return `00${n}`;
+  if (n <= 99) return `0${n}`;
+  return n.toString();
+}
