@@ -259,6 +259,34 @@ Deno.test("format: wwww", () => {
   });
 });
 
+Deno.test("format: W", () => {
+  const tests = [
+    { input: { year: 2021, month: 1, day: 1 }, expected: "53" },
+    { input: { year: 2021, month: 1, day: 4 }, expected: "1" },
+    { input: { year: 2021, month: 5, day: 25 }, expected: "21" },
+    { input: { year: 2021, month: 11, day: 4 }, expected: "44" },
+    { input: { year: 2021, month: 12, day: 31 }, expected: "52" },
+    { input: { year: 2020, month: 12, day: 31 }, expected: "53" },
+  ];
+  tests.forEach((t) => {
+    assertEquals(format(t.input, "W"), t.expected);
+  });
+});
+
+Deno.test("format: WW", () => {
+  const tests = [
+    { input: { year: 2021, month: 1, day: 1 }, expected: "53" },
+    { input: { year: 2021, month: 1, day: 4 }, expected: "01" },
+    { input: { year: 2021, month: 5, day: 25 }, expected: "21" },
+    { input: { year: 2021, month: 11, day: 4 }, expected: "44" },
+    { input: { year: 2021, month: 12, day: 31 }, expected: "52" },
+    { input: { year: 2020, month: 12, day: 31 }, expected: "53" },
+  ];
+  tests.forEach((t) => {
+    assertEquals(format(t.input, "WW"), t.expected);
+  });
+});
+
 Deno.test("parseFormat 'MMMM yyyy'", () => {
   const result = parseFormat("MMMM yyyy");
   assertEquals(result, [{ value: "MMMM", isLiteral: false }, {

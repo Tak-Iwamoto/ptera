@@ -2,10 +2,12 @@ import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
 import {
   dateInfoToJSDate,
+  dayOfWeek,
   dayOfYear,
   formatToThreeDigits,
   formatToTwoDigits,
   parseInteger,
+  weeksOfYear,
 } from "./utils.ts";
 
 const dateFormatType = [
@@ -32,6 +34,8 @@ const dateFormatType = [
   "w",
   "www",
   "wwww",
+  "W",
+  "WW",
   "a",
 ] as const;
 
@@ -108,11 +112,15 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
         ? milliseconds <= 99 ? "0${milliseconds}" : milliseconds.toString()
         : "000";
     case "w":
-      return weekNumber(dateInfo).toString();
+      return dayOfWeek(dateInfo).toString();
     case "www":
-      return weekdays[weekNumber(dateInfo) - 1].slice(0, 3);
+      return weekdays[dayOfWeek(dateInfo) - 1].slice(0, 3);
     case "wwww":
-      return weekdays[weekNumber(dateInfo) - 1];
+      return weekdays[dayOfWeek(dateInfo) - 1];
+    case "W":
+      return isoWeekNumber(dateInfo).toString();
+    case "WW":
+      return formatToTwoDigits(isoWeekNumber(dateInfo));
     case "a":
       return (hours || 0) / 12 <= 1 ? "AM" : "PM";
     default:
@@ -177,11 +185,16 @@ export function formatDate(dateInfo: DateInfo, formatStr: string) {
   return result;
 }
 
-function weekNumber(dateInfo: DateInfo): number {
-  const jsDate = dateInfoToJSDate(dateInfo);
-  const jsWeekNumber = jsDate.getUTCDay();
-  if (jsWeekNumber === 0) return 7;
-  return jsWeekNumber;
+function isoWeekNumber(dateInfo: DateInfo) {
+  const ordinalDate = dayOfYear(dateInfo);
+  const weekIndex = dayOfWeek(dateInfo);
+
+  const weekNumber = Math.floor((ordinalDate - weekIndex + 10) / 7);
+
+  if (weekNumber < 1) return weeksOfYear(dateInfo.year - 1);
+  if (weekNumber > weeksOfYear(dateInfo.year)) return 1;
+
+  return weekNumber;
 }
 
 // const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;

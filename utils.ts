@@ -140,3 +140,22 @@ export function dayOfYear(dateInfo: DateInfo): number {
   const diff = utc - startOfYear;
   return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
 }
+
+export function dayOfWeek(dateInfo: DateInfo): number {
+  const jsDate = dateInfoToJSDate(dateInfo);
+  const jsWeekNumber = jsDate.getUTCDay();
+  if (jsWeekNumber === 0) return 7;
+  return jsWeekNumber;
+}
+
+export function weeksOfYear(year: number): number {
+  const p1 = (year +
+      Math.floor(year / 4) -
+      Math.floor(year / 100) +
+      Math.floor(year / 400)) %
+      7,
+    last = year - 1,
+    p2 = (last + Math.floor(last / 4) - Math.floor(last / 100) +
+      Math.floor(last / 400)) % 7;
+  return p1 === 4 || p2 === 3 ? 53 : 52;
+}
