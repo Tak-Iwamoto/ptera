@@ -381,6 +381,31 @@ Deno.test("isoToDateInfo", () => {
         milliseconds: undefined,
       },
     },
+    {
+      input: "2021-150",
+      expected: {
+        year: 2021,
+        month: 5,
+        day: 30,
+      },
+    },
+    {
+      input: "2021-001",
+      expected: {
+        year: 2021,
+        month: 1,
+        day: 1,
+      },
+    },
+    // TODO: 不正な値ができてしまうのでvalidation
+    // {
+    //   input: "2021-366",
+    //   expected: {
+    //     year: 2021,
+    //     month: 12,
+    //     day: 1,
+    //   },
+    // },
   ];
 
   tests.forEach((t) => {

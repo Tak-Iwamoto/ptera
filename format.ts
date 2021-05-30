@@ -5,6 +5,7 @@ import {
   dayOfYear,
   formatToThreeDigits,
   formatToTwoDigits,
+  ordinalToDateInfo,
   parseInteger,
   weeksOfYear,
 } from "./utils.ts";
@@ -196,7 +197,7 @@ function isoWeekNumber(dateInfo: DateInfo) {
   return weekNumber;
 }
 
-// const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;
+const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;
 // const isoWeekRegex = /(\d{4})-W(\d{2})/;
 // const weekDayRegex = /[1-7]/;
 const isoDateRegex = /(\d{4})-?(\d{2})-?(\d{2})/;
@@ -239,6 +240,15 @@ export function extractIsoOffset(isoFormat: string): number {
   return isUTC ? 0 : toMillisecondsOffset(offsetHours, offsetMinutes);
 }
 
+export function isoOrdinalToDateInfo(isoFormat: string): DateInfo | undefined {
+  const matches = isoOrdinalDateRegex.exec(isoFormat);
+  const year = parseInteger(matches?.[1]);
+  const ordinalDate = parseInteger(matches?.[2]);
+  if (!year) return undefined;
+  if (!ordinalDate) return undefined;
+  return ordinalToDateInfo(year, ordinalDate);
+}
+
 function toMillisecondsOffset(
   offsetHours: number,
   offsetMinutes: number,
@@ -250,6 +260,9 @@ function toMillisecondsOffset(
 }
 
 export function isoToDateInfo(isoFormat: string): DateInfo | undefined {
+  const fromISOOrdinal = isoOrdinalToDateInfo(isoFormat);
+  if (fromISOOrdinal) return fromISOOrdinal;
+
   const isoDate = extractIsoDate(isoFormat);
   const isoTime = extractIsoTime(isoFormat);
 

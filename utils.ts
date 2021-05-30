@@ -179,7 +179,7 @@ export function ordinalToDateInfo(year: number, ordinal: number): DateInfo {
   ];
 
   const table = isLeapYear(year) ? leapFirstDayOfMonth : nonLeapFirstDayOfMonth;
-  const monthIndex = table.findIndex((i) => i < ordinal);
+  const monthIndex = table.map((i) => i < ordinal).lastIndexOf(true);
   const day = ordinal - table[monthIndex];
   return { year, month: monthIndex + 1, day };
 }
