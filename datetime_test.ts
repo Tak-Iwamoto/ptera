@@ -370,3 +370,16 @@ Deno.test("toDateArray", () => {
     assertEquals(new Datetime(t.input).toDateArray(), t.expected);
   });
 });
+
+Deno.test("toUnixTimestamp", () => {
+  const tests = [
+    {
+      input: "2021-05-30T06:03:40",
+      expected: 1622354620000,
+    },
+    { input: "2021-07-21T23:00:59", expected: 1626908459000 },
+  ];
+  tests.forEach((t) => {
+    assertEquals(new Datetime(t.input).toUTCUnixTimestamp(), t.expected);
+  });
+});
