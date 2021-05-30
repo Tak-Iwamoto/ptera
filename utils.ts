@@ -163,6 +163,7 @@ export function ordinalToDateInfo(year: number, ordinal: number): DateInfo {
     304,
     334,
   ];
+
   const leapFirstDayOfMonth = [
     0,
     31,
@@ -182,6 +183,12 @@ export function ordinalToDateInfo(year: number, ordinal: number): DateInfo {
   const monthIndex = table.map((i) => i < ordinal).lastIndexOf(true);
   const day = ordinal - table[monthIndex];
   return { year, month: monthIndex + 1, day };
+}
+
+export function isValidOrdinalDate(year: number, ordinal: number): boolean {
+  const days = daysInYear(year);
+
+  return isBetween(ordinal, 1, days);
 }
 
 export function weeksOfYear(year: number): number {

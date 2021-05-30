@@ -5,6 +5,7 @@ import {
   dayOfYear,
   formatToThreeDigits,
   formatToTwoDigits,
+  isValidOrdinalDate,
   ordinalToDateInfo,
   parseInteger,
   weeksOfYear,
@@ -246,6 +247,7 @@ export function isoOrdinalToDateInfo(isoFormat: string): DateInfo | undefined {
   const ordinalDate = parseInteger(matches?.[2]);
   if (!year) return undefined;
   if (!ordinalDate) return undefined;
+  if (!isValidOrdinalDate(year, ordinalDate)) return undefined;
   return ordinalToDateInfo(year, ordinalDate);
 }
 

@@ -318,7 +318,7 @@ Deno.test("formatDate MMMM yyyy", () => {
 Deno.test("isoToDateInfo", () => {
   type Test = {
     input: string;
-    expected: DateInfo;
+    expected: DateInfo | undefined;
   };
   const tests: Test[] = [
     {
@@ -397,15 +397,10 @@ Deno.test("isoToDateInfo", () => {
         day: 1,
       },
     },
-    // TODO: 不正な値ができてしまうのでvalidation
-    // {
-    //   input: "2021-366",
-    //   expected: {
-    //     year: 2021,
-    //     month: 12,
-    //     day: 1,
-    //   },
-    // },
+    {
+      input: "2021-366",
+      expected: undefined,
+    },
   ];
 
   tests.forEach((t) => {
