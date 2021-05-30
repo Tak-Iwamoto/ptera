@@ -1,7 +1,6 @@
 import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
 import {
-  dateInfoToJSDate,
   dayOfWeek,
   dayOfYear,
   formatToThreeDigits,

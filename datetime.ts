@@ -88,6 +88,10 @@ export class Datetime {
     return formatDate(this.toDateInfo(), "YYYY-MM-dd");
   }
 
+  toISOWeekDate(): string {
+    return formatDate(this.toDateInfo(), "YYYY-'W'")
+  }
+
   toISOTime(): string {
     return formatDate(this.toDateInfo(), "HH:mm:ss.S");
   }

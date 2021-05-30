@@ -148,6 +148,42 @@ export function dayOfWeek(dateInfo: DateInfo): number {
   return jsWeekNumber;
 }
 
+export function ordinalToDateInfo(year: number, ordinal: number): DateInfo {
+  const nonLeapFirstDayOfMonth = [
+    0,
+    31,
+    59,
+    90,
+    120,
+    151,
+    181,
+    212,
+    243,
+    273,
+    304,
+    334,
+  ];
+  const leapFirstDayOfMonth = [
+    0,
+    31,
+    60,
+    91,
+    121,
+    152,
+    182,
+    213,
+    244,
+    274,
+    305,
+    335,
+  ];
+
+  const table = isLeapYear(year) ? leapFirstDayOfMonth : nonLeapFirstDayOfMonth;
+  const monthIndex = table.findIndex((i) => i < ordinal);
+  const day = ordinal - table[monthIndex];
+  return { year, month: monthIndex + 1, day };
+}
+
 export function weeksOfYear(year: number): number {
   const p1 = (year +
       Math.floor(year / 4) -
