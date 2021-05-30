@@ -263,6 +263,67 @@ Deno.test("toISODate", () => {
   });
 });
 
+Deno.test("toISOWeekDate", () => {
+  type Test = {
+    input: Datetime;
+    expected: string;
+  };
+  const tests: Test[] = [
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 5,
+        day: 15,
+        hours: 12,
+        minutes: 30,
+        seconds: 30,
+        milliseconds: 999,
+      }),
+      expected: "2021-W19-6",
+    },
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 7,
+        day: 21,
+        hours: 23,
+        minutes: 0,
+        seconds: 59,
+        milliseconds: 0,
+      }),
+      expected: "2021-W29-3",
+    },
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 1,
+        day: 1,
+        hours: 23,
+        minutes: 0,
+        seconds: 59,
+        milliseconds: 0,
+      }),
+      expected: "2021-W53-5",
+    },
+    {
+      input: new Datetime({
+        year: 2021,
+        month: 12,
+        day: 31,
+        hours: 23,
+        minutes: 0,
+        seconds: 59,
+        milliseconds: 0,
+      }),
+      expected: "2021-W52-5",
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(t.input.toISOWeekDate(), t.expected);
+  });
+});
+
 Deno.test("toISOTime", () => {
   type Test = {
     input: Datetime;
