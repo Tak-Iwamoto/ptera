@@ -1,3 +1,4 @@
+import { MILLISECONDS_IN_DAY } from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
 
 export function dateInfoToArray(
@@ -126,4 +127,16 @@ export function formatToThreeDigits(n: number): string {
   if (n <= 9) return `00${n}`;
   if (n <= 99) return `0${n}`;
   return n.toString();
+}
+
+export function dayOfYear(dateInfo: DateInfo): number {
+  const jsDate = dateInfoToJSDate(dateInfo);
+  const utc = jsDate.getTime();
+
+  jsDate.setUTCMonth(0, 1);
+  jsDate.setUTCHours(0, 0, 0, 0);
+  const startOfYear = jsDate.getTime();
+
+  const diff = utc - startOfYear;
+  return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
 }

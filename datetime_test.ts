@@ -383,3 +383,15 @@ Deno.test("toUnixTimestamp", () => {
     assertEquals(new Datetime(t.input).toUTCUnixTimestamp(), t.expected);
   });
 });
+
+Deno.test("dayOfYear", () => {
+  const tests = [
+    { input: "2021-01-01", expected: 1 },
+    { input: "2021-02-23", expected: 54 },
+    { input: "2021-12-31", expected: 365 },
+    { input: "2020-12-31", expected: 366 },
+  ];
+  tests.forEach((t) => {
+    assertEquals(new Datetime(t.input).dayOfYear(), t.expected);
+  });
+});

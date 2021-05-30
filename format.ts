@@ -1,11 +1,8 @@
-import {
-  MILLISECONDS_IN_DAY,
-  MILLISECONDS_IN_HOUR,
-  MILLISECONDS_IN_MINUTE,
-} from "./constants.ts";
+import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
 import {
   dateInfoToJSDate,
+  dayOfYear,
   formatToThreeDigits,
   formatToTwoDigits,
   parseInteger,
@@ -185,18 +182,6 @@ function weekNumber(dateInfo: DateInfo): number {
   const jsWeekNumber = jsDate.getUTCDay();
   if (jsWeekNumber === 0) return 7;
   return jsWeekNumber;
-}
-
-function dayOfYear(dateInfo: DateInfo): number {
-  const jsDate = dateInfoToJSDate(dateInfo);
-  const utc = jsDate.getTime();
-
-  jsDate.setUTCMonth(0, 1);
-  jsDate.setUTCHours(0, 0, 0, 0);
-  const startOfYear = jsDate.getTime();
-
-  const diff = utc - startOfYear;
-  return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
 }
 
 // const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;

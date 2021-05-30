@@ -7,6 +7,7 @@ import {
   dateInfoToArray,
   dateInfoToJSDate,
   dateInfoToTS,
+  dayOfYear,
   formatToTwoDigits,
   isValidDate,
 } from "./utils.ts";
@@ -115,6 +116,10 @@ export class Datetime {
 
   toUTCUnixTimestamp(): number {
     return dateInfoToTS(this.toDateInfo());
+  }
+
+  dayOfYear(): number {
+    return dayOfYear(this.toDateInfo());
   }
 
   offset(): number {
