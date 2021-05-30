@@ -2,8 +2,13 @@ import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { tzOffset } from "./timezone_offset.ts";
-import { Config, DateInfo, Timezone } from "./types.ts";
-import { dateInfoToJSDate, formatToTwoDigits, isValidDate } from "./utils.ts";
+import { Config, DateInfo, DateInfoArray, Timezone } from "./types.ts";
+import {
+  dateInfoToArray,
+  dateInfoToJSDate,
+  formatToTwoDigits,
+  isValidDate,
+} from "./utils.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 
 function isDateInfo(arg: DateInfo | string): arg is DateInfo {
@@ -101,6 +106,10 @@ export class Datetime {
 
   toJSDate(): Date {
     return dateInfoToJSDate(this.toDateInfo());
+  }
+
+  toDateArray(): DateInfoArray {
+    return dateInfoToArray(this.toDateInfo());
   }
 
   offset(): number {

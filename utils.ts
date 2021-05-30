@@ -1,7 +1,8 @@
 import { DateInfo, OptionalNumber } from "./types.ts";
 
-function dateInfoToArray(
+export function dateInfoToArray(
   dateInfo: DateInfo,
+  option?: { jsMonth: boolean },
 ): [
   number,
   number,
@@ -14,7 +15,7 @@ function dateInfoToArray(
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   return [
     year,
-    month - 1,
+    option?.jsMonth ? month - 1 : month,
     day ?? 0,
     hours ?? 0,
     minutes ?? 0,
@@ -23,8 +24,8 @@ function dateInfoToArray(
   ];
 }
 
-export function dateInfoToTS(date: DateInfo) {
-  return Date.UTC(...dateInfoToArray(date));
+export function dateInfoToTS(dateInfo: DateInfo) {
+  return Date.UTC(...dateInfoToArray(dateInfo, { jsMonth: true }));
 }
 
 export function dateInfoToJSDate(
@@ -112,9 +113,8 @@ export function isValidDate(dateInfo: DateInfo): boolean {
   return true;
 }
 
-export function parseInteger(value: string): number | undefined {
-  const isValid = Boolean(value);
-  if (!isValid) return undefined;
+export function parseInteger(value: string | undefined): number | undefined {
+  if (!value) return undefined;
   return parseInt(value, 10);
 }
 

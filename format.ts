@@ -1,5 +1,9 @@
-import { MILLISECONDS_IN_DAY } from "./constants.ts";
-import { DateInfo } from "./types.ts";
+import {
+  MILLISECONDS_IN_DAY,
+  MILLISECONDS_IN_HOUR,
+  MILLISECONDS_IN_MINUTE,
+} from "./constants.ts";
+import { DateInfo, OptionalNumber } from "./types.ts";
 import { dateInfoToJSDate, formatToTwoDigits, parseInteger } from "./utils.ts";
 
 const dateFormatType = [
@@ -187,31 +191,72 @@ function utcDayOfYear(date: Date): number {
 // const weekDayRegex = /[1-7]/;
 const isoDateRegex = /(\d{4})-?(\d{2})-?(\d{2})/;
 const isoTimeRegex = /(\d{2}):?(\d{2}):?(\d{2})(?:.)?(\d{3})?/;
-const isoOffsetRegex = /(?:(Z)|([+-]\d\d)(?::?(\d\d))?)?/;
-const isoRegex = RegExp(
-  `${isoDateRegex.source}T${isoTimeRegex.source}${isoOffsetRegex.source}`,
-);
+// const isoOffsetRegex = /(?:(Z)|([+-]\d\d)(?::?(\d\d))?)?/
+const isoOffsetRegex = /(Z)|([+-]\d{2})(?::?(\d{2}))/;
 
-function regexArrayToDateInfo(
-  regexArray: RegExpExecArray,
-): DateInfo | undefined {
-  const year = parseInteger(regexArray[1]);
-  const month = parseInteger(regexArray[2]);
+function extractIsoDate(
+  isoFormat: string,
+): { year: number; month: number; day: OptionalNumber } | undefined {
+  const matches = isoDateRegex.exec(isoFormat);
+  const year = parseInteger(matches?.[1]);
+  const month = parseInteger(matches?.[2]);
   if (!year) return undefined;
   if (!month) return undefined;
-  return {
-    year,
-    month,
-    day: parseInteger(regexArray[3]),
-    hours: parseInteger(regexArray[4]),
-    minutes: parseInteger(regexArray[5]),
-    seconds: parseInteger(regexArray[6]),
-    milliseconds: parseInteger(regexArray[7]),
-  };
+  return { year, month, day: parseInteger(matches?.[3]) };
+}
+
+function extractIsoTime(
+  isoFormat: string,
+): {
+  hours: OptionalNumber;
+  minutes: OptionalNumber;
+  seconds: OptionalNumber;
+  milliseconds: OptionalNumber;
+} {
+  const matches = isoTimeRegex.exec(isoFormat);
+  const hours = parseInteger(matches?.[1]);
+  const minutes = parseInteger(matches?.[2]);
+  const seconds = parseInteger(matches?.[3]);
+  const milliseconds = parseInteger(matches?.[4]);
+  return { hours, minutes, seconds, milliseconds };
+}
+
+export function extractIsoOffset(isoFormat: string): number {
+  const matches = isoOffsetRegex.exec(isoFormat);
+  const isUTC = matches?.[1] === "Z";
+  const offsetHours = parseInteger(matches?.[2]) ?? 0;
+  const offsetMinutes = parseInteger(matches?.[3]) ?? 0;
+  return isUTC ? 0 : toMillisecondsOffset(offsetHours, offsetMinutes);
+}
+
+function toMillisecondsOffset(
+  offsetHours: number,
+  offsetMinutes: number,
+): number {
+  const isNegative = offsetHours < 0;
+  const offset = Math.abs(offsetHours) * MILLISECONDS_IN_HOUR +
+    offsetMinutes * MILLISECONDS_IN_MINUTE;
+  return isNegative ? -offset : offset;
 }
 
 export function isoToDateInfo(isoFormat: string): DateInfo | undefined {
-  const matches = isoRegex.exec(isoFormat);
-  if (!matches) return undefined;
-  return regexArrayToDateInfo(matches);
+  const isoDate = extractIsoDate(isoFormat);
+  const isoTime = extractIsoTime(isoFormat);
+
+  if (!isoDate) return undefined;
+  return {
+    year: isoDate.year,
+    month: isoDate.month,
+    day: isoDate.day,
+    hours: isoTime.hours,
+    minutes: isoTime.minutes,
+    seconds: isoTime.seconds,
+    milliseconds: isoTime.milliseconds,
+  };
 }
+
+// console.log(extractIsoDate('2017-04-20T11:32:59.999-04:00'))
+// console.log(extractIsoTime('2017-04-20T11:32:59.999-04:00'))
+// console.log(extractIsoOffset('2017-04-20T11:32:00.000-04:00'))
+// console.log(extractIsoOffset('2017-04-20T11:32:00.000Z'))
+// console.log(extractIsoOffset('2017-04-20T11:32:00.000+09:00'))
