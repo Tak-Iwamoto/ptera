@@ -6,6 +6,7 @@ import { Config, DateInfo, DateInfoArray, Timezone } from "./types.ts";
 import {
   dateInfoToArray,
   dateInfoToJSDate,
+  dateInfoToTS,
   formatToTwoDigits,
   isValidDate,
 } from "./utils.ts";
@@ -110,6 +111,10 @@ export class Datetime {
 
   toDateArray(): DateInfoArray {
     return dateInfoToArray(this.toDateInfo());
+  }
+
+  toUTCUnixTimestamp(): number {
+    return dateInfoToTS(this.toDateInfo());
   }
 
   offset(): number {
