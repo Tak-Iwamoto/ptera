@@ -1,8 +1,3 @@
-export interface Datetime {
-  offset(): number;
-  utc(): string;
-}
-
 export type DateInfo = {
   year: number;
   month: number;
@@ -23,7 +18,9 @@ export type DateInfoArray = [
   OptionalNumber,
 ];
 
-export type Config = {
+export type DateArg = DateInfo | number[] | string;
+
+export type Option = {
   timezone: Timezone;
 };
 

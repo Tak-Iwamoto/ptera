@@ -2,8 +2,9 @@ import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { tzOffset } from "./timezone_offset.ts";
-import { Config, DateInfo, DateInfoArray, Timezone } from "./types.ts";
+import { DateArg, DateInfo, DateInfoArray, Option, Timezone } from "./types.ts";
 import {
+  dateArrayToDateInfo,
   dateInfoToArray,
   dateInfoToJSDate,
   dateInfoToTS,
@@ -13,13 +14,21 @@ import {
 } from "./utils.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 
-function isDateInfo(arg: DateInfo | string): arg is DateInfo {
+function isDateInfo(arg: DateArg): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;
 }
 
-function parseArg(date: DateInfo | string): DateInfo {
+function isDateArray(arg: DateArg): arg is number[] {
+  return (Array.isArray(arg));
+}
+
+function parseArg(date: DateArg): DateInfo {
   if (isDateInfo(date)) {
     return date;
+  }
+
+  if (isDateArray(date)) {
+    return dateArrayToDateInfo(date);
   } else {
     // TODO: 現状iso8601のみ
     const parsed = isoToDateInfo(date);
@@ -37,7 +46,7 @@ export class Datetime {
   readonly milliseconds?: number;
   readonly timezone: Timezone;
 
-  constructor(date: DateInfo | string, config?: Config) {
+  constructor(date: DateArg, config?: Option) {
     const { year, month, day, hours, minutes, seconds, milliseconds } =
       parseArg(date);
     this.year = year;

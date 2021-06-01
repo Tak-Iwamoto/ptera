@@ -1,5 +1,5 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
-import { DateInfo, OptionalNumber } from "./types.ts";
+import { DateArray, DateInfo, OptionalNumber } from "./types.ts";
 
 export function dateInfoToArray(
   dateInfo: DateInfo,
@@ -45,6 +45,17 @@ export function jsDateToDateInfo(jsDate: Date): DateInfo {
     seconds: jsDate.getUTCSeconds(),
     milliseconds: jsDate.getUTCMilliseconds(),
   };
+}
+
+export function dateArrayToDateInfo(dateArray: DateArray): DateInfo {
+  const year = dateArray[0];
+  const month = dateArray[1];
+  const day = dateArray[2];
+  const hours = dateArray[3];
+  const minutes = dateArray[4];
+  const seconds = dateArray[5];
+  const milliseconds = dateArray[6];
+  return { year, month, day, hours, minutes, seconds, milliseconds };
 }
 
 export function isLeapYear(year: number): boolean {
@@ -112,6 +123,12 @@ export function isValidDate(dateInfo: DateInfo): boolean {
   }
 
   return true;
+}
+
+export function isValidOrdinalDate(year: number, ordinal: number): boolean {
+  const days = daysInYear(year);
+
+  return isBetween(ordinal, 1, days);
 }
 
 export function parseInteger(value: string | undefined): number | undefined {
@@ -183,12 +200,6 @@ export function ordinalToDateInfo(year: number, ordinal: number): DateInfo {
   const monthIndex = table.map((i) => i < ordinal).lastIndexOf(true);
   const day = ordinal - table[monthIndex];
   return { year, month: monthIndex + 1, day };
-}
-
-export function isValidOrdinalDate(year: number, ordinal: number): boolean {
-  const days = daysInYear(year);
-
-  return isBetween(ordinal, 1, days);
 }
 
 export function weeksOfYear(year: number): number {
