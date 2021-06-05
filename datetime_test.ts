@@ -456,3 +456,40 @@ Deno.test("dayOfYear", () => {
     assertEquals(new Datetime(t.input).dayOfYear(), t.expected);
   });
 });
+
+Deno.test("add", () => {
+  const tests = [
+    {
+      initialDate: "2021-05-31T23:00:00",
+      addDate: { year: 1 },
+      expected: {
+        year: 2022,
+        month: 5,
+        day: 31,
+        hours: 23,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      },
+    },
+    {
+      initialDate: "2021-05-31T23:00:00",
+      addDate: { month: 1 },
+      expected: {
+        year: 2021,
+        month: 6,
+        day: 30,
+        hours: 23,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      },
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      new Datetime(t.initialDate).add(t.addDate).toDateInfo(),
+      t.expected,
+    );
+  });
+});

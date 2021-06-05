@@ -18,10 +18,15 @@ export type DateInfoArray = [
   OptionalNumber,
 ];
 
-export type DateArg = DateInfo | number[] | string;
+export type DateArg = DateInfo | number[] | string | number;
 
 export type Option = {
   timezone: Timezone;
+};
+
+export type DateDiff = Partial<DateInfo> & {
+  quarter?: number;
+  weeks?: number;
 };
 
 export type OptionalNumber = number | undefined;
