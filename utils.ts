@@ -1,5 +1,5 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
-import { DateArray, DateInfo, OptionalNumber } from "./types.ts";
+import { DateInfo, OptionalNumber } from "./types.ts";
 
 export function dateInfoToArray(
   dateInfo: DateInfo,
@@ -47,7 +47,7 @@ export function jsDateToDateInfo(jsDate: Date): DateInfo {
   };
 }
 
-export function dateArrayToDateInfo(dateArray: DateArray): DateInfo {
+export function dateArrayToDateInfo(dateArray: number[]): DateInfo {
   const year = dateArray[0];
   const month = dateArray[1];
   const day = dateArray[2];

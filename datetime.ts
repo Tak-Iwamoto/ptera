@@ -45,17 +45,31 @@ export class Datetime {
   readonly seconds?: number;
   readonly milliseconds?: number;
   readonly timezone: Timezone;
+  readonly valid: boolean;
 
   constructor(date: DateArg, config?: Option) {
+    const dateInfo = parseArg(date);
     const { year, month, day, hours, minutes, seconds, milliseconds } =
-      parseArg(date);
-    this.year = year;
-    this.month = month;
-    this.day = day;
-    this.hours = hours;
-    this.minutes = minutes;
-    this.seconds = seconds;
-    this.milliseconds = milliseconds;
+      dateInfo;
+    this.valid = isValidDate(dateInfo);
+
+    if (this.valid) {
+      this.year = year;
+      this.month = month;
+      this.day = day;
+      this.hours = hours;
+      this.minutes = minutes;
+      this.seconds = seconds;
+      this.milliseconds = milliseconds;
+    } else {
+      this.year = NaN;
+      this.month = NaN;
+      this.day = undefined;
+      this.hours = undefined;
+      this.minutes = undefined;
+      this.seconds = undefined;
+      this.milliseconds = undefined;
+    }
     this.timezone = config?.timezone ?? "UTC";
   }
 
