@@ -569,3 +569,143 @@ Deno.test("substract", () => {
     );
   });
 });
+
+Deno.test('diffInDays', () => {
+  const tests = [
+    {
+      baseDate: "2021-02-01T23:00:00",
+      compareDate: "2021-02-02T23:00:00",
+      expected: 1
+    },
+    {
+      baseDate: "2021-02-01T23:00:00",
+      compareDate: "2021-03-01T23:00:00",
+      expected: 28
+    },
+    {
+      baseDate: "2021-01-01T23:00:00",
+      compareDate: "2021-12-31T23:00:00",
+      expected: 364
+    },
+    {
+      baseDate: "2020-01-01T23:00:00",
+      compareDate: "2020-12-31T23:00:00",
+      expected: 365
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      Datetime.diffInDays(new Datetime(t.baseDate), new Datetime(t.compareDate)),
+      t.expected,
+    );
+  });
+})
+
+Deno.test('diffInHours', () => {
+  const tests = [
+    {
+      baseDate: "2021-02-01T23:00:00",
+      compareDate: "2021-02-02T23:00:00",
+      expected: 24
+    },
+    {
+      baseDate: "2021-02-01T00:00:00",
+      compareDate: "2021-02-03T02:00:00",
+      expected: 50
+    },
+    {
+      baseDate: "2021-01-01T00:00:00",
+      compareDate: "2021-01-01T02:00:00",
+      expected: 2
+    },
+    {
+      baseDate: "2021-01-01T00:00:00",
+      compareDate: "2021-01-01T00:30:00",
+      expected: 0
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      Datetime.diffInHours(new Datetime(t.baseDate), new Datetime(t.compareDate)),
+      t.expected,
+    );
+  });
+})
+
+Deno.test('diffInMinutes', () => {
+  const tests = [
+    {
+      baseDate: "2021-02-01T23:00:00",
+      compareDate: "2021-02-02T23:00:00",
+      expected: 1440
+    },
+    {
+      baseDate: "2021-02-01T00:00:00",
+      compareDate: "2021-02-01T02:30:00",
+      expected: 150
+    },
+    {
+      baseDate: "2021-01-01T00:00:00",
+      compareDate: "2021-01-01T00:30:59",
+      expected: 30
+    },
+    {
+      baseDate: "2021-01-01T00:00:00",
+      compareDate: "2021-01-01T02:30:30",
+      expected: 150
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      Datetime.diffInMinutes(new Datetime(t.baseDate), new Datetime(t.compareDate)),
+      t.expected,
+    );
+  });
+})
+
+Deno.test('diffInSeconds', () => {
+  const tests = [
+    {
+      baseDate: "2021-02-01T23:00:00",
+      compareDate: "2021-02-01T23:00:50",
+      expected: 50
+    },
+    {
+      baseDate: "2021-02-01T00:00:00",
+      compareDate: "2021-02-01T00:30:00",
+      expected: 1800
+    },
+    {
+      baseDate: "2021-01-01T00:00:00",
+      compareDate: "2021-01-01T00:30:59",
+      expected: 1859
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      Datetime.diffInSeconds(new Datetime(t.baseDate), new Datetime(t.compareDate)),
+      t.expected,
+    );
+  });
+})
+
+Deno.test('diffInMilliSeconds', () => {
+  const tests = [
+    {
+      baseDate: "2021-02-01T23:00:00",
+      compareDate: "2021-02-01T23:00:50:999",
+      expected: 50999
+    },
+    {
+      baseDate: "2021-02-01T00:00:00",
+      compareDate: "2021-02-01T00:30:100",
+      expected: 1810000
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      Datetime.diffInMilliseconds(new Datetime(t.baseDate), new Datetime(t.compareDate)),
+      t.expected,
+    );
+  });
+})
