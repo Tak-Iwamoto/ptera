@@ -3,11 +3,11 @@ import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { tzOffset } from "./timezone_offset.ts";
 import {
+  Config,
   DateArg,
   DateDiff,
   DateInfo,
   DateInfoArray,
-  Option,
   Timezone,
 } from "./types.ts";
 import {
@@ -116,9 +116,9 @@ export class Datetime {
   readonly milliseconds?: number;
   readonly timezone: Timezone;
   readonly valid: boolean;
-  readonly #config?: Option;
+  readonly #config?: Config;
 
-  constructor(date: DateArg, config?: Option) {
+  constructor(date: DateArg, config?: Config) {
     const dateInfo = parseArg(date);
     const { year, month, day, hours, minutes, seconds, milliseconds } =
       dateInfo;
