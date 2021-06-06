@@ -485,10 +485,86 @@ Deno.test("add", () => {
         milliseconds: 0,
       },
     },
+    {
+      initialDate: "2021-02-01T23:00:00",
+      addDate: { hours: 1 },
+      expected: {
+        year: 2021,
+        month: 2,
+        day: 2,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      },
+    },
+    {
+      initialDate: "2021-02-01T23:00:00",
+      addDate: { minutes: 65 },
+      expected: {
+        year: 2021,
+        month: 2,
+        day: 2,
+        hours: 0,
+        minutes: 5,
+        seconds: 0,
+        milliseconds: 0,
+      },
+    },
   ];
   tests.forEach((t) => {
     assertEquals(
       new Datetime(t.initialDate).add(t.addDate).toDateInfo(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("substract", () => {
+  const tests = [
+    {
+      initialDate: "2021-02-01T23:00:00",
+      subDate: { year: 20 },
+      expected: {
+        year: 2001,
+        month: 2,
+        day: 1,
+        hours: 23,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      },
+    },
+    {
+      initialDate: "2021-02-28T23:00:00",
+      subDate: { month: 2 },
+      expected: {
+        year: 2020,
+        month: 12,
+        day: 28,
+        hours: 23,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      },
+    },
+    {
+      initialDate: "2021-02-01T23:00:00",
+      subDate: { day: 1 },
+      expected: {
+        year: 2021,
+        month: 1,
+        day: 31,
+        hours: 23,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      },
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      new Datetime(t.initialDate).substract(t.subDate).toDateInfo(),
       t.expected,
     );
   });

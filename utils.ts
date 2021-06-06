@@ -85,7 +85,7 @@ export function daysInMonth(year: number, month: number): number {
   if (modMonth === 2) {
     return isLeapYear(modYear) ? 29 : 28;
   } else {
-    return [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+    return [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][modMonth - 1];
   }
 }
 
@@ -230,7 +230,10 @@ export function weeksOfYear(year: number): number {
 }
 
 export function truncNumber(n?: number): number {
-  return n ? Math.trunc(n) : 0;
+  if (!n || isNaN(n)) {
+    return 0;
+  }
+  return Math.trunc(n);
 }
 
 export function floorMod(x: number, n: number) {

@@ -68,17 +68,15 @@ function adjustedUnixTimeStamp(
     milliseconds: baseMilliseconds,
   } = baseDateInfo;
 
+  const sign = option.positive ? 1 : -1;
+
   const diffYear = diff.year && diff.quarter
     ? truncNumber(diff.year + diff.quarter * 3)
     : truncNumber(diff.year);
-  const adjustedYear = option.positive
-    ? baseYear + diffYear
-    : baseYear - diffYear;
+  const adjustedYear = baseYear + (sign * diffYear);
 
   const diffMonth = truncNumber(diff.month);
-  const adjustedMonth = option.positive
-    ? baseMonth + diffMonth
-    : baseMonth - diffMonth;
+  const adjustedMonth = baseMonth + (sign * diffMonth);
 
   const diffDay = diff.day && diff.weeks
     ? truncNumber(diff.day + diff.weeks * 7)
@@ -88,35 +86,24 @@ function adjustedUnixTimeStamp(
   const diffSeconds = truncNumber(diff.seconds);
   const diffMilliSeconds = truncNumber(diff.milliseconds);
 
-  if (option.positive) {
-    return dateInfoToTS({
-      year: adjustedYear,
-      month: adjustedMonth,
-      day: baseDay
-        ? Math.min(baseDay, daysInMonth(adjustedYear, adjustedMonth)) + diffDay
-        : diffDay,
-      hours: baseHours ? baseHours + diffHours : diffHours,
-      minutes: baseMinutes ? baseMinutes + diffMinutes : diffMinutes,
-      seconds: baseSeconds ? baseSeconds + diffSeconds : diffSeconds,
-      milliseconds: baseMilliseconds
-        ? baseMilliseconds + diffMilliSeconds
-        : diffMilliSeconds,
-    });
-  } else {
-    return dateInfoToTS({
-      year: adjustedYear,
-      month: adjustedMonth,
-      day: baseDay
-        ? Math.min(baseDay, daysInMonth(adjustedYear, adjustedMonth)) - diffDay
-        : undefined,
-      hours: baseHours ? baseHours - diffHours : undefined,
-      minutes: baseMinutes ? baseMinutes - diffMinutes : undefined,
-      seconds: baseSeconds ? baseSeconds - diffSeconds : undefined,
-      milliseconds: baseMilliseconds
-        ? baseMilliseconds - diffMilliSeconds
-        : undefined,
-    });
-  }
+  return dateInfoToTS({
+    year: adjustedYear,
+    month: adjustedMonth,
+    day: baseDay
+      ? Math.min(baseDay, daysInMonth(adjustedYear, adjustedMonth)) +
+        (sign * diffDay)
+      : (sign * diffDay),
+    hours: baseHours ? baseHours + (sign * diffHours) : (sign * diffHours),
+    minutes: baseMinutes
+      ? baseMinutes + (sign * diffMinutes)
+      : (sign * diffMinutes),
+    seconds: baseSeconds
+      ? baseSeconds + (sign * diffSeconds)
+      : (sign * diffSeconds),
+    milliseconds: baseMilliseconds
+      ? baseMilliseconds + (sign * diffMilliSeconds)
+      : (sign * diffMilliSeconds),
+  });
 }
 
 export class Datetime {
