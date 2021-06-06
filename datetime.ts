@@ -213,7 +213,7 @@ export class Datetime {
     return dateInfoToArray(this.toDateInfo());
   }
 
-  toUTCUnixTimestamp(): number {
+  toTimestamp(): number {
     return dateInfoToTS(this.toDateInfo());
   }
 
