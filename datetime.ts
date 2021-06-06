@@ -2,15 +2,25 @@ import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { tzOffset } from "./timezone_offset.ts";
-import { DateArg, DateInfo, DateInfoArray, Option, Timezone } from "./types.ts";
+import {
+  DateArg,
+  DateDiff,
+  DateInfo,
+  DateInfoArray,
+  Option,
+  Timezone,
+} from "./types.ts";
 import {
   dateArrayToDateInfo,
   dateInfoToArray,
   dateInfoToJSDate,
   dateInfoToTS,
   dayOfYear,
+  daysInMonth,
   formatToTwoDigits,
   isValidDate,
+  truncNumber,
+  tsToDateInfo,
 } from "./utils.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 
@@ -23,6 +33,10 @@ function isDateArray(arg: DateArg): arg is number[] {
 }
 
 function parseArg(date: DateArg): DateInfo {
+  if (typeof date === "number") {
+    return tsToDateInfo(date);
+  }
+
   if (isDateInfo(date)) {
     return date;
   }
@@ -36,6 +50,62 @@ function parseArg(date: DateArg): DateInfo {
     return parsed;
   }
 }
+
+function adjustedUnixTimeStamp(
+  baseDateInfo: DateInfo,
+  diff: DateDiff,
+  option: {
+    positive: boolean;
+  },
+) {
+  const {
+    year: baseYear,
+    month: baseMonth,
+    day: baseDay,
+    hours: baseHours,
+    minutes: baseMinutes,
+    seconds: baseSeconds,
+    milliseconds: baseMilliseconds,
+  } = baseDateInfo;
+
+  const sign = option.positive ? 1 : -1;
+
+  const diffYear = diff.year && diff.quarter
+    ? truncNumber(diff.year + diff.quarter * 3)
+    : truncNumber(diff.year);
+  const adjustedYear = baseYear + (sign * diffYear);
+
+  const diffMonth = truncNumber(diff.month);
+  const adjustedMonth = baseMonth + (sign * diffMonth);
+
+  const diffDay = diff.day && diff.weeks
+    ? truncNumber(diff.day + diff.weeks * 7)
+    : truncNumber(diff.day);
+  const diffHours = truncNumber(diff.hours);
+  const diffMinutes = truncNumber(diff.minutes);
+  const diffSeconds = truncNumber(diff.seconds);
+  const diffMilliSeconds = truncNumber(diff.milliseconds);
+
+  return dateInfoToTS({
+    year: adjustedYear,
+    month: adjustedMonth,
+    day: baseDay
+      ? Math.min(baseDay, daysInMonth(adjustedYear, adjustedMonth)) +
+        (sign * diffDay)
+      : (sign * diffDay),
+    hours: baseHours ? baseHours + (sign * diffHours) : (sign * diffHours),
+    minutes: baseMinutes
+      ? baseMinutes + (sign * diffMinutes)
+      : (sign * diffMinutes),
+    seconds: baseSeconds
+      ? baseSeconds + (sign * diffSeconds)
+      : (sign * diffSeconds),
+    milliseconds: baseMilliseconds
+      ? baseMilliseconds + (sign * diffMilliSeconds)
+      : (sign * diffMilliSeconds),
+  });
+}
+
 export class Datetime {
   readonly year: number;
   readonly month: number;
@@ -46,6 +116,7 @@ export class Datetime {
   readonly milliseconds?: number;
   readonly timezone: Timezone;
   readonly valid: boolean;
+  readonly #config?: Option;
 
   constructor(date: DateArg, config?: Option) {
     const dateInfo = parseArg(date);
@@ -64,12 +135,13 @@ export class Datetime {
     } else {
       this.year = NaN;
       this.month = NaN;
-      this.day = undefined;
-      this.hours = undefined;
-      this.minutes = undefined;
-      this.seconds = undefined;
-      this.milliseconds = undefined;
+      this.day = NaN;
+      this.hours = NaN;
+      this.minutes = NaN;
+      this.seconds = NaN;
+      this.milliseconds = NaN;
     }
+    this.#config = config;
     this.timezone = config?.timezone ?? "UTC";
   }
 
@@ -147,6 +219,23 @@ export class Datetime {
 
   dayOfYear(): number {
     return dayOfYear(this.toDateInfo());
+  }
+
+  add(addDateDiff: DateDiff): Datetime {
+    const dt = new Datetime(
+      adjustedUnixTimeStamp(this.toDateInfo(), addDateDiff, { positive: true }),
+      this.#config,
+    );
+    return dt;
+  }
+
+  substract(subDateInfo: Partial<DateInfo>): Datetime {
+    return new Datetime(
+      adjustedUnixTimeStamp(this.toDateInfo(), subDateInfo, {
+        positive: false,
+      }),
+      this.#config,
+    );
   }
 
   offset(): number {

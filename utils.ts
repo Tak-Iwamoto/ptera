@@ -25,8 +25,21 @@ export function dateInfoToArray(
   ];
 }
 
-export function dateInfoToTS(dateInfo: DateInfo) {
+export function dateInfoToTS(dateInfo: DateInfo): number {
   return Date.UTC(...dateInfoToArray(dateInfo, { jsMonth: true }));
+}
+
+export function tsToDateInfo(ts: number): DateInfo {
+  const date = new Date(ts);
+  return {
+    year: date.getUTCFullYear(),
+    month: date.getUTCMonth() + 1,
+    day: date.getUTCDate(),
+    hours: date.getUTCHours(),
+    minutes: date.getUTCMinutes(),
+    seconds: date.getUTCSeconds(),
+    milliseconds: date.getUTCMilliseconds(),
+  };
 }
 
 export function dateInfoToJSDate(
@@ -67,10 +80,12 @@ export function daysInYear(year: number): number {
 }
 
 export function daysInMonth(year: number, month: number): number {
-  if (month == 2) {
-    return isLeapYear(year) ? 29 : 28;
+  const modMonth = floorMod(month - 1, 12) + 1,
+    modYear = year + (month - modMonth) / 12;
+  if (modMonth === 2) {
+    return isLeapYear(modYear) ? 29 : 28;
   } else {
-    return [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+    return [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][modMonth - 1];
   }
 }
 
@@ -212,4 +227,15 @@ export function weeksOfYear(year: number): number {
     p2 = (last + Math.floor(last / 4) - Math.floor(last / 100) +
       Math.floor(last / 400)) % 7;
   return p1 === 4 || p2 === 3 ? 53 : 52;
+}
+
+export function truncNumber(n?: number): number {
+  if (!n || isNaN(n)) {
+    return 0;
+  }
+  return Math.trunc(n);
+}
+
+export function floorMod(x: number, n: number) {
+  return x - n * Math.floor(x / n);
 }
