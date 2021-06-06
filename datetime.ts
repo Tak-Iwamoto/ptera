@@ -1,4 +1,8 @@
-import { MILLISECONDS_IN_DAY, MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
+import {
+  MILLISECONDS_IN_DAY,
+  MILLISECONDS_IN_HOUR,
+  MILLISECONDS_IN_MINUTE,
+} from "./constants.ts";
 import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { tzOffset } from "./timezone_offset.ts";
@@ -145,24 +149,40 @@ export class Datetime {
     this.timezone = config?.timezone ?? "UTC";
   }
 
+  static now(config?: Config): Datetime {
+    const utcDatetime = new Datetime(new Date().getTime());
+    if (config?.timezone) {
+      return utcDatetime.toZonedTime(config?.timezone);
+    }
+    return utcDatetime;
+  }
+
   static diffInMilliseconds(baseDate: Datetime, compareDate: Datetime): number {
-    return Math.abs(baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp())
+    return Math.abs(
+      baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
+    );
   }
 
   static diffInSeconds(baseDate: Datetime, compareDate: Datetime): number {
-    return Math.floor(this.diffInMilliseconds(baseDate, compareDate) / 1000)
+    return Math.floor(this.diffInMilliseconds(baseDate, compareDate) / 1000);
   }
 
   static diffInMinutes(baseDate: Datetime, compareDate: Datetime): number {
-    return Math.floor(this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_MINUTE)
+    return Math.floor(
+      this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
+    );
   }
 
   static diffInHours(baseDate: Datetime, compareDate: Datetime): number {
-    return Math.floor(this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_HOUR)
+    return Math.floor(
+      this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
+    );
   }
 
   static diffInDays(baseDate: Datetime, compareDate: Datetime): number {
-    return Math.floor(this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_DAY)
+    return Math.floor(
+      this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_DAY,
+    );
   }
 
   static isValidZone(tz: string): boolean {
