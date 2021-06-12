@@ -638,7 +638,7 @@ Deno.test("diffInHours", () => {
   });
 });
 
-Deno.test("diffInMinutes", () => {
+Deno.test("diffInMin", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
@@ -663,7 +663,7 @@ Deno.test("diffInMinutes", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      Datetime.diffInMinutes(
+      Datetime.diffInMin(
         new Datetime(t.baseDate),
         new Datetime(t.compareDate),
       ),
@@ -672,7 +672,7 @@ Deno.test("diffInMinutes", () => {
   });
 });
 
-Deno.test("diffInSeconds", () => {
+Deno.test("diffInSec", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
@@ -692,7 +692,7 @@ Deno.test("diffInSeconds", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      Datetime.diffInSeconds(
+      Datetime.diffInSec(
         new Datetime(t.baseDate),
         new Datetime(t.compareDate),
       ),
@@ -701,7 +701,7 @@ Deno.test("diffInSeconds", () => {
   });
 });
 
-Deno.test("diffInMilliSeconds", () => {
+Deno.test("diffInMillisec", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
@@ -716,7 +716,7 @@ Deno.test("diffInMilliSeconds", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      Datetime.diffInMilliseconds(
+      Datetime.diffInMillisec(
         new Datetime(t.baseDate),
         new Datetime(t.compareDate),
       ),

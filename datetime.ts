@@ -5,6 +5,7 @@ import {
 } from "./constants.ts";
 import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
+import { getLocalName, utcToLocalTime } from "./local_time.ts";
 import { tzOffset } from "./timezone_offset.ts";
 import {
   Config,
@@ -48,7 +49,6 @@ function parseArg(date: DateArg): DateInfo {
   if (isDateArray(date)) {
     return dateArrayToDateInfo(date);
   } else {
-    // TODO: 現状iso8601のみ
     const parsed = isoToDateInfo(date);
     if (!parsed) throw new Error("Invalid format");
     return parsed;
@@ -154,34 +154,36 @@ export class Datetime {
     if (config?.timezone) {
       return utcDatetime.toZonedTime(config?.timezone);
     }
-    return utcDatetime;
+
+    const localDate = utcToLocalTime(utcDatetime.toDateInfo());
+    return new Datetime(localDate, { timezone: getLocalName() as Timezone });
   }
 
-  static diffInMilliseconds(baseDate: Datetime, compareDate: Datetime): number {
+  static diffInMillisec(baseDate: Datetime, compareDate: Datetime): number {
     return Math.abs(
       baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
     );
   }
 
-  static diffInSeconds(baseDate: Datetime, compareDate: Datetime): number {
-    return Math.floor(this.diffInMilliseconds(baseDate, compareDate) / 1000);
+  static diffInSec(baseDate: Datetime, compareDate: Datetime): number {
+    return Math.floor(this.diffInMillisec(baseDate, compareDate) / 1000);
   }
 
-  static diffInMinutes(baseDate: Datetime, compareDate: Datetime): number {
+  static diffInMin(baseDate: Datetime, compareDate: Datetime): number {
     return Math.floor(
-      this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
+      this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
     );
   }
 
   static diffInHours(baseDate: Datetime, compareDate: Datetime): number {
     return Math.floor(
-      this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
+      this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
     );
   }
 
   static diffInDays(baseDate: Datetime, compareDate: Datetime): number {
     return Math.floor(
-      this.diffInMilliseconds(baseDate, compareDate) / MILLISECONDS_IN_DAY,
+      this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_DAY,
     );
   }
 
@@ -232,7 +234,10 @@ export class Datetime {
   }
 
   toUTC(): Datetime {
-    const utcDateInfo = zonedTimeToUTC(this.toDateInfo(), this.timezone);
+    const utcDateInfo = zonedTimeToUTC(
+      this.toDateInfo(),
+      this.timezone,
+    );
     return new Datetime(utcDateInfo, { timezone: "UTC" });
   }
 
