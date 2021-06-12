@@ -5,7 +5,12 @@ import {
   dayOfYear,
   formatToThreeDigits,
   formatToTwoDigits,
+  isValidHour,
+  isValidMillisec,
+  isValidMinutes,
+  isValidMonth,
   isValidOrdinalDate,
+  isValidSec,
   ordinalToDateInfo,
   parseInteger,
   weeksOfYear,
@@ -42,6 +47,21 @@ const dateFormatType = [
 
 type DateFormatType = typeof dateFormatType[number];
 
+const shortMonths = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 const months = [
   "January",
   "February",
@@ -55,7 +75,17 @@ const months = [
   "October",
   "November",
   "December",
-] as const;
+];
+
+const shortWeekdays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 const weekdays = [
   "Monday",
@@ -65,9 +95,12 @@ const weekdays = [
   "Friday",
   "Saturday",
   "Sunday",
-] as const;
+];
 
-export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
+export function formatDateInfo(
+  dateInfo: DateInfo,
+  formatStr: DateFormatType,
+): string {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   const twelveHours = (hours || 0) % 12;
 
@@ -129,7 +162,7 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
   }
 }
 
-export function parseFormat(
+function parseFormat(
   format: string,
 ): { value: string; isLiteral: boolean }[] {
   const result = [];
@@ -178,7 +211,7 @@ export function formatDate(dateInfo: DateInfo, formatStr: string) {
     if (f.isLiteral) {
       result += f.value;
     } else if (isFormatDateType(f.value)) {
-      result += format(dateInfo, f.value);
+      result += formatDateInfo(dateInfo, f.value);
     } else {
       result += f.value;
     }
@@ -279,3 +312,180 @@ export function isoToDateInfo(isoFormat: string): DateInfo | undefined {
     milliseconds: isoTime.milliseconds,
   };
 }
+
+export function parseFromFormat(dateStr: string, format: string) {
+  const parsedFormat = parseFormat(format);
+
+  let cursor = 0;
+  let currentValue = "";
+  const result: { [key: string]: string } = {};
+
+  for (const f of parsedFormat) {
+    if (isFormatDateType(f.value)) {
+      result[formatTypeName(f.value)] = dateStr.slice(
+        cursor,
+        cursor + f.value.length,
+      );
+    }
+
+    cursor += f.value.length;
+  }
+  return result;
+}
+
+function isFinishedFormat(value: string, format: string) {
+  switch (format) {
+    case "YY":
+    case "YYYY":
+    case "M":
+    case "MM":
+    case "d":
+    case "dd":
+    case "H":
+    case "HH":
+    case "h":
+    case "hh":
+    case "m":
+    case "mm":
+    case "s":
+    case "ss":
+      return value.length === format.length;
+    case "MMM":
+      return shortMonths.includes(value);
+    case "MMMM":
+      return months.includes(value);
+    case "D":
+    case "DDD":
+      return "dayOfYear";
+    case "S":
+      return value.length === 3;
+    case "w":
+      return "weekNumber";
+    case "www":
+      return "shortWeekdays";
+    case "wwww":
+      return "weekdays";
+    case "W":
+    case "WW":
+      return "isoWeekNumber";
+    case "a":
+      ["AM", "PM"].includes(value);
+    default:
+      return format;
+  }
+}
+
+function formatTypeName(format: string) {
+  switch (format) {
+    case "YY":
+    case "YYYY":
+      return "year";
+    case "M":
+    case "MM":
+      return "month";
+    case "MMM":
+    case "MMMM":
+      return "monthString";
+    case "d":
+    case "dd":
+      return "day";
+    case "D":
+    case "DDD":
+      return "dayOfYear";
+    case "H":
+    case "HH":
+      return "hour";
+    case "h":
+    case "hh":
+      return "twelveHour";
+    case "m":
+    case "mm":
+      return "minute";
+    case "s":
+    case "ss":
+      return "second";
+    case "S":
+      return "millisecond";
+    case "w":
+      return "weekNumber";
+    case "www":
+      return "shortWeekdays";
+    case "wwww":
+      return "weekdays";
+    case "W":
+    case "WW":
+      return "isoWeekNumber";
+    case "a":
+      return "AMPM";
+    default:
+      return format;
+  }
+}
+
+function parseStringByFormat(value: string, format: DateFormatType) {
+  const parsedAsInt = parseInteger(value);
+  switch (format) {
+    case "YY":
+    case "YYYY":
+      return parseInteger(value);
+    case "M":
+    case "MM":
+      if (!parsedAsInt || !isValidMonth(parsedAsInt)) return undefined;
+      return parsedAsInt;
+    case "MMM":
+      if (!shortMonths.includes(value)) return undefined;
+      return value;
+    case "MMMM":
+      if (!months.includes(value)) return undefined;
+      return value;
+    case "d":
+    case "dd":
+      if (!parsedAsInt || parsedAsInt < 1 || parsedAsInt > 31) return undefined;
+      return parsedAsInt;
+    case "D":
+    case "DDD":
+      if (!parsedAsInt || parsedAsInt < 1 || parsedAsInt > 366) {
+        return undefined;
+      }
+      return parsedAsInt;
+    case "H":
+    case "HH":
+      if (!parsedAsInt || isValidHour(parsedAsInt)) return undefined;
+      return parsedAsInt;
+    case "h":
+    case "hh":
+      if (!parsedAsInt || isValidHour(parsedAsInt)) return undefined;
+      return (parsedAsInt % 12);
+    case "m":
+    case "mm":
+      if (!parsedAsInt || isValidMinutes(parsedAsInt)) return undefined;
+      return parsedAsInt;
+    case "s":
+    case "ss":
+      if (!parsedAsInt || isValidSec(parsedAsInt)) return undefined;
+      return parsedAsInt;
+    case "S":
+      if (!parsedAsInt || isValidMillisec(parsedAsInt)) return undefined;
+      return parsedAsInt;
+    case "w":
+      if (!parsedAsInt || parsedAsInt < 1 || parsedAsInt > 7) return undefined;
+      return parsedAsInt;
+    case "www":
+      if (!shortWeekdays.includes(value)) return undefined;
+      return value;
+    case "wwww":
+      if (!weekdays.includes(value)) return undefined;
+      return value;
+    case "W":
+    case "WW":
+      if (!parsedAsInt || parsedAsInt < 1 || parsedAsInt > 53) return undefined;
+      return parsedAsInt;
+    case "a":
+      if (value === "AM" || value === "PM") return value;
+      return undefined;
+    default:
+      throw new TypeError("Please input valid format.");
+  }
+}
+
+console.log(parseFromFormat("January-2021-04-22", "MMMM-YYYY-MM-dd"));
