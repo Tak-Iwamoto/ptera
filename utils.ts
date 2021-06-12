@@ -105,36 +105,55 @@ export function isBetween(n: number, min: number, max: number): boolean {
   return min <= n && n <= max;
 }
 
+export function isValidMonth(month: number): boolean {
+  return isBetween(month, 1, 12);
+}
+
+export function isValidDay(day: number, year: number, month: number): boolean {
+  return isBetween(day, 1, daysInMonth(year, month));
+}
+
+export function isValidHour(hours: number): boolean {
+  return isBetween(hours, 1, 23);
+}
+
+export function isValidMinutes(minutes: number): boolean {
+  return isBetween(minutes, 0, 59);
+}
+
+export function isValidSec(sec: number): boolean {
+  return isBetween(sec, 0, 59);
+}
+
+export function isValidMillisec(milliseconds: number): boolean {
+  return isBetween(milliseconds, 0, 999);
+}
+
 export function isValidDate(dateInfo: DateInfo): boolean {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
 
-  const isValidMonth = isBetween(month, 1, 12);
-  if (!isValidMonth) return false;
+  if (!isValidMonth(month)) return false;
 
   if (day) {
-    const isValidDay = isBetween(day, 1, daysInMonth(year, month));
-    if (!isValidDay) return false;
+    if (!isValidDay(day, year, month)) return false;
   }
 
   if (hours) {
-    const isValidHour = isBetween(hours, 1, 23) ||
+    const isValid = isValidHour(hours) ||
       (hours === 24 && minutes === 0 && seconds === 0 && milliseconds === 0);
-    if (!isValidHour) return false;
+    if (!isValid) return false;
   }
 
   if (minutes) {
-    const isValidMinutes = isBetween(minutes, 0, 59);
-    if (!isValidMinutes) return false;
+    if (!isValidMinutes(minutes)) return false;
   }
 
   if (seconds) {
-    const isValidSeconds = isBetween(seconds, 0, 59);
-    if (!isValidSeconds) return false;
+    if (!isValidSec(seconds)) return false;
   }
 
   if (milliseconds) {
-    const isValidMilliseconds = isBetween(milliseconds, 0, 999);
-    if (!isValidMilliseconds) return false;
+    if (!isValidMillisec(milliseconds)) return false;
   }
 
   return true;
@@ -148,7 +167,11 @@ export function isValidOrdinalDate(year: number, ordinal: number): boolean {
 
 export function parseInteger(value: string | undefined): number | undefined {
   if (!value) return undefined;
-  return parseInt(value, 10);
+
+  const parsed = parseInt(value, 10);
+  if (isNaN(parsed)) return undefined;
+
+  return parsed;
 }
 
 export function formatToTwoDigits(n: number): string {
