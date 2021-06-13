@@ -75,8 +75,8 @@ export function tsToDate(ts: number): DateInfo {
 
 export function dayOfYearToDate(dayOfYear: number, year: number) {
   const ts = adjustedUnixTimeStamp({ year, month: 1, day: 1 }, {
-    day: dayOfYear,
-  }, { positive: false });
+    day: dayOfYear - 1,
+  }, { positive: true });
   return tsToDate(ts);
 }
 

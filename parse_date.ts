@@ -1,4 +1,5 @@
 import { DateFormatType, isFormatDateType } from "./constants.ts";
+import { dayOfYearToDate } from "./convert.ts";
 import { DateInfo } from "./types.ts";
 import { monthStrToNumber, parseInteger } from "./utils.ts";
 
@@ -8,7 +9,7 @@ const formatsRegex =
 const oneDigitRegex = /\d/;
 const fourDigitsRegex = /\d\d\d\d/;
 const oneToTwoDigitRegex = /\d\d?/;
-const oneToThreeDigitRegex = /\d\d\d?/;
+const oneToThreeDigitRegex = /\d{1,3}/;
 const offsetRegex = /[+-]\d\d:?(\d\d)?|Z/g;
 const literalRegex = /\d*[^\s\d-_:/()]+/;
 const monthRegex =
@@ -109,7 +110,17 @@ function hashToDate(
     month = monthStrToNumber(hash["shortMonthStr"]);
   }
   month = parseInteger((hash["month"]));
-  const day = parseInteger((hash["day"]));
+  let day = parseInteger((hash["day"]));
+
+  if (hash["dayOfYear"]) {
+    const dayOfYear = parseInteger(hash["dayOfYear"]);
+    const date = dayOfYear && year
+      ? dayOfYearToDate(dayOfYear, year)
+      : undefined;
+    month = date?.month;
+    day = date?.day;
+  }
+
   const hours = parseInteger((hash["hours"]));
   const minutes = parseInteger((hash["minutes"]));
   const seconds = parseInteger((hash["seconds"]));

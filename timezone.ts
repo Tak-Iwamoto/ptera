@@ -45,21 +45,6 @@ function partsOffset(dtf: Intl.DateTimeFormat, date: Date): TokenizeDate {
   };
 }
 
-// 必要になった時にコメント解除する
-// function hackyOffset(dtf: Intl.DateTimeFormat, date: Date): TokenizeDate {
-//   const formatted = dtf.format(date).replace(/\u200E/g, "")
-//   const parsed = /(\d+)\/(\d+)\/(\d+),? (\d+):(\d+):(\d+)/.exec(formatted)
-
-//   return {
-//     year: parseInt(parsed?.[3] as string, 10),
-//     month: parseInt(parsed?.[1] as string, 10),
-//     day: parseInt(parsed?.[2] as string, 10),
-//     hour: parseInt(parsed?.[4] as string, 10),
-//     minute: parseInt(parsed?.[5] as string, 10),
-//     second: parseInt(parsed?.[6] as string, 10),
-//   }
-// }
-
 const cache: Map<string, Intl.DateTimeFormat> = new Map();
 function getDateTimeFormat(tz: Timezone): Intl.DateTimeFormat {
   if (!cache.get(tz)) {
