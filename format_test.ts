@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { format, formatDate, isoToDateInfo, parseFormat } from "./format.ts";
+import { formatDate, formatDateInfo, isoToDateInfo } from "./format.ts";
 import { DateInfo } from "./types.ts";
 
 Deno.test("format: YY", () => {
@@ -11,7 +11,7 @@ Deno.test("format: YY", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "YY"), t.expected);
+    assertEquals(formatDateInfo(t.input, "YY"), t.expected);
   });
 });
 
@@ -24,7 +24,7 @@ Deno.test("format: YYYY", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "YYYY"), t.expected);
+    assertEquals(formatDateInfo(t.input, "YYYY"), t.expected);
   });
 });
 
@@ -35,7 +35,7 @@ Deno.test("format: M", () => {
     { input: { year: 2021, month: 11, day: 15 }, expected: "11" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "M"), t.expected);
+    assertEquals(formatDateInfo(t.input, "M"), t.expected);
   });
 });
 
@@ -46,7 +46,7 @@ Deno.test("format: MM", () => {
     { input: { year: 2021, month: 11, day: 15 }, expected: "11" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "MM"), t.expected);
+    assertEquals(formatDateInfo(t.input, "MM"), t.expected);
   });
 });
 
@@ -57,7 +57,7 @@ Deno.test("format: MMM", () => {
     { input: { year: 2021, month: 11, day: 15 }, expected: "Nov" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "MMM"), t.expected);
+    assertEquals(formatDateInfo(t.input, "MMM"), t.expected);
   });
 });
 
@@ -68,7 +68,7 @@ Deno.test("format: MMMM", () => {
     { input: { year: 2021, month: 11, day: 15 }, expected: "November" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "MMMM"), t.expected);
+    assertEquals(formatDateInfo(t.input, "MMMM"), t.expected);
   });
 });
 
@@ -78,7 +78,7 @@ Deno.test("format: d", () => {
     { input: { year: 2021, month: 11, day: 15 }, expected: "15" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "d"), t.expected);
+    assertEquals(formatDateInfo(t.input, "d"), t.expected);
   });
 });
 
@@ -88,7 +88,7 @@ Deno.test("format: dd", () => {
     { input: { year: 2021, month: 11, day: 15 }, expected: "15" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "dd"), t.expected);
+    assertEquals(formatDateInfo(t.input, "dd"), t.expected);
   });
 });
 
@@ -99,7 +99,7 @@ Deno.test("format: D", () => {
     { input: { year: 2020, month: 12, day: 31, hours: 21 }, expected: "366" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "D"), t.expected);
+    assertEquals(formatDateInfo(t.input, "D"), t.expected);
   });
 });
 
@@ -111,7 +111,7 @@ Deno.test("format: DDD", () => {
     { input: { year: 2020, month: 12, day: 31, hours: 21 }, expected: "366" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "DDD"), t.expected);
+    assertEquals(formatDateInfo(t.input, "DDD"), t.expected);
   });
 });
 
@@ -123,7 +123,7 @@ Deno.test("format: H", () => {
     { input: { year: 2020, month: 12, day: 31, hours: 23 }, expected: "23" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "H"), t.expected);
+    assertEquals(formatDateInfo(t.input, "H"), t.expected);
   });
 });
 
@@ -135,7 +135,7 @@ Deno.test("format: HH", () => {
     { input: { year: 2020, month: 12, day: 31, hours: 23 }, expected: "23" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "HH"), t.expected);
+    assertEquals(formatDateInfo(t.input, "HH"), t.expected);
   });
 });
 
@@ -147,7 +147,7 @@ Deno.test("format: h", () => {
     { input: { year: 2020, month: 12, day: 31, hours: 23 }, expected: "11" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "h"), t.expected);
+    assertEquals(formatDateInfo(t.input, "h"), t.expected);
   });
 });
 
@@ -159,7 +159,7 @@ Deno.test("format: hh", () => {
     { input: { year: 2020, month: 12, day: 31, hours: 23 }, expected: "11" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "hh"), t.expected);
+    assertEquals(formatDateInfo(t.input, "hh"), t.expected);
   });
 });
 
@@ -183,7 +183,7 @@ Deno.test("format: m", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "m"), t.expected);
+    assertEquals(formatDateInfo(t.input, "m"), t.expected);
   });
 });
 
@@ -207,7 +207,7 @@ Deno.test("format: mm", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "mm"), t.expected);
+    assertEquals(formatDateInfo(t.input, "mm"), t.expected);
   });
 });
 
@@ -219,7 +219,7 @@ Deno.test("format: a", () => {
     { input: { year: 2020, month: 12, day: 31, hours: 23 }, expected: "PM" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "a"), t.expected);
+    assertEquals(formatDateInfo(t.input, "a"), t.expected);
   });
 });
 
@@ -231,7 +231,7 @@ Deno.test("format: w", () => {
     { input: { year: 2021, month: 5, day: 7 }, expected: "5" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "w"), t.expected);
+    assertEquals(formatDateInfo(t.input, "w"), t.expected);
   });
 });
 
@@ -243,7 +243,7 @@ Deno.test("format: www", () => {
     { input: { year: 2021, month: 5, day: 7 }, expected: "Fri" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "www"), t.expected);
+    assertEquals(formatDateInfo(t.input, "www"), t.expected);
   });
 });
 
@@ -255,7 +255,7 @@ Deno.test("format: wwww", () => {
     { input: { year: 2021, month: 5, day: 7 }, expected: "Friday" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "wwww"), t.expected);
+    assertEquals(formatDateInfo(t.input, "wwww"), t.expected);
   });
 });
 
@@ -269,7 +269,7 @@ Deno.test("format: W", () => {
     { input: { year: 2020, month: 12, day: 31 }, expected: "53" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "W"), t.expected);
+    assertEquals(formatDateInfo(t.input, "W"), t.expected);
   });
 });
 
@@ -283,30 +283,8 @@ Deno.test("format: WW", () => {
     { input: { year: 2020, month: 12, day: 31 }, expected: "53" },
   ];
   tests.forEach((t) => {
-    assertEquals(format(t.input, "WW"), t.expected);
+    assertEquals(formatDateInfo(t.input, "WW"), t.expected);
   });
-});
-
-Deno.test("parseFormat 'MMMM yyyy'", () => {
-  const result = parseFormat("MMMM yyyy");
-  assertEquals(result, [{ value: "MMMM", isLiteral: false }, {
-    value: " ",
-    isLiteral: false,
-  }, { value: "yyyy", isLiteral: false }]);
-});
-
-Deno.test("parseFormat 'hh 'aaa' WWW'", () => {
-  const result = parseFormat("hh 'aaa' WWW");
-  assertEquals(result, [
-    { value: "hh", isLiteral: false },
-    {
-      value: " ",
-      isLiteral: false,
-    },
-    { value: "aaa", isLiteral: true },
-    { value: " ", isLiteral: false },
-    { value: "WWW", isLiteral: false },
-  ]);
 });
 
 Deno.test("formatDate MMMM yyyy", () => {

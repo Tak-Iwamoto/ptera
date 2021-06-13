@@ -1,73 +1,27 @@
-import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
+import {
+  DateFormatType,
+  isFormatDateType,
+  longMonths,
+  MILLISECONDS_IN_HOUR,
+  MILLISECONDS_IN_MINUTE,
+  shortMonths,
+  weekdays,
+} from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
 import {
-  dayOfWeek,
-  dayOfYear,
   formatToThreeDigits,
   formatToTwoDigits,
   isValidOrdinalDate,
-  ordinalToDateInfo,
   parseInteger,
   weeksOfYear,
 } from "./utils.ts";
 
-const dateFormatType = [
-  "YY",
-  "YYYY",
-  "M",
-  "MM",
-  "MMM",
-  "MMMM",
-  "d",
-  "dd",
-  "D",
-  "DDD",
-  "H",
-  "HH",
-  "h",
-  "hh",
-  "m",
-  "mm",
-  "s",
-  "ss",
-  "S",
-  "SSS",
-  "w",
-  "www",
-  "wwww",
-  "W",
-  "WW",
-  "a",
-] as const;
+import { dateToDayOfWeek, dateToDayOfYear, ordinalToDate } from "./convert.ts";
 
-type DateFormatType = typeof dateFormatType[number];
-
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-] as const;
-
-const weekdays = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-] as const;
-
-export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
+export function formatDateInfo(
+  dateInfo: DateInfo,
+  formatStr: DateFormatType,
+): string {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   const twelveHours = (hours || 0) % 12;
 
@@ -81,17 +35,17 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
     case "MM":
       return month <= 9 ? `0${month}` : month.toString();
     case "MMM":
-      return months[month - 1].slice(0, 3);
+      return shortMonths[month - 1];
     case "MMMM":
-      return months[month - 1];
+      return longMonths[month - 1];
     case "d":
       return day ? day.toString() : "0";
     case "dd":
       return day ? formatToTwoDigits(day) : "00";
     case "D":
-      return dayOfYear(dateInfo).toString();
+      return dateToDayOfYear(dateInfo).toString();
     case "DDD":
-      return formatToThreeDigits(dayOfYear(dateInfo));
+      return formatToThreeDigits(dateToDayOfYear(dateInfo));
     case "H":
       return String(hours);
     case "HH":
@@ -113,11 +67,11 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
         ? milliseconds <= 99 ? "0${milliseconds}" : milliseconds.toString()
         : "000";
     case "w":
-      return dayOfWeek(dateInfo).toString();
+      return dateToDayOfWeek(dateInfo).toString();
     case "www":
-      return weekdays[dayOfWeek(dateInfo) - 1].slice(0, 3);
+      return weekdays[dateToDayOfWeek(dateInfo) - 1].slice(0, 3);
     case "wwww":
-      return weekdays[dayOfWeek(dateInfo) - 1];
+      return weekdays[dateToDayOfWeek(dateInfo) - 1];
     case "W":
       return isoWeekNumber(dateInfo).toString();
     case "WW":
@@ -129,7 +83,7 @@ export function format(dateInfo: DateInfo, formatStr: DateFormatType): string {
   }
 }
 
-export function parseFormat(
+function parseFormat(
   format: string,
 ): { value: string; isLiteral: boolean }[] {
   const result = [];
@@ -166,10 +120,6 @@ export function parseFormat(
   return result;
 }
 
-function isFormatDateType(format: string): format is DateFormatType {
-  return dateFormatType.includes(format as DateFormatType);
-}
-
 export function formatDate(dateInfo: DateInfo, formatStr: string) {
   const parsedFormat = parseFormat(formatStr);
   let result = "";
@@ -178,7 +128,7 @@ export function formatDate(dateInfo: DateInfo, formatStr: string) {
     if (f.isLiteral) {
       result += f.value;
     } else if (isFormatDateType(f.value)) {
-      result += format(dateInfo, f.value);
+      result += formatDateInfo(dateInfo, f.value);
     } else {
       result += f.value;
     }
@@ -187,8 +137,8 @@ export function formatDate(dateInfo: DateInfo, formatStr: string) {
 }
 
 function isoWeekNumber(dateInfo: DateInfo) {
-  const ordinalDate = dayOfYear(dateInfo);
-  const weekIndex = dayOfWeek(dateInfo);
+  const ordinalDate = dateToDayOfYear(dateInfo);
+  const weekIndex = dateToDayOfWeek(dateInfo);
 
   const weekNumber = Math.floor((ordinalDate - weekIndex + 10) / 7);
 
@@ -248,7 +198,7 @@ export function isoOrdinalToDateInfo(isoFormat: string): DateInfo | undefined {
   if (!year) return undefined;
   if (!ordinalDate) return undefined;
   if (!isValidOrdinalDate(year, ordinalDate)) return undefined;
-  return ordinalToDateInfo(year, ordinalDate);
+  return ordinalToDate(year, ordinalDate);
 }
 
 function toMillisecondsOffset(
