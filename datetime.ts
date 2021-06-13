@@ -7,7 +7,7 @@ import { adjustedUnixTimeStamp } from "./diff.ts";
 import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { getLocalName, utcToLocalTime } from "./local_time.ts";
-import { tzOffset } from "./timezone_offset.ts";
+import { tzOffset } from "./timezone.ts";
 import {
   Config,
   DateArg,

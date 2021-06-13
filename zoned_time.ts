@@ -1,4 +1,4 @@
-import { tzOffset } from "./timezone_offset.ts";
+import { tzOffset } from "./timezone.ts";
 import { DateInfo, Timezone } from "./types.ts";
 import { dateToJSDate, dateToTS, jsDateToDate } from "./convert.ts";
 

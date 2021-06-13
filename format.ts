@@ -16,7 +16,7 @@ import {
   weeksOfYear,
 } from "./utils.ts";
 
-import { dateToDayOfWeek, dateToDayOfYear, ordinalToDate } from "./convert.ts";
+import { dateToDayOfYear, dateToWeekNumber, ordinalToDate } from "./convert.ts";
 
 export function formatDateInfo(
   dateInfo: DateInfo,
@@ -67,11 +67,11 @@ export function formatDateInfo(
         ? milliseconds <= 99 ? "0${milliseconds}" : milliseconds.toString()
         : "000";
     case "w":
-      return dateToDayOfWeek(dateInfo).toString();
+      return dateToWeekNumber(dateInfo).toString();
     case "www":
-      return weekdays[dateToDayOfWeek(dateInfo) - 1].slice(0, 3);
+      return weekdays[dateToWeekNumber(dateInfo) - 1].slice(0, 3);
     case "wwww":
-      return weekdays[dateToDayOfWeek(dateInfo) - 1];
+      return weekdays[dateToWeekNumber(dateInfo) - 1];
     case "W":
       return isoWeekNumber(dateInfo).toString();
     case "WW":
@@ -138,7 +138,7 @@ export function formatDate(dateInfo: DateInfo, formatStr: string) {
 
 function isoWeekNumber(dateInfo: DateInfo) {
   const ordinalDate = dateToDayOfYear(dateInfo);
-  const weekIndex = dateToDayOfWeek(dateInfo);
+  const weekIndex = dateToWeekNumber(dateInfo);
 
   const weekNumber = Math.floor((ordinalDate - weekIndex + 10) / 7);
 

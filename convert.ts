@@ -80,7 +80,7 @@ export function dayOfYearToDate(dayOfYear: number, year: number) {
   return tsToDate(ts);
 }
 
-export function dateToDayOfWeek(dateInfo: DateInfo): number {
+export function dateToWeekNumber(dateInfo: DateInfo): number {
   const jsDate = dateToJSDate(dateInfo);
   const jsWeekNumber = jsDate.getUTCDay();
   if (jsWeekNumber === 0) return 7;
