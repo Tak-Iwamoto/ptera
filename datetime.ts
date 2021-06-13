@@ -3,6 +3,7 @@ import {
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
+import { adjustedUnixTimeStamp } from "./diff.ts";
 import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { getLocalName, utcToLocalTime } from "./local_time.ts";
@@ -15,18 +16,15 @@ import {
   DateInfoArray,
   Timezone,
 } from "./types.ts";
+import { formatToTwoDigits, isValidDate } from "./utils.ts";
 import {
-  dateArrayToDateInfo,
-  dateInfoToArray,
-  dateInfoToJSDate,
-  dateInfoToTS,
-  dayOfYear,
-  daysInMonth,
-  formatToTwoDigits,
-  isValidDate,
-  truncNumber,
-  tsToDateInfo,
-} from "./utils.ts";
+  dateArrayToDate,
+  dateToArray,
+  dateToJSDate,
+  dateToTS,
+} from "./convert.ts";
+
+import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 
 function isDateInfo(arg: DateArg): arg is DateInfo {
@@ -39,7 +37,7 @@ function isDateArray(arg: DateArg): arg is number[] {
 
 function parseArg(date: DateArg): DateInfo {
   if (typeof date === "number") {
-    return tsToDateInfo(date);
+    return tsToDate(date);
   }
 
   if (isDateInfo(date)) {
@@ -47,67 +45,12 @@ function parseArg(date: DateArg): DateInfo {
   }
 
   if (isDateArray(date)) {
-    return dateArrayToDateInfo(date);
+    return dateArrayToDate(date);
   } else {
     const parsed = isoToDateInfo(date);
     if (!parsed) throw new Error("Invalid format");
     return parsed;
   }
-}
-
-function adjustedUnixTimeStamp(
-  baseDateInfo: DateInfo,
-  diff: DateDiff,
-  option: {
-    positive: boolean;
-  },
-) {
-  const {
-    year: baseYear,
-    month: baseMonth,
-    day: baseDay,
-    hours: baseHours,
-    minutes: baseMinutes,
-    seconds: baseSeconds,
-    milliseconds: baseMilliseconds,
-  } = baseDateInfo;
-
-  const sign = option.positive ? 1 : -1;
-
-  const diffYear = diff.year && diff.quarter
-    ? truncNumber(diff.year + diff.quarter * 3)
-    : truncNumber(diff.year);
-  const adjustedYear = baseYear + (sign * diffYear);
-
-  const diffMonth = truncNumber(diff.month);
-  const adjustedMonth = baseMonth + (sign * diffMonth);
-
-  const diffDay = diff.day && diff.weeks
-    ? truncNumber(diff.day + diff.weeks * 7)
-    : truncNumber(diff.day);
-  const diffHours = truncNumber(diff.hours);
-  const diffMinutes = truncNumber(diff.minutes);
-  const diffSeconds = truncNumber(diff.seconds);
-  const diffMilliSeconds = truncNumber(diff.milliseconds);
-
-  return dateInfoToTS({
-    year: adjustedYear,
-    month: adjustedMonth,
-    day: baseDay
-      ? Math.min(baseDay, daysInMonth(adjustedYear, adjustedMonth)) +
-        (sign * diffDay)
-      : (sign * diffDay),
-    hours: baseHours ? baseHours + (sign * diffHours) : (sign * diffHours),
-    minutes: baseMinutes
-      ? baseMinutes + (sign * diffMinutes)
-      : (sign * diffMinutes),
-    seconds: baseSeconds
-      ? baseSeconds + (sign * diffSeconds)
-      : (sign * diffSeconds),
-    milliseconds: baseMilliseconds
-      ? baseMilliseconds + (sign * diffMilliSeconds)
-      : (sign * diffMilliSeconds),
-  });
 }
 
 export class Datetime {
@@ -251,19 +194,19 @@ export class Datetime {
   }
 
   toJSDate(): Date {
-    return dateInfoToJSDate(this.toDateInfo());
+    return dateToJSDate(this.toDateInfo());
   }
 
   toDateArray(): DateInfoArray {
-    return dateInfoToArray(this.toDateInfo());
+    return dateToArray(this.toDateInfo());
   }
 
   toTimestamp(): number {
-    return dateInfoToTS(this.toDateInfo());
+    return dateToTS(this.toDateInfo());
   }
 
   dayOfYear(): number {
-    return dayOfYear(this.toDateInfo());
+    return dateToDayOfYear(this.toDateInfo());
   }
 
   add(addDateDiff: DateDiff): Datetime {

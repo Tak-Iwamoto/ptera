@@ -1,17 +1,17 @@
 import { tzOffset } from "./timezone_offset.ts";
 import { DateInfo, Timezone } from "./types.ts";
-import { dateInfoToJSDate, dateInfoToTS, jsDateToDateInfo } from "./utils.ts";
+import { dateToJSDate, dateToTS, jsDateToDate } from "./convert.ts";
 
 export function utcToZonedTime(date: DateInfo, tz: Timezone): DateInfo {
-  const offset = tzOffset(dateInfoToJSDate(date), tz);
-  const d = new Date(dateInfoToTS(date) + offset);
-  return jsDateToDateInfo(d);
+  const offset = tzOffset(dateToJSDate(date), tz);
+  const d = new Date(dateToTS(date) + offset);
+  return jsDateToDate(d);
 }
 
 export function zonedTimeToUTC(date: DateInfo, tz: Timezone): DateInfo {
-  const offset = tzOffset(dateInfoToJSDate(date), tz);
-  const d = new Date(dateInfoToTS(date) - offset);
-  return jsDateToDateInfo(d);
+  const offset = tzOffset(dateToJSDate(date), tz);
+  const d = new Date(dateToTS(date) - offset);
+  return jsDateToDate(d);
 }
 
 export function diffOffset(
@@ -20,8 +20,8 @@ export function diffOffset(
   compareTZ: Timezone,
 ): number {
   if (baseTZ === compareTZ) return 0;
-  const baseOffset = tzOffset(dateInfoToJSDate(date), baseTZ);
-  const compareOffset = tzOffset(dateInfoToJSDate(date), compareTZ);
+  const baseOffset = tzOffset(dateToJSDate(date), baseTZ);
+  const compareOffset = tzOffset(dateToJSDate(date), compareTZ);
   return baseOffset - compareOffset;
 }
 
@@ -30,6 +30,6 @@ export function toOtherZonedTime(
   baseTZ: Timezone,
   compareTZ: Timezone,
 ): DateInfo {
-  const d = new Date(dateInfoToTS(date) - diffOffset(date, baseTZ, compareTZ));
-  return jsDateToDateInfo(d);
+  const d = new Date(dateToTS(date) - diffOffset(date, baseTZ, compareTZ));
+  return jsDateToDate(d);
 }

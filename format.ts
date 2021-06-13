@@ -9,15 +9,14 @@ import {
 } from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
 import {
-  dayOfWeek,
-  dayOfYear,
   formatToThreeDigits,
   formatToTwoDigits,
   isValidOrdinalDate,
-  ordinalToDateInfo,
   parseInteger,
   weeksOfYear,
 } from "./utils.ts";
+
+import { dateToDayOfWeek, dateToDayOfYear, ordinalToDate } from "./convert.ts";
 
 export function formatDateInfo(
   dateInfo: DateInfo,
@@ -44,9 +43,9 @@ export function formatDateInfo(
     case "dd":
       return day ? formatToTwoDigits(day) : "00";
     case "D":
-      return dayOfYear(dateInfo).toString();
+      return dateToDayOfYear(dateInfo).toString();
     case "DDD":
-      return formatToThreeDigits(dayOfYear(dateInfo));
+      return formatToThreeDigits(dateToDayOfYear(dateInfo));
     case "H":
       return String(hours);
     case "HH":
@@ -68,11 +67,11 @@ export function formatDateInfo(
         ? milliseconds <= 99 ? "0${milliseconds}" : milliseconds.toString()
         : "000";
     case "w":
-      return dayOfWeek(dateInfo).toString();
+      return dateToDayOfWeek(dateInfo).toString();
     case "www":
-      return weekdays[dayOfWeek(dateInfo) - 1].slice(0, 3);
+      return weekdays[dateToDayOfWeek(dateInfo) - 1].slice(0, 3);
     case "wwww":
-      return weekdays[dayOfWeek(dateInfo) - 1];
+      return weekdays[dateToDayOfWeek(dateInfo) - 1];
     case "W":
       return isoWeekNumber(dateInfo).toString();
     case "WW":
@@ -138,8 +137,8 @@ export function formatDate(dateInfo: DateInfo, formatStr: string) {
 }
 
 function isoWeekNumber(dateInfo: DateInfo) {
-  const ordinalDate = dayOfYear(dateInfo);
-  const weekIndex = dayOfWeek(dateInfo);
+  const ordinalDate = dateToDayOfYear(dateInfo);
+  const weekIndex = dateToDayOfWeek(dateInfo);
 
   const weekNumber = Math.floor((ordinalDate - weekIndex + 10) / 7);
 
@@ -199,7 +198,7 @@ export function isoOrdinalToDateInfo(isoFormat: string): DateInfo | undefined {
   if (!year) return undefined;
   if (!ordinalDate) return undefined;
   if (!isValidOrdinalDate(year, ordinalDate)) return undefined;
-  return ordinalToDateInfo(year, ordinalDate);
+  return ordinalToDate(year, ordinalDate);
 }
 
 function toMillisecondsOffset(

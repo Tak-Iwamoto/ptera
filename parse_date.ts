@@ -9,7 +9,6 @@ const oneDigitRegex = /\d/;
 const fourDigitsRegex = /\d\d\d\d/;
 const oneToTwoDigitRegex = /\d\d?/;
 const oneToThreeDigitRegex = /\d\d\d?/;
-const signedRegex = /[+-]?\d+/;
 const offsetRegex = /[+-]\d\d:?(\d\d)?|Z/g;
 const literalRegex = /\d*[^\s\d-_:/()]+/;
 const monthRegex =
@@ -68,6 +67,11 @@ function formatToRegexAndProperty(formatStr: DateFormatType): [RegExp, string] {
   }
 }
 
+export function parseDateStr(dateStr: string, format: string) {
+  const hash = dateStrToHash(dateStr, format);
+  return hashToDate(hash);
+}
+
 function dateStrToHash(
   dateStr: string,
   formatStr: string,
@@ -108,8 +112,9 @@ function hashToDate(
   const day = parseInteger((hash["day"]));
   const hours = parseInteger((hash["hours"]));
   const minutes = parseInteger((hash["minutes"]));
+  const seconds = parseInteger((hash["seconds"]));
   const milliseconds = parseInteger((hash["milliseconds"]));
-  const offset = parseOffset(hash["offset"]);
+  const offset = hash["offset"] ? parseOffset(hash["offset"]) : undefined;
   const isPM = hash["AMPM"] === "PM";
 
   return {
@@ -118,6 +123,7 @@ function hashToDate(
     day,
     hours: normalizeHours(hours, isPM),
     minutes,
+    seconds,
     milliseconds,
     offset,
   };
