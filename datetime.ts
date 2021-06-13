@@ -62,6 +62,7 @@ export class Datetime {
   readonly milliseconds?: number;
   readonly timezone: Timezone;
   readonly valid: boolean;
+  readonly offset: number;
   readonly #config?: Config;
 
   constructor(date: DateArg, config?: Config) {
@@ -89,6 +90,22 @@ export class Datetime {
     }
     this.#config = config;
     this.timezone = config?.timezone ?? "UTC";
+    if (this.valid) {
+      this.offset = config?.offset ? config?.offset : tzOffset(
+        new Date(
+          this.year,
+          this.month - 1,
+          this.day ?? 0,
+          this.hours ?? 0,
+          this.minutes ?? 0,
+          this.seconds ?? 0,
+          this.milliseconds ?? 0,
+        ),
+        this?.timezone ?? "UTC",
+      );
+    } else {
+      this.offset = 0;
+    }
   }
 
   static now(config?: Config): Datetime {
@@ -224,23 +241,7 @@ export class Datetime {
       this.#config,
     );
   }
-
-  offset(): number {
-    return tzOffset(
-      new Date(
-        this.year,
-        this.month - 1,
-        this.day,
-        this.hours,
-        this.minutes,
-        this.seconds,
-        this.milliseconds,
-      ),
-      this?.timezone ?? "UTC",
-    );
-  }
-
   offsetHours(): number {
-    return this.offset() / MILLISECONDS_IN_HOUR;
+    return this.offset ? this.offset / MILLISECONDS_IN_HOUR : 0;
   }
 }

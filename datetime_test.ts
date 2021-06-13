@@ -133,33 +133,33 @@ Deno.test("offset", () => {
       input: new Datetime("2021-01-01T12:30:30.000Z", {
         timezone: "Asia/Tokyo",
       })
-        .offset(),
+        .offset,
       expected: 9,
     },
     {
       input: new Datetime("2021-01-01T12:30:30.000Z", {
         timezone: "America/New_York",
       })
-        .offset(),
+        .offset,
       expected: -5,
     },
     {
       input: new Datetime("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
       })
-        .offset(),
+        .offset,
       expected: -4,
     },
     {
       input: new Datetime("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
       })
-        .offset(),
+        .offset,
       expected: -4,
     },
     {
       input: new Datetime("2021-05-15T12:30:30.000Z", { timezone: "UTC" })
-        .offset(),
+        .offset,
       expected: 0,
     },
   ];

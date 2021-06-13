@@ -22,6 +22,7 @@ export type DateArg = DateInfo | number[] | string | number;
 
 export type Config = {
   timezone: Timezone;
+  offset?: number;
 };
 
 export type DateDiff = Partial<DateInfo> & {
