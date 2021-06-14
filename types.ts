@@ -169,3 +169,5 @@ export type Locale =
   | "zh-C"
   | "zh-HK"
   | "zh-TW";
+
+export type IntlOptions = Intl.DateTimeFormatOptions | Intl.NumberFormatOptions | Intl.RelativeTimeFormatOptions
