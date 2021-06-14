@@ -52,7 +52,7 @@ function parseArg(date: DateArg): DateInfo {
   }
 }
 
-export class Datetime {
+export class Time {
   readonly year: number;
   readonly month: number;
   readonly day?: number;
@@ -108,39 +108,39 @@ export class Datetime {
     }
   }
 
-  static now(config?: Config): Datetime {
-    const utcDatetime = new Datetime(new Date().getTime());
+  static now(config?: Config): Time {
+    const utcTime = new Time(new Date().getTime());
     if (config?.timezone) {
-      return utcDatetime.toZonedTime(config?.timezone);
+      return utcTime.toZonedTime(config?.timezone);
     }
 
-    const localDate = utcToLocalTime(utcDatetime.toDateInfo());
-    return new Datetime(localDate, { timezone: getLocalName() as Timezone });
+    const localDate = utcToLocalTime(utcTime.toDateInfo());
+    return new Time(localDate, { timezone: getLocalName() as Timezone });
   }
 
-  static diffInMillisec(baseDate: Datetime, compareDate: Datetime): number {
+  static diffInMillisec(baseDate: Time, compareDate: Time): number {
     return Math.abs(
       baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
     );
   }
 
-  static diffInSec(baseDate: Datetime, compareDate: Datetime): number {
+  static diffInSec(baseDate: Time, compareDate: Time): number {
     return Math.floor(this.diffInMillisec(baseDate, compareDate) / 1000);
   }
 
-  static diffInMin(baseDate: Datetime, compareDate: Datetime): number {
+  static diffInMin(baseDate: Time, compareDate: Time): number {
     return Math.floor(
       this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
     );
   }
 
-  static diffInHours(baseDate: Datetime, compareDate: Datetime): number {
+  static diffInHours(baseDate: Time, compareDate: Time): number {
     return Math.floor(
       this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
     );
   }
 
-  static diffInDays(baseDate: Datetime, compareDate: Datetime): number {
+  static diffInDays(baseDate: Time, compareDate: Time): number {
     return Math.floor(
       this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_DAY,
     );
@@ -192,21 +192,21 @@ export class Datetime {
     return formatDate(this.toDateInfo(), "HH:mm:ss.S");
   }
 
-  toUTC(): Datetime {
+  toUTC(): Time {
     const utcDateInfo = zonedTimeToUTC(
       this.toDateInfo(),
       this.timezone,
     );
-    return new Datetime(utcDateInfo, { timezone: "UTC" });
+    return new Time(utcDateInfo, { timezone: "UTC" });
   }
 
-  toZonedTime(tz: Timezone): Datetime {
+  toZonedTime(tz: Timezone): Time {
     const zonedDateInfo = toOtherZonedTime(
       this.toDateInfo(),
       this.timezone,
       tz,
     );
-    return new Datetime(zonedDateInfo, { timezone: tz });
+    return new Time(zonedDateInfo, { timezone: tz });
   }
 
   toJSDate(): Date {
@@ -225,16 +225,16 @@ export class Datetime {
     return dateToDayOfYear(this.toDateInfo());
   }
 
-  add(addDateDiff: DateDiff): Datetime {
-    const dt = new Datetime(
+  add(addDateDiff: DateDiff): Time {
+    const dt = new Time(
       adjustedUnixTimeStamp(this.toDateInfo(), addDateDiff, { positive: true }),
       this.#config,
     );
     return dt;
   }
 
-  substract(subDateInfo: Partial<DateInfo>): Datetime {
-    return new Datetime(
+  substract(subDateInfo: Partial<DateInfo>): Time {
+    return new Time(
       adjustedUnixTimeStamp(this.toDateInfo(), subDateInfo, {
         positive: false,
       }),

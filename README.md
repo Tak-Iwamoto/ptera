@@ -1,4 +1,4 @@
-# DD
+# Ptera
 
 Date utilities for Deno
 
