@@ -23,6 +23,7 @@ export type DateArg = DateInfo | number[] | string | number;
 export type Config = {
   timezone: Timezone;
   offset?: number;
+  locale?: string;
 };
 
 export type DateDiff = Partial<DateInfo> & {
@@ -169,5 +170,3 @@ export type Locale =
   | "zh-C"
   | "zh-HK"
   | "zh-TW";
-
-export type IntlOptions = Intl.DateTimeFormatOptions | Intl.NumberFormatOptions | Intl.RelativeTimeFormatOptions

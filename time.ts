@@ -63,6 +63,7 @@ export class Time {
   readonly timezone: Timezone;
   readonly valid: boolean;
   readonly offset: number;
+  readonly locale: string;
   readonly #config?: Config;
 
   constructor(date: DateArg, config?: Config) {
@@ -90,6 +91,8 @@ export class Time {
     }
     this.#config = config;
     this.timezone = config?.timezone ?? "UTC";
+    this.locale = config?.locale ?? "en";
+
     if (this.valid) {
       this.offset = config?.offset ? config?.offset : tzOffset(
         new Date(
