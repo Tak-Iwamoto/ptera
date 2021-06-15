@@ -58,8 +58,16 @@ export class Locale {
     this.rtfOptions = options.rtfOptions ?? {};
   }
 
-  dtfFormat(date: Date) {
-    return cachedDTF(this.locale, this.dtfOptions).format(date);
+  dtfFormat(date: Date, options?: Intl.DateTimeFormatOptions) {
+    const opts = options ?? this.dtfOptions;
+    return cachedDTF(this.locale, opts).format(date);
+  }
+
+  monthList(format?: "numeric" | "2-digit" | "long" | "short" | "narrow") {
+    const monthIndexes = [...Array(12).keys()];
+    return monthIndexes.map((m) =>
+      this.dtfFormat(new Date(2020, m), { month: format })
+    );
   }
 
   dtfFormatToParts(date: Date) {
