@@ -1,5 +1,4 @@
 # Ptera
-
-Date utilities for Deno
+Ptera is datetime library for Deno
 
 WIP
