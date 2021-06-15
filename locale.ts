@@ -63,10 +63,18 @@ export class Locale {
     return cachedDTF(this.locale, opts).format(date);
   }
 
-  monthList(format?: "numeric" | "2-digit" | "long" | "short" | "narrow") {
+  monthList(format: "numeric" | "2-digit" | "long" | "short" | "narrow") {
     const monthIndexes = [...Array(12).keys()];
     return monthIndexes.map((m) =>
-      this.dtfFormat(new Date(2020, m), { month: format })
+      this.dtfFormat(new Date(2021, m), { month: format })
+    );
+  }
+
+  weekList(format: "long" | "short" | "narrow") {
+    const weekIndexes = [...Array(7).keys()];
+
+    return weekIndexes.map((m) =>
+      this.dtfFormat(new Date(2021, 0, 4 + m), { weekday: format })
     );
   }
 
