@@ -46,21 +46,54 @@ export class Locale {
 
   constructor(
     locale: string,
-    options: {
+    options?: {
       dtfOptions?: Intl.DateTimeFormatOptions;
       nfOptions?: Intl.NumberFormatOptions;
       rtfOptions?: Intl.RelativeTimeFormatOptions;
     },
   ) {
     this.locale = locale;
-    this.dtfOptions = options.dtfOptions ?? {};
-    this.nfOptions = options.nfOptions ?? {};
-    this.rtfOptions = options.rtfOptions ?? {};
+    this.dtfOptions = options?.dtfOptions ?? {};
+    this.nfOptions = options?.nfOptions ?? {};
+    this.rtfOptions = options?.rtfOptions ?? {};
   }
 
   dtfFormat(date: Date, options?: Intl.DateTimeFormatOptions) {
     const opts = options ?? this.dtfOptions;
     return cachedDTF(this.locale, opts).format(date);
+  }
+
+  dtfFormatToParts(date: Date, options?: Intl.DateTimeFormatOptions) {
+    const opts = options ?? this.dtfOptions;
+    return cachedDTF(this.locale, opts).formatToParts(date);
+  }
+
+  nfFormat(n: number, options?: Intl.NumberFormatOptions) {
+    const opts = options ?? this.nfOptions;
+    return cachedNF(this.locale, opts).format(n);
+  }
+
+  nfFormatToParts(n: number, options?: Intl.NumberFormatOptions) {
+    const opts = options ?? this.nfOptions;
+    return cachedNF(this.locale, opts).formatToParts(n);
+  }
+
+  rtfFormat(
+    n: number,
+    unit: Intl.RelativeTimeFormatUnit,
+    options?: Intl.RelativeTimeFormatOptions,
+  ) {
+    const opts = options ?? this.rtfOptions;
+    return cachedRTF(this.locale, opts).format(n, unit);
+  }
+
+  rtfFormatToParts(
+    n: number,
+    unit: Intl.RelativeTimeFormatUnit,
+    options?: Intl.RelativeTimeFormatOptions,
+  ) {
+    const opts = options ?? this.rtfOptions;
+    return cachedRTF(this.locale, opts).formatToParts(n, unit);
   }
 
   monthList(format: "numeric" | "2-digit" | "long" | "short" | "narrow") {
@@ -78,23 +111,36 @@ export class Locale {
     );
   }
 
-  dtfFormatToParts(date: Date) {
-    return cachedDTF(this.locale, this.dtfOptions).formatToParts(date);
+  meridiems(format?: "long" | "short" | "narrow") {
+    return [
+      this.extractDTFParts(new Date(Date.UTC(2021, 1, 1, 9)), "dayPeriod", {
+        dayPeriod: format,
+        hour12: true,
+        hour: "numeric",
+      }),
+      this.extractDTFParts(new Date(Date.UTC(2021, 1, 1, 21)), "dayPeriod", {
+        dayPeriod: format,
+        hour12: true,
+        hour: "numeric",
+      }),
+    ];
   }
 
-  nfFormat(n: number) {
-    return cachedNF(this.locale, this.nfOptions).format(n);
+  eras(format: "long" | "short" | "narrow") {
+    return [
+      this.extractDTFParts(new Date(-40, 1, 1), "era", { era: format }),
+      this.extractDTFParts(new Date(2021, 1, 1), "era", { era: format }),
+    ];
   }
 
-  nfFormatToParts(n: number) {
-    return cachedNF(this.locale, this.nfOptions).formatToParts(n);
-  }
-
-  rtfFormat(n: number, unit: Intl.RelativeTimeFormatUnit) {
-    return cachedRTF(this.locale, this.rtfOptions).format(n, unit);
-  }
-
-  rtfFormatToParts(n: number, unit: Intl.RelativeTimeFormatUnit) {
-    return cachedRTF(this.locale, this.rtfOptions).formatToParts(n, unit);
+  extractDTFParts(
+    date: Date,
+    type: Intl.DateTimeFormatPartTypes,
+    options?: Intl.DateTimeFormatOptions,
+  ) {
+    const opts = options ?? this.dtfOptions;
+    const parts = this.dtfFormatToParts(date, opts);
+    const matchParts = parts.find((p) => p.type === type);
+    return matchParts?.value ?? null;
   }
 }
