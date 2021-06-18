@@ -148,3 +148,28 @@ Deno.test("parseDateStr", () => {
     assertEquals(parseDateStr(t.dateStr, t.format), t.expected);
   });
 });
+
+Deno.test("parseDateStr jp", () => {
+  const tests = [
+    {
+      dateStr: "2021 1月",
+      format: "YYYY MMM",
+      expected: {
+        year: 2021,
+        month: 1,
+        day: undefined,
+        hours: undefined,
+        minutes: undefined,
+        seconds: undefined,
+        milliseconds: undefined,
+        offset: undefined,
+      },
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      parseDateStr(t.dateStr, t.format, { locale: "jp" }),
+      t.expected,
+    );
+  });
+});

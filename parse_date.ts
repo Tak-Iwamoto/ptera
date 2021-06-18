@@ -1,10 +1,6 @@
-import {
-  DateFormatType,
-  isFormatDateType,
-  longMonths,
-  shortMonths,
-} from "./constants.ts";
+import { DateFormatType, isFormatDateType } from "./constants.ts";
 import { dayOfYearToDate } from "./convert.ts";
+import { Locale } from "./locale.ts";
 import { DateInfo } from "./types.ts";
 import { parseInteger } from "./utils.ts";
 
@@ -17,13 +13,15 @@ const oneToTwoDigitRegex = /\d\d?/;
 const oneToThreeDigitRegex = /\d{1,3}/;
 const offsetRegex = /[+-]\d\d:?(\d\d)?|Z/g;
 const literalRegex = /\d*[^\s\d-_:/()]+/;
-const monthRegex =
-  /January|February|March|April|May|June|July|August|September|October|November|December/g;
-const shortMonthRegex = /Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/g;
-const shortWeekRegex = /Mon|Tue|Wed|Thu|Fri|Sat|Sun/g;
-const weekRegex = /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/g;
 
-function formatToRegexAndProperty(formatStr: DateFormatType): [RegExp, string] {
+function arrayToRegex(array: string[]) {
+  return new RegExp(array.join("|"), "g");
+}
+
+function formatToRegexAndProperty(
+  formatStr: DateFormatType,
+  locale: Locale,
+): [RegExp, string] {
   switch (formatStr) {
     case "YY":
     case "YYYY":
@@ -32,9 +30,9 @@ function formatToRegexAndProperty(formatStr: DateFormatType): [RegExp, string] {
     case "MM":
       return [oneToTwoDigitRegex, "month"];
     case "MMM":
-      return [shortMonthRegex, "shortMonthStr"];
+      return [arrayToRegex(locale.monthList("short")), "shortMonthStr"];
     case "MMMM":
-      return [monthRegex, "monthStr"];
+      return [arrayToRegex(locale.monthList("long")), "monthStr"];
     case "d":
     case "dd":
       return [oneToTwoDigitRegex, "day"];
@@ -57,9 +55,9 @@ function formatToRegexAndProperty(formatStr: DateFormatType): [RegExp, string] {
     case "w":
       return [oneDigitRegex, "weekNumber"];
     case "www":
-      return [shortWeekRegex, "week"];
+      return [arrayToRegex(locale.weekList("short")), "week"];
     case "wwww":
-      return [weekRegex, "week"];
+      return [arrayToRegex(locale.weekList("long")), "week"];
     case "W":
     case "WW":
       return [oneToTwoDigitRegex, "isoweek"];
@@ -73,14 +71,20 @@ function formatToRegexAndProperty(formatStr: DateFormatType): [RegExp, string] {
   }
 }
 
-export function parseDateStr(dateStr: string, format: string) {
-  const hash = dateStrToHash(dateStr, format);
-  return hashToDate(hash);
+export function parseDateStr(
+  dateStr: string,
+  format: string,
+  option?: { locale: string },
+) {
+  const locale = new Locale(option?.locale ?? "en");
+  const hash = dateStrToHash(dateStr, format, locale);
+  return hashToDate(hash, locale);
 }
 
 function dateStrToHash(
   dateStr: string,
   formatStr: string,
+  locale: Locale,
 ): { [key: string]: string } {
   const parsedFormat = formatStr.match(formatsRegex);
   let cursor = 0;
@@ -88,7 +92,7 @@ function dateStrToHash(
   if (parsedFormat) {
     for (const f of parsedFormat) {
       if (isFormatDateType(f)) {
-        const [regex, property] = formatToRegexAndProperty(f);
+        const [regex, property] = formatToRegexAndProperty(f, locale);
         const targetStr = dateStr.substr(cursor);
         const parts = targetStr.match(regex);
         if (parts) {
@@ -105,17 +109,18 @@ function dateStrToHash(
 
 function hashToDate(
   hash: { [key: string]: string },
+  locale: Locale,
 ): Partial<DateInfo> & { offset?: number } {
   const year = parseInteger(hash["year"]);
   const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   let month = undefined;
   if (hash["monthStr"]) {
-    month = months[longMonths.indexOf(hash["monthStr"])];
+    month = months[locale.monthList("long").indexOf(hash["monthStr"])];
   }
 
   if (hash["shortMonthStr"]) {
-    month = months[shortMonths.indexOf(hash["shortMonthStr"])];
+    month = months[locale.monthList("short").indexOf(hash["shortMonthStr"])];
   }
 
   if (hash["month"]) {
