@@ -1,4 +1,3 @@
-import { longMonths, shortMonths } from "./constants.ts";
 import { DateInfo } from "./types.ts";
 
 export function isLeapYear(year: number): boolean {
@@ -135,11 +134,4 @@ export function truncNumber(n?: number): number {
 
 export function floorMod(x: number, n: number) {
   return x - n * Math.floor(x / n);
-}
-
-export function monthStrToNumber(monthStr: string): number {
-  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  return monthStr.length === 3
-    ? months[shortMonths.indexOf(monthStr)]
-    : months[longMonths.indexOf(monthStr)];
 }

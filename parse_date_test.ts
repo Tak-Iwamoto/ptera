@@ -129,20 +129,20 @@ Deno.test("parseDateStr", () => {
         offset: undefined,
       },
     },
-    // {
-    //   dateStr: "2021-05-31 21:05:30",
-    //   format: "dd-MM",
-    //   expected: {
-    //     year: undefined,
-    //     month: undefined,
-    //     day: undefined,
-    //     hours: undefined,
-    //     minutes: undefined,
-    //     seconds: undefined,
-    //     milliseconds: undefined,
-    //     offset: undefined
-    //   },
-    // },
+    {
+      dateStr: "2021 Jan",
+      format: "YYYY MMM",
+      expected: {
+        year: 2021,
+        month: 1,
+        day: undefined,
+        hours: undefined,
+        minutes: undefined,
+        seconds: undefined,
+        milliseconds: undefined,
+        offset: undefined,
+      },
+    },
   ];
   tests.forEach((t) => {
     assertEquals(parseDateStr(t.dateStr, t.format), t.expected);

@@ -1,7 +1,12 @@
-import { DateFormatType, isFormatDateType } from "./constants.ts";
+import {
+  DateFormatType,
+  isFormatDateType,
+  longMonths,
+  shortMonths,
+} from "./constants.ts";
 import { dayOfYearToDate } from "./convert.ts";
 import { DateInfo } from "./types.ts";
-import { monthStrToNumber, parseInteger } from "./utils.ts";
+import { parseInteger } from "./utils.ts";
 
 const formatsRegex =
   /([-:/.()\s]+)|(YYYY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|WW?|ZZ?|a)/g;
@@ -102,14 +107,21 @@ function hashToDate(
   hash: { [key: string]: string },
 ): Partial<DateInfo> & { offset?: number } {
   const year = parseInteger(hash["year"]);
+  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
   let month = undefined;
   if (hash["monthStr"]) {
-    month = monthStrToNumber(hash["monthStr"]);
+    month = months[longMonths.indexOf(hash["monthStr"])];
   }
+
   if (hash["shortMonthStr"]) {
-    month = monthStrToNumber(hash["shortMonthStr"]);
+    month = months[shortMonths.indexOf(hash["shortMonthStr"])];
   }
-  month = parseInteger((hash["month"]));
+
+  if (hash["month"]) {
+    month = parseInteger((hash["month"]));
+  }
+
   let day = parseInteger((hash["day"]));
 
   if (hash["dayOfYear"]) {
