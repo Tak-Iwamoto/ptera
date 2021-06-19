@@ -410,7 +410,7 @@ Deno.test("toISO", () => {
   });
 });
 
-Deno.test("toDateArray", () => {
+Deno.test("toArray", () => {
   const tests = [
     { input: "2021-07-21", expected: [2021, 7, 21, 0, 0, 0, 0] },
     { input: "2021-07-21T23:00:59", expected: [2021, 7, 21, 23, 0, 59, 0] },
@@ -428,7 +428,7 @@ Deno.test("toDateArray", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(new Time(t.input).toDateArray(), t.expected);
+    assertEquals(new Time(t.input).toArray(), t.expected);
   });
 });
 

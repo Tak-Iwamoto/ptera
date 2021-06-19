@@ -6,12 +6,7 @@ import { tzOffset } from "./timezone.ts";
 import { formatToTwoDigits, isValidDate } from "./utils.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
-import {
-  dateArrayToDate,
-  dateToArray,
-  dateToJSDate,
-  dateToTS,
-} from "./convert.ts";
+import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
 import {
   Config,
   DateArg,
@@ -30,7 +25,7 @@ function isDateInfo(arg: DateArg): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;
 }
 
-function isDateArray(arg: DateArg): arg is number[] {
+function isArray(arg: DateArg): arg is number[] {
   return (Array.isArray(arg));
 }
 
@@ -43,8 +38,8 @@ function parseArg(date: DateArg): DateInfo {
     return date;
   }
 
-  if (isDateArray(date)) {
-    return dateArrayToDate(date);
+  if (isArray(date)) {
+    return arrayToDate(date);
   } else {
     const parsed = isoToDateInfo(date);
     if (!parsed) throw new Error("Invalid format");
@@ -200,7 +195,7 @@ export class Time {
       this.toDateInfo(),
       this.timezone,
     );
-    return new Time(utcDateInfo, { timezone: "UTC" });
+    return new Time(utcDateInfo, { ...this.#config, timezone: "UTC" });
   }
 
   toZonedTime(tz: Timezone): Time {
@@ -209,14 +204,14 @@ export class Time {
       this.timezone,
       tz,
     );
-    return new Time(zonedDateInfo, { timezone: tz });
+    return new Time(zonedDateInfo, { ...this.#config, timezone: tz });
   }
 
   toJSDate(): Date {
     return dateToJSDate(this.toDateInfo());
   }
 
-  toDateArray(): DateInfoArray {
+  toArray(): DateInfoArray {
     return dateToArray(this.toDateInfo());
   }
 

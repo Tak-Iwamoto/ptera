@@ -49,7 +49,7 @@ export function jsDateToDate(jsDate: Date): DateInfo {
   };
 }
 
-export function dateArrayToDate(dateArray: number[]): DateInfo {
+export function arrayToDate(dateArray: number[]): DateInfo {
   const year = dateArray[0];
   const month = dateArray[1];
   const day = dateArray[2];
