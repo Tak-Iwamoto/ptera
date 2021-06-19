@@ -1,11 +1,8 @@
 import {
   DateFormatType,
   isFormatDateType,
-  longMonths,
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
-  shortMonths,
-  weekdays,
 } from "./constants.ts";
 import { DateInfo, OptionalNumber } from "./types.ts";
 import {
@@ -17,10 +14,12 @@ import {
 } from "./utils.ts";
 
 import { dateToDayOfYear, dateToWeekNumber, ordinalToDate } from "./convert.ts";
+import { Locale } from "./locale.ts";
 
 export function formatDateInfo(
   dateInfo: DateInfo,
   formatStr: DateFormatType,
+  locale: Locale,
 ): string {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   const twelveHours = (hours || 0) % 12;
@@ -35,9 +34,9 @@ export function formatDateInfo(
     case "MM":
       return month <= 9 ? `0${month}` : month.toString();
     case "MMM":
-      return shortMonths[month - 1];
+      return locale.monthList("short")[month - 1];
     case "MMMM":
-      return longMonths[month - 1];
+      return locale.monthList("long")[month - 1];
     case "d":
       return day ? day.toString() : "0";
     case "dd":
@@ -69,9 +68,9 @@ export function formatDateInfo(
     case "w":
       return dateToWeekNumber(dateInfo).toString();
     case "www":
-      return weekdays[dateToWeekNumber(dateInfo) - 1].slice(0, 3);
+      return locale.weekList("short")[dateToWeekNumber(dateInfo) - 1];
     case "wwww":
-      return weekdays[dateToWeekNumber(dateInfo) - 1];
+      return locale.weekList("long")[dateToWeekNumber(dateInfo) - 1];
     case "W":
       return isoWeekNumber(dateInfo).toString();
     case "WW":
@@ -120,15 +119,21 @@ function parseFormat(
   return result;
 }
 
-export function formatDate(dateInfo: DateInfo, formatStr: string) {
+export function formatDate(
+  dateInfo: DateInfo,
+  formatStr: string,
+  localeStr?: string,
+) {
   const parsedFormat = parseFormat(formatStr);
   let result = "";
+
+  const locale = new Locale(localeStr ?? "en");
 
   for (const f of parsedFormat) {
     if (f.isLiteral) {
       result += f.value;
     } else if (isFormatDateType(f.value)) {
-      result += formatDateInfo(dateInfo, f.value);
+      result += formatDateInfo(dateInfo, f.value, locale);
     } else {
       result += f.value;
     }
@@ -153,7 +158,6 @@ const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;
 // const weekDayRegex = /[1-7]/;
 const isoDateRegex = /(\d{4})-?(\d{2})-?(\d{2})/;
 const isoTimeRegex = /(\d{2}):?(\d{2}):?(\d{2})(?:.)?(\d{3})?/;
-// const isoOffsetRegex = /(?:(Z)|([+-]\d\d)(?::?(\d\d))?)?/
 const isoOffsetRegex = /(Z)|([+-]\d{2})(?::?(\d{2}))/;
 
 function extractIsoDate(
@@ -191,7 +195,7 @@ export function extractIsoOffset(isoFormat: string): number {
   return isUTC ? 0 : toMillisecondsOffset(offsetHours, offsetMinutes);
 }
 
-export function isoOrdinalToDateInfo(isoFormat: string): DateInfo | undefined {
+function isoOrdinalToDateInfo(isoFormat: string): DateInfo | undefined {
   const matches = isoOrdinalDateRegex.exec(isoFormat);
   const year = parseInteger(matches?.[1]);
   const ordinalDate = parseInteger(matches?.[2]);
