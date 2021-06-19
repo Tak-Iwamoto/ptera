@@ -7,22 +7,21 @@ import { formatToTwoDigits, isLeapYear, isValidDate } from "./utils.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
-import {
-  Config,
-  DateArg,
-  DateDiff,
-  DateInfo,
-  DateInfoArray,
-  Timezone,
-} from "./types.ts";
+import { DateDiff, DateInfo, DateInfoArray, Timezone } from "./types.ts";
 import {
   MILLISECONDS_IN_DAY,
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
 
+type DateArg = DateInfo | Date | number[] | string | number;
+
 function isDateInfo(arg: DateArg): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;
+}
+
+function isJSDate(arg: DateArg): arg is Date {
+  return (arg as Date).getTime() !== undefined;
 }
 
 function isArray(arg: DateArg): arg is number[] {
@@ -32,6 +31,10 @@ function isArray(arg: DateArg): arg is number[] {
 function parseArg(date: DateArg): DateInfo {
   if (typeof date === "number") {
     return tsToDate(date);
+  }
+
+  if (isJSDate(date)) {
+    return tsToDate(date.getTime());
   }
 
   if (isDateInfo(date)) {
@@ -46,6 +49,12 @@ function parseArg(date: DateArg): DateInfo {
     return parsed;
   }
 }
+
+type Config = {
+  timezone: Timezone;
+  offset?: number;
+  locale?: string;
+};
 
 export class Time {
   readonly year: number;
@@ -224,11 +233,11 @@ export class Time {
   }
 
   quarter(): number {
-    return Math.ceil(this.month / 3)
+    return Math.ceil(this.month / 3);
   }
 
   isLeapYear(): boolean {
-    return isLeapYear(this.year)
+    return isLeapYear(this.year);
   }
 
   add(addDateDiff: DateDiff): Time {
