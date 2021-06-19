@@ -6,6 +6,8 @@ import { tzOffset } from "./timezone.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
+import { Locale } from "./locale.ts";
+import { isLeapYear, isValidDate, weeksInWeekYear } from "./utils.ts";
 import {
   Config,
   DateDiff,
@@ -13,13 +15,6 @@ import {
   DateInfoArray,
   Timezone,
 } from "./types.ts";
-import { Locale } from "./locale.ts";
-import {
-  formatToTwoDigits,
-  isLeapYear,
-  isValidDate,
-  weeksInWeekYear,
-} from "./utils.ts";
 import {
   MILLISECONDS_IN_DAY,
   MILLISECONDS_IN_HOUR,

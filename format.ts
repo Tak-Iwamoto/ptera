@@ -1,10 +1,11 @@
+import { Config, DateInfo, OptionalNumber } from "./types.ts";
+import { Locale } from "./locale.ts";
 import {
   DateFormatType,
   isFormatDateType,
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
-import { Config, DateInfo, OptionalNumber } from "./types.ts";
 import {
   formatToThreeDigits,
   formatToTwoDigits,
@@ -13,14 +14,12 @@ import {
   parseInteger,
   weeksOfYear,
 } from "./utils.ts";
-
 import {
   dateToDayOfYear,
   dateToTS,
   dateToWeekNumber,
   ordinalToDate,
 } from "./convert.ts";
-import { Locale } from "./locale.ts";
 
 export function formatDateInfo(
   dateInfo: DateInfo,

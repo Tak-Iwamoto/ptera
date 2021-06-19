@@ -1,7 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { formatDate, formatDateInfo, isoToDateInfo } from "./format.ts";
 import { Locale } from "./locale.ts";
-import { DateInfo, Timezone } from "./types.ts";
+import { Config, DateInfo, Timezone } from "./types.ts";
 
 const defaultLocale = new Locale("en");
 Deno.test("format: YY", () => {
@@ -440,10 +440,52 @@ Deno.test("format: ZZ", () => {
   });
 });
 
-Deno.test("formatDate MMMM yyyy", () => {
-  const dateInfo = { year: 2021, month: 6, day: 1, hours: 9 };
-  const result = formatDate(dateInfo, "MMMM YYYY");
-  assertEquals(result, "June 2021");
+Deno.test("formatDate", () => {
+  type Test = {
+    input: DateInfo;
+    formatStr: string;
+    config?: Config;
+    expected: string;
+  };
+  const tests: Test[] = [
+    {
+      input: {
+        year: 2021,
+        month: 6,
+        day: 1,
+        hours: 9,
+      },
+      formatStr: "MMMM YYYY",
+      config: undefined,
+      expected: "June 2021",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 6,
+        day: 1,
+      },
+      formatStr: "x YYYY",
+      config: undefined,
+      expected: "1622505600000 2021",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 6,
+        day: 1,
+      },
+      formatStr: "z MMMM",
+      config: { timezone: "Asia/Tokyo" },
+      expected: "Asia/Tokyo June",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      formatDate(t.input, t.formatStr, t.config),
+      t.expected,
+    );
+  });
 });
 
 Deno.test("isoToDateInfo", () => {
