@@ -129,3 +129,45 @@ export type Timezone =
   | "Pacific/Tongatapu"
   | "Pacific/Apia"
   | "UTC";
+
+export const dateFormatType = [
+  "YY",
+  "YYYY",
+  "M",
+  "MM",
+  "MMM",
+  "MMMM",
+  "d",
+  "dd",
+  "D",
+  "DDD",
+  "H",
+  "HH",
+  "h",
+  "hh",
+  "m",
+  "mm",
+  "s",
+  "ss",
+  "S",
+  "SSS",
+  "w",
+  "www",
+  "wwww",
+  "W",
+  "WW",
+  "a",
+  "z",
+  "Z",
+  "ZZ",
+  "ZZZ",
+  "ZZZZ",
+  "X",
+  "x",
+] as const;
+
+export type DateFormatType = typeof dateFormatType[number];
+
+export function isFormatDateType(format: string): format is DateFormatType {
+  return dateFormatType.includes(format as DateFormatType);
+}

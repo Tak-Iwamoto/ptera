@@ -1,7 +1,6 @@
-import { DateFormatType, isFormatDateType } from "./constants.ts";
 import { dayOfYearToDate } from "./convert.ts";
 import { Locale } from "./locale.ts";
-import { DateInfo } from "./types.ts";
+import { DateFormatType, DateInfo, isFormatDateType } from "./types.ts";
 import { parseInteger } from "./utils.ts";
 
 const formatsRegex =

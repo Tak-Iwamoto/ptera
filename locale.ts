@@ -1,3 +1,5 @@
+import { Timezone } from "./types.ts";
+
 function cacheKey(locale: string, options: unknown): string {
   return JSON.stringify([locale, options]);
 }
@@ -133,7 +135,21 @@ export class Locale {
     ];
   }
 
-  extractDTFParts(
+  offsetName(date: Date, offsetFormat: "long" | "short", timezone?: Timezone) {
+    const parsedParts = this.extractDTFParts(date, "timeZoneName", {
+      hour12: false,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: offsetFormat,
+      timeZone: timezone,
+    });
+    return parsedParts;
+  }
+
+  private extractDTFParts(
     date: Date,
     type: Intl.DateTimeFormatPartTypes,
     options?: Intl.DateTimeFormatOptions,

@@ -440,6 +440,66 @@ Deno.test("format: ZZ", () => {
   });
 });
 
+Deno.test("format: ZZZ", () => {
+  type Test = {
+    input: DateInfo;
+    tz?: Timezone;
+    locale: string;
+    expected: string;
+  };
+
+  const tests: Test[] = [
+    {
+      input: { year: 2021, month: 1, day: 1 },
+      tz: "Asia/Tokyo",
+      locale: "jp",
+      expected: "JST",
+    },
+    {
+      input: { year: 2021, month: 1, day: 4 },
+      tz: "America/New_York",
+      locale: "fr",
+      expected: "UTC−5",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      formatDateInfo(t.input, "ZZZ", { locale: t.locale, timezone: t.tz }),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("format: ZZZZ", () => {
+  type Test = {
+    input: DateInfo;
+    tz: Timezone;
+    locale: string;
+    expected: string;
+  };
+
+  const tests: Test[] = [
+    {
+      input: { year: 2021, month: 1, day: 1 },
+      tz: "Asia/Tokyo",
+      locale: "jp",
+      expected: "日本標準時",
+    },
+    {
+      input: { year: 2021, month: 1, day: 4 },
+      tz: "America/New_York",
+      locale: "fr",
+      expected: "heure normale de l’Est nord-américain",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      formatDateInfo(t.input, "ZZZZ", { locale: t.locale, timezone: t.tz }),
+      t.expected,
+    );
+  });
+});
+
 Deno.test("formatDate", () => {
   type Test = {
     input: DateInfo;

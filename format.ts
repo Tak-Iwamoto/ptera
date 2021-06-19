@@ -1,11 +1,12 @@
-import { Config, DateInfo, OptionalNumber } from "./types.ts";
-import { Locale } from "./locale.ts";
 import {
+  Config,
   DateFormatType,
+  DateInfo,
   isFormatDateType,
-  MILLISECONDS_IN_HOUR,
-  MILLISECONDS_IN_MINUTE,
-} from "./constants.ts";
+  OptionalNumber,
+} from "./types.ts";
+import { Locale } from "./locale.ts";
+import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import {
   formatToThreeDigits,
   formatToTwoDigits,
@@ -97,6 +98,18 @@ export function formatDateInfo(
       return config?.offsetMillisec
         ? formatOffsetMillisec(config.offsetMillisec, "ZZ")
         : "";
+    case "ZZZ":
+      return locale.offsetName(
+        new Date(dateToTS(dateInfo)),
+        "short",
+        config?.timezone,
+      ) ?? "";
+    case "ZZZZ":
+      return locale.offsetName(
+        new Date(dateToTS(dateInfo)),
+        "long",
+        config?.timezone,
+      ) ?? "";
     default:
       throw new TypeError("Please input valid format.");
   }
