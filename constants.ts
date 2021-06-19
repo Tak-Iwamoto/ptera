@@ -29,8 +29,11 @@ export const dateFormatType = [
   "W",
   "WW",
   "a",
+  "z",
   "Z",
   "ZZ",
+  "X",
+  "x",
 ] as const;
 
 export type DateFormatType = typeof dateFormatType[number];

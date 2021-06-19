@@ -1,3 +1,4 @@
+import { MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import { DateInfo } from "./types.ts";
 
 export function isLeapYear(year: number): boolean {
@@ -134,4 +135,8 @@ export function truncNumber(n?: number): number {
 
 export function floorMod(x: number, n: number) {
   return x - n * Math.floor(x / n);
+}
+
+export function millisecToMin(millisec: number): number {
+  return millisec / MILLISECONDS_IN_MINUTE;
 }
