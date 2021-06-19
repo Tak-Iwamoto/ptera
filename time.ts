@@ -3,7 +3,7 @@ import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { getLocalName, utcToLocalTime } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
-import { formatToTwoDigits, isValidDate } from "./utils.ts";
+import { formatToTwoDigits, isLeapYear, isValidDate } from "./utils.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
@@ -221,6 +221,14 @@ export class Time {
 
   dayOfYear(): number {
     return dateToDayOfYear(this.toDateInfo());
+  }
+
+  quarter(): number {
+    return Math.ceil(this.month / 3)
+  }
+
+  isLeapYear(): boolean {
+    return isLeapYear(this.year)
   }
 
   add(addDateDiff: DateDiff): Time {
