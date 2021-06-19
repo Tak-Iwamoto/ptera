@@ -3,7 +3,12 @@ import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { getLocalName, utcToLocalTime } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
-import { formatToTwoDigits, isLeapYear, isValidDate } from "./utils.ts";
+import {
+  formatToTwoDigits,
+  isLeapYear,
+  isValidDate,
+  weeksInWeekYear,
+} from "./utils.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
@@ -20,10 +25,6 @@ function isDateInfo(arg: DateArg): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;
 }
 
-function isJSDate(arg: DateArg): arg is Date {
-  return (arg as Date).getTime() !== undefined;
-}
-
 function isArray(arg: DateArg): arg is number[] {
   return (Array.isArray(arg));
 }
@@ -33,7 +34,7 @@ function parseArg(date: DateArg): DateInfo {
     return tsToDate(date);
   }
 
-  if (isJSDate(date)) {
+  if (date instanceof Date) {
     return tsToDate(date.getTime());
   }
 
@@ -230,6 +231,10 @@ export class Time {
 
   dayOfYear(): number {
     return dateToDayOfYear(this.toDateInfo());
+  }
+
+  weeksInWeekYear(): number {
+    return weeksInWeekYear(this.year);
   }
 
   quarter(): number {

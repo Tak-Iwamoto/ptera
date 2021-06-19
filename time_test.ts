@@ -445,6 +445,16 @@ Deno.test("toTimestamp", () => {
   });
 });
 
+Deno.test("weeksInWeekYear", () => {
+  const tests = [
+    { input: "2021-01-01", expected: 52 },
+    { input: "2020-12-31", expected: 53 },
+  ];
+  tests.forEach((t) => {
+    assertEquals(new Time(t.input).weeksInWeekYear(), t.expected);
+  });
+});
+
 Deno.test("dayOfYear", () => {
   const tests = [
     { input: "2021-01-01", expected: 1 },
