@@ -3,16 +3,17 @@ import { formatDate } from "./format.ts";
 import { isoToDateInfo } from "./format.ts";
 import { getLocalName, utcToLocalTime } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
+import { dateToDayOfYear, tsToDate } from "./convert.ts";
+import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
+import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
+import { DateDiff, DateInfo, DateInfoArray, Timezone } from "./types.ts";
+import { Locale } from "./locale.ts";
 import {
   formatToTwoDigits,
   isLeapYear,
   isValidDate,
   weeksInWeekYear,
 } from "./utils.ts";
-import { dateToDayOfYear, tsToDate } from "./convert.ts";
-import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
-import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
-import { DateDiff, DateInfo, DateInfoArray, Timezone } from "./types.ts";
 import {
   MILLISECONDS_IN_DAY,
   MILLISECONDS_IN_HOUR,
@@ -52,7 +53,7 @@ function parseArg(date: DateArg): DateInfo {
 }
 
 type Config = {
-  timezone: Timezone;
+  timezone?: Timezone;
   offset?: number;
   locale?: string;
 };
@@ -69,6 +70,7 @@ export class Time {
   readonly valid: boolean;
   readonly offset: number;
   readonly locale: string;
+  readonly #localeClass: Locale;
   readonly #config?: Config;
 
   constructor(date: DateArg, config?: Config) {
@@ -97,6 +99,7 @@ export class Time {
     this.#config = config;
     this.timezone = config?.timezone ?? "UTC";
     this.locale = config?.locale ?? "en";
+    this.#localeClass = new Locale(this.locale);
 
     if (this.valid) {
       this.offset = config?.offset ? config?.offset : tzOffset(
@@ -119,11 +122,14 @@ export class Time {
   static now(config?: Config): Time {
     const utcTime = new Time(new Date().getTime());
     if (config?.timezone) {
-      return utcTime.toZonedTime(config?.timezone);
+      return utcTime.toZonedTime(config?.timezone, config);
     }
 
     const localDate = utcToLocalTime(utcTime.toDateInfo());
-    return new Time(localDate, { timezone: getLocalName() as Timezone });
+    return new Time(localDate, {
+      ...config,
+      timezone: getLocalName() as Timezone,
+    });
   }
 
   static diffInMillisec(baseDate: Time, compareDate: Time): number {
@@ -208,13 +214,13 @@ export class Time {
     return new Time(utcDateInfo, { ...this.#config, timezone: "UTC" });
   }
 
-  toZonedTime(tz: Timezone): Time {
+  toZonedTime(tz: Timezone, config?: Config): Time {
     const zonedDateInfo = toOtherZonedTime(
       this.toDateInfo(),
       this.timezone,
       tz,
     );
-    return new Time(zonedDateInfo, { ...this.#config, timezone: tz });
+    return new Time(zonedDateInfo, { ...config, timezone: tz });
   }
 
   toJSDate(): Date {
@@ -263,5 +269,13 @@ export class Time {
   }
   offsetHours(): number {
     return this.offset ? this.offset / MILLISECONDS_IN_HOUR : 0;
+  }
+
+  toDateTimeFormat(options?: Intl.DateTimeFormatOptions) {
+    return this.#localeClass.dtfFormat(this.toJSDate(), options);
+  }
+
+  toDateTimeFormatParts(options?: Intl.DateTimeFormatOptions) {
+    return this.#localeClass.dtfFormatToParts(this.toJSDate(), options);
   }
 }
