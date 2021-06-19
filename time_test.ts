@@ -127,39 +127,39 @@ Deno.test("toUTC", () => {
   });
 });
 
-Deno.test("offset", () => {
+Deno.test("offsetMillisec", () => {
   const tests = [
     {
       input: new Time("2021-01-01T12:30:30.000Z", {
         timezone: "Asia/Tokyo",
       })
-        .offset,
+        .offsetMillisec(),
       expected: 9,
     },
     {
       input: new Time("2021-01-01T12:30:30.000Z", {
         timezone: "America/New_York",
       })
-        .offset,
+        .offsetMillisec(),
       expected: -5,
     },
     {
       input: new Time("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
       })
-        .offset,
+        .offsetMillisec(),
       expected: -4,
     },
     {
       input: new Time("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
       })
-        .offset,
+        .offsetMillisec(),
       expected: -4,
     },
     {
       input: new Time("2021-05-15T12:30:30.000Z", { timezone: "UTC" })
-        .offset,
+        .offsetMillisec(),
       expected: 0,
     },
   ];

@@ -4,26 +4,33 @@ import {
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
-import { DateInfo, OptionalNumber } from "./types.ts";
+import { Config, DateInfo, OptionalNumber } from "./types.ts";
 import {
   formatToThreeDigits,
   formatToTwoDigits,
   isValidOrdinalDate,
+  millisecToMin,
   parseInteger,
   weeksOfYear,
 } from "./utils.ts";
 
-import { dateToDayOfYear, dateToWeekNumber, ordinalToDate } from "./convert.ts";
+import {
+  dateToDayOfYear,
+  dateToTS,
+  dateToWeekNumber,
+  ordinalToDate,
+} from "./convert.ts";
 import { Locale } from "./locale.ts";
 
 export function formatDateInfo(
   dateInfo: DateInfo,
   formatStr: DateFormatType,
-  locale: Locale,
+  config?: Config,
 ): string {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   const twelveHours = (hours || 0) % 12;
 
+  const locale = new Locale(config?.locale ?? "en");
   switch (formatStr) {
     case "YY":
       return year.toString().slice(-2);
@@ -77,8 +84,38 @@ export function formatDateInfo(
       return formatToTwoDigits(isoWeekNumber(dateInfo));
     case "a":
       return (hours || 0) / 12 <= 1 ? "AM" : "PM";
+    case "X":
+      return (dateToTS(dateInfo) / 1000).toString();
+    case "x":
+      return dateToTS(dateInfo).toString();
+    case "z":
+      return config?.timezone ?? "";
+    case "Z":
+      return config?.offsetMillisec
+        ? formatOffsetMillisec(config.offsetMillisec, "Z")
+        : "";
+    case "ZZ":
+      return config?.offsetMillisec
+        ? formatOffsetMillisec(config.offsetMillisec, "ZZ")
+        : "";
     default:
       throw new TypeError("Please input valid format.");
+  }
+}
+
+function formatOffsetMillisec(offsetMillisec: number, format: "Z" | "ZZ") {
+  const offsetMin = millisecToMin(offsetMillisec);
+  const hour = Math.floor(Math.abs(offsetMin) / 60);
+  const min = Math.abs(offsetMin) % 60;
+  const sign = offsetMin >= 0 ? "+" : "-";
+
+  switch (format) {
+    case "Z":
+      return `${sign}${formatToTwoDigits(hour)}:${formatToTwoDigits(min)}`;
+    case "ZZ":
+      return `${sign}${formatToTwoDigits(hour)}${formatToTwoDigits(min)}`;
+    default:
+      throw new TypeError("Please input valid offset format.");
   }
 }
 
@@ -122,18 +159,16 @@ function parseFormat(
 export function formatDate(
   dateInfo: DateInfo,
   formatStr: string,
-  localeStr?: string,
+  config?: Config,
 ) {
   const parsedFormat = parseFormat(formatStr);
   let result = "";
-
-  const locale = new Locale(localeStr ?? "en");
 
   for (const f of parsedFormat) {
     if (f.isLiteral) {
       result += f.value;
     } else if (isFormatDateType(f.value)) {
-      result += formatDateInfo(dateInfo, f.value, locale);
+      result += formatDateInfo(dateInfo, f.value, config);
     } else {
       result += f.value;
     }

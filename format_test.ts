@@ -1,7 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { formatDate, formatDateInfo, isoToDateInfo } from "./format.ts";
 import { Locale } from "./locale.ts";
-import { DateInfo } from "./types.ts";
+import { DateInfo, Timezone } from "./types.ts";
 
 const defaultLocale = new Locale("en");
 Deno.test("format: YY", () => {
@@ -336,6 +336,107 @@ Deno.test("format: WW", () => {
   ];
   tests.forEach((t) => {
     assertEquals(formatDateInfo(t.input, "WW", defaultLocale), t.expected);
+  });
+});
+
+Deno.test("format: X", () => {
+  const tests = [
+    {
+      input: { year: 2021, month: 1, day: 1, hours: 13, minutes: 30 },
+      expected: "1609507800",
+    },
+    { input: { year: 2021, month: 1, day: 4 }, expected: "1609718400" },
+    { input: { year: 2021, month: 5, day: 25 }, expected: "1621900800" },
+  ];
+  tests.forEach((t) => {
+    assertEquals(formatDateInfo(t.input, "X", defaultLocale), t.expected);
+  });
+});
+
+Deno.test("format: x", () => {
+  const tests = [
+    {
+      input: { year: 2021, month: 1, day: 1, hours: 13, minutes: 30 },
+      expected: "1609507800000",
+    },
+    { input: { year: 2021, month: 1, day: 4 }, expected: "1609718400000" },
+    { input: { year: 2021, month: 5, day: 25 }, expected: "1621900800000" },
+  ];
+  tests.forEach((t) => {
+    assertEquals(formatDateInfo(t.input, "x", defaultLocale), t.expected);
+  });
+});
+
+Deno.test("format: z", () => {
+  const tests = [
+    {
+      input: { year: 2021, month: 1, day: 1 },
+      timezone: "Asia/Tokyo",
+      expected: "Asia/Tokyo",
+    },
+    {
+      input: { year: 2021, month: 1, day: 4 },
+      timezone: "America/New_York",
+      expected: "America/New_York",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      formatDateInfo(t.input, "z", { timezone: t.timezone as Timezone }),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("format: Z", () => {
+  const tests = [
+    {
+      input: { year: 2021, month: 1, day: 1 },
+      offset: 10800000,
+      expected: "+03:00",
+    },
+    {
+      input: { year: 2021, month: 1, day: 4 },
+      offset: 19800000,
+      expected: "+05:30",
+    },
+    {
+      input: { year: 2021, month: 1, day: 4 },
+      offset: -19800000,
+      expected: "-05:30",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      formatDateInfo(t.input, "Z", { offsetMillisec: t.offset }),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("format: ZZ", () => {
+  const tests = [
+    {
+      input: { year: 2021, month: 1, day: 1 },
+      offset: 10800000,
+      expected: "+0300",
+    },
+    {
+      input: { year: 2021, month: 1, day: 4 },
+      offset: 19800000,
+      expected: "+0530",
+    },
+    {
+      input: { year: 2021, month: 1, day: 4 },
+      offset: -19800000,
+      expected: "-0530",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      formatDateInfo(t.input, "ZZ", { offsetMillisec: t.offset }),
+      t.expected,
+    );
   });
 });
 

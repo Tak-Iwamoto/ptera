@@ -6,7 +6,13 @@ import { tzOffset } from "./timezone.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
-import { DateDiff, DateInfo, DateInfoArray, Timezone } from "./types.ts";
+import {
+  Config,
+  DateDiff,
+  DateInfo,
+  DateInfoArray,
+  Timezone,
+} from "./types.ts";
 import { Locale } from "./locale.ts";
 import {
   formatToTwoDigits,
@@ -45,18 +51,12 @@ function parseArg(date: DateArg): DateInfo {
 
   if (isArray(date)) {
     return arrayToDate(date);
-  } else {
-    const parsed = isoToDateInfo(date);
-    if (!parsed) throw new Error("Invalid format");
-    return parsed;
   }
-}
 
-type Config = {
-  timezone?: Timezone;
-  offset?: number;
-  locale?: string;
-};
+  const parsed = isoToDateInfo(date);
+  if (!parsed) throw new Error("Invalid format");
+  return parsed;
+}
 
 export class Time {
   readonly year: number;
@@ -68,10 +68,9 @@ export class Time {
   readonly milliseconds?: number;
   readonly timezone: Timezone;
   readonly valid: boolean;
-  readonly offset: number;
   readonly locale: string;
-  readonly #localeClass: Locale;
   readonly #config?: Config;
+  readonly #localeClass: Locale;
 
   constructor(date: DateArg, config?: Config) {
     const dateInfo = parseArg(date);
@@ -96,27 +95,10 @@ export class Time {
       this.seconds = NaN;
       this.milliseconds = NaN;
     }
-    this.#config = config;
     this.timezone = config?.timezone ?? "UTC";
     this.locale = config?.locale ?? "en";
     this.#localeClass = new Locale(this.locale);
-
-    if (this.valid) {
-      this.offset = config?.offset ? config?.offset : tzOffset(
-        new Date(
-          this.year,
-          this.month - 1,
-          this.day ?? 0,
-          this.hours ?? 0,
-          this.minutes ?? 0,
-          this.seconds ?? 0,
-          this.milliseconds ?? 0,
-        ),
-        this?.timezone ?? "UTC",
-      );
-    } else {
-      this.offset = 0;
-    }
+    this.#config = config;
   }
 
   static now(config?: Config): Time {
@@ -187,9 +169,7 @@ export class Time {
   }
 
   toISO(): string {
-    const offset = this.offsetHours() >= 0
-      ? `+${formatToTwoDigits(this.offsetHours())}:00`
-      : `-${formatToTwoDigits(this.offsetHours() * -1)}:00`;
+    const offset = formatDate(this.toDateInfo(), "Z", this.config());
     const tz = this.timezone === "UTC" ? "Z" : offset;
     return `${this.toISODate()}T${this.toISOTime()}${tz}`;
   }
@@ -206,12 +186,24 @@ export class Time {
     return formatDate(this.toDateInfo(), "HH:mm:ss.S");
   }
 
+  private config(): Config {
+    return {
+      offsetMillisec: this.offsetMillisec(),
+      timezone: this.timezone,
+      locale: this.locale,
+    };
+  }
+
+  format(formatStr: string) {
+    return formatDate(this.toDateInfo(), formatStr, this.config());
+  }
+
   toUTC(): Time {
     const utcDateInfo = zonedTimeToUTC(
       this.toDateInfo(),
       this.timezone,
     );
-    return new Time(utcDateInfo, { ...this.#config, timezone: "UTC" });
+    return new Time(utcDateInfo, { ...this.config(), timezone: "UTC" });
   }
 
   toZonedTime(tz: Timezone, config?: Config): Time {
@@ -254,7 +246,7 @@ export class Time {
   add(addDateDiff: DateDiff): Time {
     const dt = new Time(
       adjustedUnixTimeStamp(this.toDateInfo(), addDateDiff, { positive: true }),
-      this.#config,
+      this.config(),
     );
     return dt;
   }
@@ -264,11 +256,35 @@ export class Time {
       adjustedUnixTimeStamp(this.toDateInfo(), subDateInfo, {
         positive: false,
       }),
-      this.#config,
+      this.config(),
     );
   }
+
+  offsetMillisec(): number {
+    if (this.valid) {
+      return this.#config?.offsetMillisec
+        ? this.#config?.offsetMillisec
+        : tzOffset(
+          new Date(
+            this.year,
+            this.month - 1,
+            this.day ?? 0,
+            this.hours ?? 0,
+            this.minutes ?? 0,
+            this.seconds ?? 0,
+            this.milliseconds ?? 0,
+          ),
+          this?.timezone ?? "UTC",
+        );
+    } else {
+      return 0;
+    }
+  }
+
   offsetHours(): number {
-    return this.offset ? this.offset / MILLISECONDS_IN_HOUR : 0;
+    return this.offsetMillisec
+      ? this.offsetMillisec() / MILLISECONDS_IN_HOUR
+      : 0;
   }
 
   toDateTimeFormat(options?: Intl.DateTimeFormatOptions) {

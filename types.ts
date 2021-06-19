@@ -25,6 +25,12 @@ export type DateDiff = Partial<DateInfo> & {
 
 export type OptionalNumber = number | undefined;
 
+export type Config = {
+  timezone?: Timezone;
+  offsetMillisec?: number;
+  locale?: string;
+};
+
 export type Timezone =
   | "Etc/GMT+12"
   | "Etc/GMT+11"
