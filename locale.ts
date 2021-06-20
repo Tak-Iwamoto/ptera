@@ -115,12 +115,12 @@ export class Locale {
 
   meridiems(format?: "long" | "short" | "narrow") {
     return [
-      this.extractDTFParts(new Date(Date.UTC(2021, 1, 1, 9)), "dayPeriod", {
+      this.#extractDTFParts(new Date(Date.UTC(2021, 1, 1, 9)), "dayPeriod", {
         dayPeriod: format,
         hour12: true,
         hour: "numeric",
       }),
-      this.extractDTFParts(new Date(Date.UTC(2021, 1, 1, 21)), "dayPeriod", {
+      this.#extractDTFParts(new Date(Date.UTC(2021, 1, 1, 21)), "dayPeriod", {
         dayPeriod: format,
         hour12: true,
         hour: "numeric",
@@ -130,13 +130,13 @@ export class Locale {
 
   eras(format: "long" | "short" | "narrow") {
     return [
-      this.extractDTFParts(new Date(-40, 1, 1), "era", { era: format }),
-      this.extractDTFParts(new Date(2021, 1, 1), "era", { era: format }),
+      this.#extractDTFParts(new Date(-40, 1, 1), "era", { era: format }),
+      this.#extractDTFParts(new Date(2021, 1, 1), "era", { era: format }),
     ];
   }
 
   offsetName(date: Date, offsetFormat: "long" | "short", timezone?: Timezone) {
-    const parsedParts = this.extractDTFParts(date, "timeZoneName", {
+    const parsedParts = this.#extractDTFParts(date, "timeZoneName", {
       hour12: false,
       year: "numeric",
       month: "2-digit",
@@ -149,7 +149,7 @@ export class Locale {
     return parsedParts;
   }
 
-  private extractDTFParts(
+  #extractDTFParts(
     date: Date,
     type: Intl.DateTimeFormatPartTypes,
     options?: Intl.DateTimeFormatOptions,
