@@ -1,16 +1,21 @@
 import { dayOfYearToDate } from "./convert.ts";
 import { Locale } from "./locale.ts";
 import { DateFormatType, DateInfo, isFormatDateType } from "./types.ts";
-import { parseInteger } from "./utils.ts";
+import {
+  isValidDay,
+  isValidMonth,
+  minToMillisec,
+  parseInteger,
+} from "./utils.ts";
 
 const formatsRegex =
-  /([-:/.()\s]+)|(YYYY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|WW?|ZZ?|a)/g;
+  /([-:/.()\s\_]+)|(YYYY|YY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|WW?|ZZ?|a)/g;
 
 const oneDigitRegex = /\d/;
 const fourDigitsRegex = /\d\d\d\d/;
 const oneToTwoDigitRegex = /\d\d?/;
 const oneToThreeDigitRegex = /\d{1,3}/;
-const offsetRegex = /[+-]\d\d:?(\d\d)?|Z/g;
+const offsetRegex = /[+-]\d\d:?(\d\d)?|Z/;
 const literalRegex = /\d*[^\s\d-_:/()]+/;
 
 function arrayToRegex(array: string[]) {
@@ -20,51 +25,51 @@ function arrayToRegex(array: string[]) {
 function formatToRegexAndProperty(
   formatStr: DateFormatType,
   locale: Locale,
-): [RegExp, string] {
+): [RegExp, string, number | null] {
   switch (formatStr) {
     case "YY":
     case "YYYY":
-      return [fourDigitsRegex, "year"];
+      return [fourDigitsRegex, "year", 4];
     case "M":
     case "MM":
-      return [oneToTwoDigitRegex, "month"];
+      return [oneToTwoDigitRegex, "month", 2];
     case "MMM":
-      return [arrayToRegex(locale.monthList("short")), "shortMonthStr"];
+      return [arrayToRegex(locale.monthList("short")), "shortMonthStr", null];
     case "MMMM":
-      return [arrayToRegex(locale.monthList("long")), "monthStr"];
+      return [arrayToRegex(locale.monthList("long")), "monthStr", null];
     case "d":
     case "dd":
-      return [oneToTwoDigitRegex, "day"];
+      return [oneToTwoDigitRegex, "day", 2];
     case "D":
     case "DDD":
-      return [oneToThreeDigitRegex, "dayOfYear"];
+      return [oneToThreeDigitRegex, "dayOfYear", 3];
     case "H":
     case "HH":
     case "h":
     case "hh":
-      return [oneToTwoDigitRegex, "hours"];
+      return [oneToTwoDigitRegex, "hours", 2];
     case "m":
     case "mm":
-      return [oneToTwoDigitRegex, "minutes"];
+      return [oneToTwoDigitRegex, "minutes", 2];
     case "s":
     case "ss":
-      return [oneToTwoDigitRegex, "seconds"];
+      return [oneToTwoDigitRegex, "seconds", 2];
     case "S":
-      return [oneToThreeDigitRegex, "milliseconds"];
+      return [oneToThreeDigitRegex, "milliseconds", 3];
     case "w":
-      return [oneDigitRegex, "weekNumber"];
+      return [oneDigitRegex, "weekNumber", 1];
     case "www":
-      return [arrayToRegex(locale.weekList("short")), "week"];
+      return [arrayToRegex(locale.weekList("short")), "week", null];
     case "wwww":
-      return [arrayToRegex(locale.weekList("long")), "week"];
+      return [arrayToRegex(locale.weekList("long")), "week", null];
     case "W":
     case "WW":
-      return [oneToTwoDigitRegex, "isoweek"];
+      return [oneToTwoDigitRegex, "isoweek", 2];
     case "a":
-      return [literalRegex, "AMPM"];
+      return [literalRegex, "AMPM", 2];
     case "Z":
     case "ZZ":
-      return [offsetRegex, "offset"];
+      return [offsetRegex, "offset", 6];
     default:
       throw new TypeError("Please input valid format.");
   }
@@ -91,12 +96,19 @@ function dateStrToHash(
   if (parsedFormat) {
     for (const f of parsedFormat) {
       if (isFormatDateType(f)) {
-        const [regex, property] = formatToRegexAndProperty(f, locale);
-        const targetStr = dateStr.substr(cursor);
+        const [regex, property, formatCursor] = formatToRegexAndProperty(
+          f,
+          locale,
+        );
+        const targetStr = formatCursor
+          ? dateStr.substr(cursor, formatCursor)
+          : dateStr.substr(cursor);
         const parts = targetStr.match(regex);
         if (parts) {
           cursor += parts[0].length;
           hash[property] = parts[0];
+        } else {
+          return {};
         }
       } else {
         cursor += f.length;
@@ -109,9 +121,9 @@ function dateStrToHash(
 function hashToDate(
   hash: { [key: string]: string },
   locale: Locale,
-): Partial<DateInfo> & { offset?: number } {
+): Partial<DateInfo> & { offsetMillisec?: number } {
   const year = parseInteger(hash["year"]);
-  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
   let month = undefined;
   if (hash["monthStr"]) {
@@ -122,11 +134,27 @@ function hashToDate(
     month = months[locale.monthList("short").indexOf(hash["shortMonthStr"])];
   }
 
+  const invalidResult = {
+    year: undefined,
+    month: undefined,
+    day: undefined,
+    hours: undefined,
+    minutes: undefined,
+    seconds: undefined,
+    milliseconds: undefined,
+    offsetMillisec: undefined,
+  };
+
   if (hash["month"]) {
     month = parseInteger((hash["month"]));
+    if (month && !isValidMonth(month)) return invalidResult;
   }
 
   let day = parseInteger((hash["day"]));
+
+  if (day && month && year && !isValidDay(day, year, month)) {
+    return invalidResult;
+  }
 
   if (hash["dayOfYear"]) {
     const dayOfYear = parseInteger(hash["dayOfYear"]);
@@ -141,7 +169,9 @@ function hashToDate(
   const minutes = parseInteger((hash["minutes"]));
   const seconds = parseInteger((hash["seconds"]));
   const milliseconds = parseInteger((hash["milliseconds"]));
-  const offset = hash["offset"] ? parseOffset(hash["offset"]) : undefined;
+  const offsetMillisec = hash["offset"]
+    ? parseOffsetMillisec(hash["offset"])
+    : undefined;
   const isPM = hash["AMPM"] === "PM";
 
   return {
@@ -152,7 +182,7 @@ function hashToDate(
     minutes,
     seconds,
     milliseconds,
-    offset,
+    offsetMillisec,
   };
 }
 
@@ -169,14 +199,14 @@ function normalizeHours(hours: number | undefined, isPM: boolean) {
   return hours;
 }
 
-function parseOffset(offsetStr: string): number {
+function parseOffsetMillisec(offsetStr: string): number {
   if (offsetStr === "Z") return 0;
   const parts = offsetStr.match(/([-+]|\d\d)/g);
   if (!parts) return 0;
 
   const hours = parseInteger(parts[1]) ?? 0;
   const minutes = parseInteger(parts[2]) ?? 0;
-  const result = hours * 60 + minutes;
+  const result = minToMillisec(hours * 60 + minutes);
   if (parts[0] === "-") return result * (-1);
   return result;
 }

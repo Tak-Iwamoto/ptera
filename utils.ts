@@ -140,3 +140,7 @@ export function floorMod(x: number, n: number) {
 export function millisecToMin(millisec: number): number {
   return millisec / MILLISECONDS_IN_MINUTE;
 }
+
+export function minToMillisec(min: number) {
+  return min * MILLISECONDS_IN_MINUTE;
+}
