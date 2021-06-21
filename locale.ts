@@ -119,11 +119,13 @@ export class Locale {
         dayPeriod: format,
         hour12: true,
         hour: "numeric",
+        timeZone: "UTC",
       }),
       this.#extractDTFParts(new Date(Date.UTC(2021, 1, 1, 21)), "dayPeriod", {
         dayPeriod: format,
         hour12: true,
         hour: "numeric",
+        timeZone: "UTC",
       }),
     ];
   }
