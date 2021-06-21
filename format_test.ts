@@ -63,13 +63,13 @@ Deno.test("format: MMM", () => {
   });
 });
 
-Deno.test("format: MMM jp", () => {
+Deno.test("format: MMM ja", () => {
   const tests = [
     { input: { year: 2021, month: 1, day: 1 }, expected: "1月" },
     { input: { year: 2021, month: 8, day: 1 }, expected: "8月" },
     { input: { year: 2021, month: 11, day: 15 }, expected: "11月" },
   ];
-  const locale = new Locale("jp");
+  const locale = new Locale("ja");
   tests.forEach((t) => {
     assertEquals(formatDateInfo(t.input, "MMM", locale), t.expected);
   });
@@ -86,13 +86,13 @@ Deno.test("format: MMMM", () => {
   });
 });
 
-Deno.test("format: MMMM jp", () => {
+Deno.test("format: MMMM ja", () => {
   const tests = [
     { input: { year: 2021, month: 1, day: 1 }, expected: "1月" },
     { input: { year: 2021, month: 8, day: 1 }, expected: "8月" },
     { input: { year: 2021, month: 11, day: 15 }, expected: "11月" },
   ];
-  const locale = new Locale("jp");
+  const locale = new Locale("ja");
   tests.forEach((t) => {
     assertEquals(formatDateInfo(t.input, "MMMM", locale), t.expected);
   });
@@ -273,14 +273,14 @@ Deno.test("format: www", () => {
   });
 });
 
-Deno.test("format: www jp", () => {
+Deno.test("format: www ja", () => {
   const tests = [
     { input: { year: 2021, month: 1, day: 2 }, expected: "土" },
     { input: { year: 2021, month: 1, day: 3 }, expected: "日" },
     { input: { year: 2021, month: 5, day: 3 }, expected: "月" },
     { input: { year: 2021, month: 5, day: 7 }, expected: "金" },
   ];
-  const locale = new Locale("jp");
+  const locale = new Locale("ja");
   tests.forEach((t) => {
     assertEquals(formatDateInfo(t.input, "www", locale), t.expected);
   });
@@ -298,14 +298,14 @@ Deno.test("format: wwww", () => {
   });
 });
 
-Deno.test("format: wwww jp", () => {
+Deno.test("format: wwww ja", () => {
   const tests = [
     { input: { year: 2021, month: 1, day: 2 }, expected: "土曜日" },
     { input: { year: 2021, month: 1, day: 3 }, expected: "日曜日" },
     { input: { year: 2021, month: 5, day: 3 }, expected: "月曜日" },
     { input: { year: 2021, month: 5, day: 7 }, expected: "金曜日" },
   ];
-  const locale = new Locale("jp");
+  const locale = new Locale("ja");
   tests.forEach((t) => {
     assertEquals(formatDateInfo(t.input, "wwww", locale), t.expected);
   });
@@ -452,7 +452,7 @@ Deno.test("format: ZZZ", () => {
     {
       input: { year: 2021, month: 1, day: 1 },
       tz: "Asia/Tokyo",
-      locale: "jp",
+      locale: "ja",
       expected: "JST",
     },
     {
@@ -482,7 +482,7 @@ Deno.test("format: ZZZZ", () => {
     {
       input: { year: 2021, month: 1, day: 1 },
       tz: "Asia/Tokyo",
-      locale: "jp",
+      locale: "ja",
       expected: "日本標準時",
     },
     {

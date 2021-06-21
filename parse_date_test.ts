@@ -280,7 +280,7 @@ Deno.test("parseDateStr locale", () => {
     {
       dateStr: "2021 1月",
       format: "YYYY MMM",
-      locale: "jp",
+      locale: "ja",
       expected: {
         year: 2021,
         month: 1,
