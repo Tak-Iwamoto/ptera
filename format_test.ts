@@ -1,7 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { formatDate, formatDateInfo, isoToDateInfo } from "./format.ts";
 import { Locale } from "./locale.ts";
-import { Config, DateInfo, Timezone } from "./types.ts";
+import { DateInfo, Option, Timezone } from "./types.ts";
 
 const defaultLocale = new Locale("en");
 Deno.test("format: YY", () => {
@@ -504,7 +504,7 @@ Deno.test("formatDate", () => {
   type Test = {
     input: DateInfo;
     formatStr: string;
-    config?: Config;
+    option?: Option;
     expected: string;
   };
   const tests: Test[] = [
@@ -516,7 +516,7 @@ Deno.test("formatDate", () => {
         hours: 9,
       },
       formatStr: "MMMM YYYY",
-      config: undefined,
+      option: undefined,
       expected: "June 2021",
     },
     {
@@ -526,7 +526,7 @@ Deno.test("formatDate", () => {
         day: 1,
       },
       formatStr: "x YYYY",
-      config: undefined,
+      option: undefined,
       expected: "1622505600000 2021",
     },
     {
@@ -536,13 +536,13 @@ Deno.test("formatDate", () => {
         day: 1,
       },
       formatStr: "z MMMM",
-      config: { timezone: "Asia/Tokyo" },
+      option: { timezone: "Asia/Tokyo" },
       expected: "Asia/Tokyo June",
     },
   ];
   tests.forEach((t) => {
     assertEquals(
-      formatDate(t.input, t.formatStr, t.config),
+      formatDate(t.input, t.formatStr, t.option),
       t.expected,
     );
   });

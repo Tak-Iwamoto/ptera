@@ -25,7 +25,7 @@ export type DateDiff = Partial<DateInfo> & {
 
 export type OptionalNumber = number | undefined;
 
-export type Config = {
+export type Option = {
   timezone?: Timezone;
   offsetMillisec?: number;
   locale?: string;

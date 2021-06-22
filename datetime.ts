@@ -9,10 +9,10 @@ import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
 import { Locale } from "./locale.ts";
 import { isLeapYear, isValidDate, weeksInWeekYear } from "./utils.ts";
 import {
-  Config,
   DateDiff,
   DateInfo,
   DateInfoArray,
+  Option,
   Timezone,
 } from "./types.ts";
 import {
@@ -53,6 +53,8 @@ function parseArg(date: DateArg): DateInfo {
   return parsed;
 }
 
+type DateTimeOption = Omit<Option, "offsetMillisec">;
+
 export class DateTime {
   readonly year: number;
   readonly month: number;
@@ -66,7 +68,7 @@ export class DateTime {
   readonly locale: string;
   readonly #localeClass: Locale;
 
-  constructor(date: DateArg, config?: Config) {
+  constructor(date: DateArg, option?: DateTimeOption) {
     const dateInfo = parseArg(date);
     const { year, month, day, hours, minutes, seconds, milliseconds } =
       dateInfo;
@@ -89,20 +91,20 @@ export class DateTime {
       this.seconds = NaN;
       this.milliseconds = NaN;
     }
-    this.timezone = config?.timezone ?? "UTC";
-    this.locale = config?.locale ?? "en";
+    this.timezone = option?.timezone ?? "UTC";
+    this.locale = option?.locale ?? "en";
     this.#localeClass = new Locale(this.locale);
   }
 
-  static now(config?: Config): DateTime {
+  static now(option?: Option): DateTime {
     const utcTime = new DateTime(new Date().getTime());
-    if (config?.timezone) {
-      return utcTime.toZonedTime(config?.timezone, config);
+    if (option?.timezone) {
+      return utcTime.toZonedTime(option?.timezone, option);
     }
 
     const localDate = utcToLocalTime(utcTime.toDateInfo());
     return new DateTime(localDate, {
-      ...config,
+      ...option,
       timezone: getLocalName() as Timezone,
     });
   }
@@ -162,7 +164,7 @@ export class DateTime {
   }
 
   toISO(): string {
-    const offset = formatDate(this.toDateInfo(), "Z", this.#config());
+    const offset = formatDate(this.toDateInfo(), "Z", this.#option());
     const tz = this.timezone === "UTC" ? "Z" : offset;
     return `${this.toISODate()}T${this.toISOTime()}${tz}`;
   }
@@ -179,7 +181,7 @@ export class DateTime {
     return formatDate(this.toDateInfo(), "HH:mm:ss.S");
   }
 
-  #config(): Config {
+  #option(): Option {
     return {
       offsetMillisec: this.offsetMillisec(),
       timezone: this.timezone,
@@ -188,7 +190,7 @@ export class DateTime {
   }
 
   format(formatStr: string) {
-    return formatDate(this.toDateInfo(), formatStr, this.#config());
+    return formatDate(this.toDateInfo(), formatStr, this.#option());
   }
 
   toUTC(): DateTime {
@@ -196,16 +198,16 @@ export class DateTime {
       this.toDateInfo(),
       this.timezone,
     );
-    return new DateTime(utcDateInfo, { ...this.#config(), timezone: "UTC" });
+    return new DateTime(utcDateInfo, { ...this.#option(), timezone: "UTC" });
   }
 
-  toZonedTime(tz: Timezone, config?: Config): DateTime {
+  toZonedTime(tz: Timezone, option?: DateTimeOption): DateTime {
     const zonedDateInfo = toOtherZonedTime(
       this.toDateInfo(),
       this.timezone,
       tz,
     );
-    return new DateTime(zonedDateInfo, { ...config, timezone: tz });
+    return new DateTime(zonedDateInfo, { ...option, timezone: tz });
   }
 
   toJSDate(): Date {
@@ -239,7 +241,7 @@ export class DateTime {
   add(addDateDiff: DateDiff): DateTime {
     const dt = new DateTime(
       adjustedUnixTimeStamp(this.toDateInfo(), addDateDiff, { positive: true }),
-      this.#config(),
+      this.#option(),
     );
     return dt;
   }
@@ -249,7 +251,7 @@ export class DateTime {
       adjustedUnixTimeStamp(this.toDateInfo(), subDateInfo, {
         positive: false,
       }),
-      this.#config(),
+      this.#option(),
     );
   }
 

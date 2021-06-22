@@ -1,8 +1,8 @@
 import {
-  Config,
   DateFormatType,
   DateInfo,
   isFormatDateType,
+  Option,
   OptionalNumber,
 } from "./types.ts";
 import { Locale } from "./locale.ts";
@@ -25,12 +25,12 @@ import {
 export function formatDateInfo(
   dateInfo: DateInfo,
   formatStr: DateFormatType,
-  config?: Config,
+  option?: Option,
 ): string {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   const twelveHours = (hours || 0) % 12;
 
-  const locale = new Locale(config?.locale ?? "en");
+  const locale = new Locale(option?.locale ?? "en");
   switch (formatStr) {
     case "YY":
       return year.toString().slice(-2);
@@ -89,26 +89,26 @@ export function formatDateInfo(
     case "x":
       return dateToTS(dateInfo).toString();
     case "z":
-      return config?.timezone ?? "";
+      return option?.timezone ?? "";
     case "Z":
-      return config?.offsetMillisec
-        ? formatOffsetMillisec(config.offsetMillisec, "Z")
+      return option?.offsetMillisec
+        ? formatOffsetMillisec(option.offsetMillisec, "Z")
         : "";
     case "ZZ":
-      return config?.offsetMillisec
-        ? formatOffsetMillisec(config.offsetMillisec, "ZZ")
+      return option?.offsetMillisec
+        ? formatOffsetMillisec(option.offsetMillisec, "ZZ")
         : "";
     case "ZZZ":
       return locale.offsetName(
         new Date(dateToTS(dateInfo)),
         "short",
-        config?.timezone,
+        option?.timezone,
       ) ?? "";
     case "ZZZZ":
       return locale.offsetName(
         new Date(dateToTS(dateInfo)),
         "long",
-        config?.timezone,
+        option?.timezone,
       ) ?? "";
     default:
       throw new TypeError("Please input valid format.");
@@ -171,7 +171,7 @@ function parseFormat(
 export function formatDate(
   dateInfo: DateInfo,
   formatStr: string,
-  config?: Config,
+  option?: Option,
 ) {
   const parsedFormat = parseFormat(formatStr);
   let result = "";
@@ -180,7 +180,7 @@ export function formatDate(
     if (f.isLiteral) {
       result += f.value;
     } else if (isFormatDateType(f.value)) {
-      result += formatDateInfo(dateInfo, f.value, config);
+      result += formatDateInfo(dateInfo, f.value, option);
     } else {
       result += f.value;
     }
