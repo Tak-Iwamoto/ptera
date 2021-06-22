@@ -7,7 +7,7 @@ import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
 import { Locale } from "./locale.ts";
-import { isLeapYear, isValidDate, weeksInWeekYear } from "./utils.ts";
+import { INVALID_DATE, isLeapYear, isValidDate, weeksInWeekYear } from "./utils.ts";
 import {
   DateDiff,
   DateInfo,
@@ -21,16 +21,6 @@ import {
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
 import { parseDateStr } from "./parse_date.ts";
-
-const invalidDateInfo = {
-  year: NaN,
-  month: NaN,
-  day: NaN,
-  hours: NaN,
-  minutes: NaN,
-  seconds: NaN,
-  milliseconds: NaN,
-};
 
 type DateArg = Partial<DateInfo> | Date | number[] | string | number;
 
@@ -65,7 +55,7 @@ function parseArg(date: DateArg): DateInfo {
     return parsed;
   }
 
-  return invalidDateInfo;
+  return INVALID_DATE;
 }
 
 type DateTimeOption = Omit<Option, "offsetMillisec">;
@@ -210,14 +200,6 @@ export class DateTime {
     return formatDate(this.toDateInfo(), "HH:mm:ss.S");
   }
 
-  #option(): Option {
-    return {
-      offsetMillisec: this.offsetMillisec(),
-      timezone: this.timezone,
-      locale: this.locale,
-    };
-  }
-
   format(formatStr: string) {
     return formatDate(this.toDateInfo(), formatStr, this.#option());
   }
@@ -315,5 +297,13 @@ export class DateTime {
 
   toDateTimeFormatParts(options?: Intl.DateTimeFormatOptions) {
     return this.#localeClass.dtfFormatToParts(this.toJSDate(), options);
+  }
+
+  #option(): Option {
+    return {
+      offsetMillisec: this.offsetMillisec(),
+      timezone: this.timezone,
+      locale: this.locale,
+    };
   }
 }

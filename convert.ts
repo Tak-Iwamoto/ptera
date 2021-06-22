@@ -50,13 +50,17 @@ export function jsDateToDate(jsDate: Date): DateInfo {
 }
 
 export function arrayToDate(dateArray: number[]): DateInfo {
-  const year = dateArray[0];
-  const month = dateArray[1];
-  const day = dateArray[2];
-  const hours = dateArray[3];
-  const minutes = dateArray[4];
-  const seconds = dateArray[5];
-  const milliseconds = dateArray[6];
+  const result = [NaN, 1, 1, 0, 0, 0, 0];
+  for (const [i, v] of dateArray.entries()) {
+    result[i] = v;
+  }
+  const year = result[0];
+  const month = result[1];
+  const day = result[2];
+  const hours = result[3];
+  const minutes = result[4];
+  const seconds = result[5];
+  const milliseconds = result[6];
   return { year, month, day, hours, minutes, seconds, milliseconds };
 }
 

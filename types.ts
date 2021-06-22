@@ -11,11 +11,11 @@ export type DateInfo = {
 export type DateInfoArray = [
   number,
   number,
-  OptionalNumber,
-  OptionalNumber,
-  OptionalNumber,
-  OptionalNumber,
-  OptionalNumber,
+  number,
+  number,
+  number,
+  number,
+  number,
 ];
 
 export type DateDiff = Partial<DateInfo> & {
