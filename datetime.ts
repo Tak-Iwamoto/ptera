@@ -53,7 +53,7 @@ function parseArg(date: DateArg): DateInfo {
   return parsed;
 }
 
-export class Time {
+export class DateTime {
   readonly year: number;
   readonly month: number;
   readonly day?: number;
@@ -94,42 +94,42 @@ export class Time {
     this.#localeClass = new Locale(this.locale);
   }
 
-  static now(config?: Config): Time {
-    const utcTime = new Time(new Date().getTime());
+  static now(config?: Config): DateTime {
+    const utcTime = new DateTime(new Date().getTime());
     if (config?.timezone) {
       return utcTime.toZonedTime(config?.timezone, config);
     }
 
     const localDate = utcToLocalTime(utcTime.toDateInfo());
-    return new Time(localDate, {
+    return new DateTime(localDate, {
       ...config,
       timezone: getLocalName() as Timezone,
     });
   }
 
-  static diffInMillisec(baseDate: Time, compareDate: Time): number {
+  static diffInMillisec(baseDate: DateTime, compareDate: DateTime): number {
     return Math.abs(
       baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
     );
   }
 
-  static diffInSec(baseDate: Time, compareDate: Time): number {
+  static diffInSec(baseDate: DateTime, compareDate: DateTime): number {
     return Math.floor(this.diffInMillisec(baseDate, compareDate) / 1000);
   }
 
-  static diffInMin(baseDate: Time, compareDate: Time): number {
+  static diffInMin(baseDate: DateTime, compareDate: DateTime): number {
     return Math.floor(
       this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
     );
   }
 
-  static diffInHours(baseDate: Time, compareDate: Time): number {
+  static diffInHours(baseDate: DateTime, compareDate: DateTime): number {
     return Math.floor(
       this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
     );
   }
 
-  static diffInDays(baseDate: Time, compareDate: Time): number {
+  static diffInDays(baseDate: DateTime, compareDate: DateTime): number {
     return Math.floor(
       this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_DAY,
     );
@@ -191,21 +191,21 @@ export class Time {
     return formatDate(this.toDateInfo(), formatStr, this.#config());
   }
 
-  toUTC(): Time {
+  toUTC(): DateTime {
     const utcDateInfo = zonedTimeToUTC(
       this.toDateInfo(),
       this.timezone,
     );
-    return new Time(utcDateInfo, { ...this.#config(), timezone: "UTC" });
+    return new DateTime(utcDateInfo, { ...this.#config(), timezone: "UTC" });
   }
 
-  toZonedTime(tz: Timezone, config?: Config): Time {
+  toZonedTime(tz: Timezone, config?: Config): DateTime {
     const zonedDateInfo = toOtherZonedTime(
       this.toDateInfo(),
       this.timezone,
       tz,
     );
-    return new Time(zonedDateInfo, { ...config, timezone: tz });
+    return new DateTime(zonedDateInfo, { ...config, timezone: tz });
   }
 
   toJSDate(): Date {
@@ -236,16 +236,16 @@ export class Time {
     return isLeapYear(this.year);
   }
 
-  add(addDateDiff: DateDiff): Time {
-    const dt = new Time(
+  add(addDateDiff: DateDiff): DateTime {
+    const dt = new DateTime(
       adjustedUnixTimeStamp(this.toDateInfo(), addDateDiff, { positive: true }),
       this.#config(),
     );
     return dt;
   }
 
-  substract(subDateInfo: Partial<DateInfo>): Time {
-    return new Time(
+  substract(subDateInfo: Partial<DateInfo>): DateTime {
+    return new DateTime(
       adjustedUnixTimeStamp(this.toDateInfo(), subDateInfo, {
         positive: false,
       }),
