@@ -111,9 +111,9 @@ export class DateTime {
     this.#localeClass = new Locale(this.locale);
   }
 
-  static parse(dateStr: string, formatStr: string): DateTime {
+  static parse(dateStr: string, formatStr: string, option?: Option): DateTime {
     const { year, month, day, hours, minutes, seconds, milliseconds } =
-      parseDateStr(dateStr, formatStr);
+      parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
     return new DateTime({
       year,
       month,

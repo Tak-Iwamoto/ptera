@@ -9,11 +9,11 @@ export function dateToArray(
 ): [
   number,
   number,
-  Partial<number>,
-  Partial<number>,
-  Partial<number>,
-  Partial<number>,
-  Partial<number>,
+  number,
+  number,
+  number,
+  number,
+  number,
 ] {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
   return [

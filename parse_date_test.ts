@@ -1,5 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import { parseDateStr } from "./parse_date.ts";
+import { INVALID_DATE } from "./utils.ts";
 
 Deno.test("parseDateStr valid", () => {
   const tests = [
@@ -10,11 +11,11 @@ Deno.test("parseDateStr valid", () => {
         year: 2021,
         month: 5,
         day: 31,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -27,8 +28,8 @@ Deno.test("parseDateStr valid", () => {
         hours: 21,
         minutes: 5,
         seconds: 30,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -40,9 +41,9 @@ Deno.test("parseDateStr valid", () => {
         day: 31,
         hours: 9,
         minutes: 30,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -54,9 +55,9 @@ Deno.test("parseDateStr valid", () => {
         day: 31,
         hours: 21,
         minutes: 30,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -68,8 +69,8 @@ Deno.test("parseDateStr valid", () => {
         day: 31,
         hours: 9,
         minutes: 30,
-        seconds: undefined,
-        milliseconds: undefined,
+        seconds: 0,
+        milliseconds: 0,
         offsetMillisec: 0,
       },
     },
@@ -82,8 +83,8 @@ Deno.test("parseDateStr valid", () => {
         day: 31,
         hours: 9,
         minutes: 30,
-        seconds: undefined,
-        milliseconds: undefined,
+        seconds: 0,
+        milliseconds: 0,
         offsetMillisec: 32400000,
       },
     },
@@ -96,8 +97,8 @@ Deno.test("parseDateStr valid", () => {
         day: 31,
         hours: 9,
         minutes: 30,
-        seconds: undefined,
-        milliseconds: undefined,
+        seconds: 0,
+        milliseconds: 0,
         offsetMillisec: -32400000,
       },
     },
@@ -108,11 +109,11 @@ Deno.test("parseDateStr valid", () => {
         year: 2021,
         month: 1,
         day: 1,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -122,11 +123,11 @@ Deno.test("parseDateStr valid", () => {
         year: 2021,
         month: 12,
         day: 31,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -136,11 +137,11 @@ Deno.test("parseDateStr valid", () => {
         year: 2021,
         month: 12,
         day: 31,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -149,12 +150,12 @@ Deno.test("parseDateStr valid", () => {
       expected: {
         year: 2021,
         month: 1,
-        day: undefined,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        day: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -163,12 +164,12 @@ Deno.test("parseDateStr valid", () => {
       expected: {
         year: 2021,
         month: 1,
-        day: undefined,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        day: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -195,7 +196,7 @@ Deno.test("parseDateStr valid", () => {
         hours: 14,
         minutes: 15,
         seconds: 30,
-        milliseconds: undefined,
+        milliseconds: 0,
         offsetMillisec: 32400000,
       },
     },
@@ -223,8 +224,8 @@ Deno.test("parseDateStr valid", () => {
         hours: 14,
         minutes: 15,
         seconds: 23,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
   ];
@@ -234,16 +235,6 @@ Deno.test("parseDateStr valid", () => {
 });
 
 Deno.test("parseDateStr invalid", () => {
-  const invalidResult = {
-    year: undefined,
-    month: undefined,
-    day: undefined,
-    hours: undefined,
-    minutes: undefined,
-    seconds: undefined,
-    milliseconds: undefined,
-    offsetMillisec: undefined,
-  };
   const tests = [
     {
       dateStr: "21-04-2021",
@@ -271,7 +262,7 @@ Deno.test("parseDateStr invalid", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(parseDateStr(t.dateStr, t.format), invalidResult);
+    assertEquals(parseDateStr(t.dateStr, t.format), INVALID_DATE);
   });
 });
 
@@ -284,12 +275,12 @@ Deno.test("parseDateStr locale", () => {
       expected: {
         year: 2021,
         month: 1,
-        day: undefined,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        day: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
     {
@@ -300,11 +291,11 @@ Deno.test("parseDateStr locale", () => {
         year: 2021,
         month: 2,
         day: 3,
-        hours: undefined,
-        minutes: undefined,
-        seconds: undefined,
-        milliseconds: undefined,
-        offsetMillisec: undefined,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
       },
     },
   ];

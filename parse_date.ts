@@ -2,8 +2,8 @@ import { dayOfYearToDate } from "./convert.ts";
 import { Locale } from "./locale.ts";
 import { DateFormatType, DateInfo, isFormatDateType } from "./types.ts";
 import {
-  isValidDay,
-  isValidMonth,
+  INVALID_DATE,
+  isValidDate,
   minToMillisec,
   parseInteger,
 } from "./utils.ts";
@@ -121,7 +121,7 @@ function dateStrToHash(
 function hashToDate(
   hash: { [key: string]: string },
   locale: Locale,
-): Partial<DateInfo> & { offsetMillisec?: number } {
+): DateInfo & { offsetMillisec: number } {
   const year = parseInteger(hash["year"]);
   const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
@@ -134,27 +134,11 @@ function hashToDate(
     month = months[locale.monthList("short").indexOf(hash["shortMonthStr"])];
   }
 
-  const invalidResult = {
-    year: undefined,
-    month: undefined,
-    day: undefined,
-    hours: undefined,
-    minutes: undefined,
-    seconds: undefined,
-    milliseconds: undefined,
-    offsetMillisec: undefined,
-  };
-
   if (hash["month"]) {
     month = parseInteger((hash["month"]));
-    if (month && !isValidMonth(month)) return invalidResult;
   }
 
   let day = parseInteger((hash["day"]));
-
-  if (day && month && year && !isValidDay(day, year, month)) {
-    return invalidResult;
-  }
 
   if (hash["dayOfYear"]) {
     const dayOfYear = parseInteger(hash["dayOfYear"]);
@@ -169,25 +153,30 @@ function hashToDate(
   const minutes = parseInteger((hash["minutes"]));
   const seconds = parseInteger((hash["seconds"]));
   const milliseconds = parseInteger((hash["milliseconds"]));
+
+  if (
+    !isValidDate({ year, month, day, hours, minutes, seconds, milliseconds })
+  ) {
+    return INVALID_DATE;
+  }
   const offsetMillisec = hash["offset"]
     ? parseOffsetMillisec(hash["offset"])
     : undefined;
   const isPM = hash["AMPM"] === "PM";
 
   return {
-    year,
-    month,
-    day,
-    hours: normalizeHours(hours, isPM),
-    minutes,
-    seconds,
-    milliseconds,
-    offsetMillisec,
+    year: year as number,
+    month: month ?? 0,
+    day: day ?? 0,
+    hours: normalizeHours(hours ?? 0, isPM),
+    minutes: minutes ?? 0,
+    seconds: seconds ?? 0,
+    milliseconds: milliseconds ?? 0,
+    offsetMillisec: offsetMillisec ?? 0,
   };
 }
 
-function normalizeHours(hours: number | undefined, isPM: boolean) {
-  if (!hours) return undefined;
+function normalizeHours(hours: number, isPM: boolean) {
   if (isPM) {
     if (hours < 12) {
       return hours + 12;

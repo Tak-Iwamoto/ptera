@@ -1,6 +1,17 @@
 import { MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import { DateInfo } from "./types.ts";
 
+export const INVALID_DATE = {
+  year: NaN,
+  month: NaN,
+  day: NaN,
+  hours: NaN,
+  minutes: NaN,
+  seconds: NaN,
+  milliseconds: NaN,
+  offsetMillisec: NaN,
+} as const;
+
 export function isLeapYear(year: number): boolean {
   return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
@@ -35,27 +46,27 @@ export function isBetween(n: number, min: number, max: number): boolean {
   return min <= n && n <= max;
 }
 
-export function isValidMonth(month: number): boolean {
+function isValidMonth(month: number): boolean {
   return isBetween(month, 1, 12);
 }
 
-export function isValidDay(day: number, year: number, month: number): boolean {
+function isValidDay(day: number, year: number, month: number): boolean {
   return isBetween(day, 1, daysInMonth(year, month));
 }
 
-export function isValidHour(hours: number): boolean {
+function isValidHour(hours: number): boolean {
   return isBetween(hours, 1, 23);
 }
 
-export function isValidMinutes(minutes: number): boolean {
+function isValidMinutes(minutes: number): boolean {
   return isBetween(minutes, 0, 59);
 }
 
-export function isValidSec(sec: number): boolean {
+function isValidSec(sec: number): boolean {
   return isBetween(sec, 0, 59);
 }
 
-export function isValidMillisec(milliseconds: number): boolean {
+function isValidMillisec(milliseconds: number): boolean {
   return isBetween(milliseconds, 0, 999);
 }
 
