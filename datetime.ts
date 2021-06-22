@@ -20,8 +20,19 @@ import {
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
+import { parseDateStr } from "./parse_date.ts";
 
-type DateArg = DateInfo | Date | number[] | string | number;
+const invalidDateInfo = {
+  year: NaN,
+  month: NaN,
+  day: NaN,
+  hours: NaN,
+  minutes: NaN,
+  seconds: NaN,
+  milliseconds: NaN,
+};
+
+type DateArg = Partial<DateInfo> | Date | number[] | string | number;
 
 function isDateInfo(arg: DateArg): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;
@@ -48,9 +59,13 @@ function parseArg(date: DateArg): DateInfo {
     return arrayToDate(date);
   }
 
-  const parsed = isoToDateInfo(date);
-  if (!parsed) throw new Error("Invalid format");
-  return parsed;
+  if (typeof date === "string") {
+    const parsed = isoToDateInfo(date);
+    if (!parsed) throw new Error("Invalid format");
+    return parsed;
+  }
+
+  return invalidDateInfo;
 }
 
 type DateTimeOption = Omit<Option, "offsetMillisec">;
@@ -58,11 +73,11 @@ type DateTimeOption = Omit<Option, "offsetMillisec">;
 export class DateTime {
   readonly year: number;
   readonly month: number;
-  readonly day?: number;
-  readonly hours?: number;
-  readonly minutes?: number;
-  readonly seconds?: number;
-  readonly milliseconds?: number;
+  readonly day: number;
+  readonly hours: number;
+  readonly minutes: number;
+  readonly seconds: number;
+  readonly milliseconds: number;
   readonly timezone: Timezone;
   readonly valid: boolean;
   readonly locale: string;
@@ -77,11 +92,11 @@ export class DateTime {
     if (this.valid) {
       this.year = year;
       this.month = month;
-      this.day = day;
-      this.hours = hours;
-      this.minutes = minutes;
-      this.seconds = seconds;
-      this.milliseconds = milliseconds;
+      this.day = day ?? 1;
+      this.hours = hours ?? 0;
+      this.minutes = minutes ?? 0;
+      this.seconds = seconds ?? 0;
+      this.milliseconds = milliseconds ?? 0;
     } else {
       this.year = NaN;
       this.month = NaN;
@@ -94,6 +109,20 @@ export class DateTime {
     this.timezone = option?.timezone ?? "UTC";
     this.locale = option?.locale ?? "en";
     this.#localeClass = new Locale(this.locale);
+  }
+
+  static parse(dateStr: string, formatStr: string): DateTime {
+    const { year, month, day, hours, minutes, seconds, milliseconds } =
+      parseDateStr(dateStr, formatStr);
+    return new DateTime({
+      year,
+      month,
+      day,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+    });
   }
 
   static now(option?: Option): DateTime {

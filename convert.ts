@@ -74,7 +74,15 @@ export function tsToDate(ts: number): DateInfo {
 }
 
 export function dayOfYearToDate(dayOfYear: number, year: number) {
-  const ts = adjustedUnixTimeStamp({ year, month: 1, day: 1 }, {
+  const ts = adjustedUnixTimeStamp({
+    year,
+    month: 1,
+    day: 1,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  }, {
     day: dayOfYear - 1,
   }, { positive: true });
   return tsToDate(ts);
@@ -133,5 +141,13 @@ export function ordinalToDate(year: number, ordinal: number): DateInfo {
   const table = isLeapYear(year) ? leapFirstDayOfMonth : nonLeapFirstDayOfMonth;
   const monthIndex = table.map((i) => i < ordinal).lastIndexOf(true);
   const day = ordinal - table[monthIndex];
-  return { year, month: monthIndex + 1, day };
+  return {
+    year,
+    month: monthIndex + 1,
+    day,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  };
 }

@@ -59,10 +59,12 @@ export function isValidMillisec(milliseconds: number): boolean {
   return isBetween(milliseconds, 0, 999);
 }
 
-export function isValidDate(dateInfo: DateInfo): boolean {
+export function isValidDate(dateInfo: Partial<DateInfo>): boolean {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
 
-  if (!isValidMonth(month)) return false;
+  if (!year) return false;
+
+  if (!month || !isValidMonth(month)) return false;
 
   if (day) {
     if (!isValidDay(day, year, month)) return false;

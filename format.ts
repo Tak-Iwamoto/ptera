@@ -273,10 +273,10 @@ export function isoToDateInfo(isoFormat: string): DateInfo | undefined {
   return {
     year: isoDate.year,
     month: isoDate.month,
-    day: isoDate.day,
-    hours: isoTime.hours,
-    minutes: isoTime.minutes,
-    seconds: isoTime.seconds,
-    milliseconds: isoTime.milliseconds,
+    day: isoDate.day ?? 1,
+    hours: isoTime.hours ?? 0,
+    minutes: isoTime.minutes ?? 0,
+    seconds: isoTime.seconds ?? 0,
+    milliseconds: isoTime.milliseconds ?? 0,
   };
 }
