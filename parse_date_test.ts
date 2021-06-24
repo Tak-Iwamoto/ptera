@@ -16,6 +16,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -30,6 +31,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 30,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -44,6 +46,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -58,6 +61,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -72,6 +76,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -86,6 +91,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 32400000,
+        timezone: undefined,
       },
     },
     {
@@ -100,6 +106,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: -32400000,
+        timezone: undefined,
       },
     },
     {
@@ -114,6 +121,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -128,6 +136,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -142,6 +151,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -156,6 +166,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -170,6 +181,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -184,6 +196,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 3,
         milliseconds: 4,
         offsetMillisec: 3600000,
+        timezone: undefined,
       },
     },
     {
@@ -198,6 +211,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 30,
         milliseconds: 0,
         offsetMillisec: 32400000,
+        timezone: undefined,
       },
     },
     {
@@ -212,6 +226,7 @@ Deno.test("parseDateStr valid", () => {
         seconds: 3,
         milliseconds: 4,
         offsetMillisec: -3600000,
+        timezone: undefined,
       },
     },
     {
@@ -226,6 +241,22 @@ Deno.test("parseDateStr valid", () => {
         seconds: 23,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
+      },
+    },
+    {
+      dateStr: "20210112 Asia/Tokyo",
+      format: "YYYYMMdd z",
+      expected: {
+        year: 2021,
+        month: 1,
+        day: 12,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
+        timezone: "Asia/Tokyo",
       },
     },
   ];
@@ -281,6 +312,7 @@ Deno.test("parseDateStr locale", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
     {
@@ -296,6 +328,7 @@ Deno.test("parseDateStr locale", () => {
         seconds: 0,
         milliseconds: 0,
         offsetMillisec: 0,
+        timezone: undefined,
       },
     },
   ];

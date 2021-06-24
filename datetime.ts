@@ -7,7 +7,12 @@ import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
 import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
 import { Locale } from "./locale.ts";
-import { INVALID_DATE, isLeapYear, isValidDate, weeksInWeekYear } from "./utils.ts";
+import {
+  INVALID_DATE,
+  isLeapYear,
+  isValidDate,
+  weeksInWeekYear,
+} from "./utils.ts";
 import {
   DateDiff,
   DateInfo,
@@ -101,9 +106,21 @@ export class DateTime {
     this.#localeClass = new Locale(this.locale);
   }
 
-  static parse(dateStr: string, formatStr: string, option?: Option): DateTime {
-    const { year, month, day, hours, minutes, seconds, milliseconds } =
-      parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
+  static parse(
+    dateStr: string,
+    formatStr: string,
+    option?: DateTimeOption,
+  ): DateTime {
+    const {
+      year,
+      month,
+      day,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      timezone,
+    } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
     return new DateTime({
       year,
       month,
@@ -112,7 +129,7 @@ export class DateTime {
       minutes,
       seconds,
       milliseconds,
-    });
+    }, { ...option, timezone: timezone });
   }
 
   static now(option?: Option): DateTime {
