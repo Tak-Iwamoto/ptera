@@ -1,6 +1,5 @@
 import { adjustedUnixTimeStamp } from "./diff.ts";
 import { formatDate } from "./format.ts";
-import { isoToDateInfo } from "./format.ts";
 import { getLocalName, utcToLocalTime } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
@@ -25,7 +24,7 @@ import {
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
-import { parseDateStr } from "./parse_date.ts";
+import { parseDateStr, parseISO } from "./parse_date.ts";
 
 type DateArg = Partial<DateInfo> | Date | number[] | string | number;
 
@@ -55,7 +54,7 @@ function parseArg(date: DateArg): DateInfo {
   }
 
   if (typeof date === "string") {
-    const parsed = isoToDateInfo(date);
+    const parsed = parseISO(date);
     if (!parsed) throw new Error("Invalid format");
     return parsed;
   }

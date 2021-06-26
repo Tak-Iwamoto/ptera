@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { formatDate, formatDateInfo, isoToDateInfo } from "./format.ts";
+import { formatDate, formatDateInfo } from "./format.ts";
 import { Locale } from "./locale.ts";
 import { DateInfo, Option, Timezone } from "./types.ts";
 
@@ -1705,106 +1705,5 @@ Deno.test("formatDate", () => {
       formatDate(t.input, t.formatStr, t.option),
       t.expected,
     );
-  });
-});
-
-Deno.test("isoToDateInfo", () => {
-  type Test = {
-    input: string;
-    expected: DateInfo | null;
-  };
-  const tests: Test[] = [
-    {
-      input: "2021-05-25T09:08:34",
-      expected: {
-        year: 2021,
-        month: 5,
-        day: 25,
-        hours: 9,
-        minutes: 8,
-        seconds: 34,
-        milliseconds: 0,
-      },
-    },
-    {
-      input: "2021-11-01T09:08:34.123",
-      expected: {
-        year: 2021,
-        month: 11,
-        day: 1,
-        hours: 9,
-        minutes: 8,
-        seconds: 34,
-        milliseconds: 123,
-      },
-    },
-    {
-      input: "2021-11-01T09:08:34Z",
-      expected: {
-        year: 2021,
-        month: 11,
-        day: 1,
-        hours: 9,
-        minutes: 8,
-        seconds: 34,
-        milliseconds: 0,
-      },
-    },
-    {
-      input: "2021-11-01T09:08:34+09:00",
-      expected: {
-        year: 2021,
-        month: 11,
-        day: 1,
-        hours: 9,
-        minutes: 8,
-        seconds: 34,
-        milliseconds: 0,
-      },
-    },
-    {
-      input: "2021-11-01T09:08:34-04:00",
-      expected: {
-        year: 2021,
-        month: 11,
-        day: 1,
-        hours: 9,
-        minutes: 8,
-        seconds: 34,
-        milliseconds: 0,
-      },
-    },
-    {
-      input: "2021-150",
-      expected: {
-        year: 2021,
-        month: 5,
-        day: 30,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0,
-      },
-    },
-    {
-      input: "2021-001",
-      expected: {
-        year: 2021,
-        month: 1,
-        day: 1,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0,
-      },
-    },
-    {
-      input: "2021-366",
-      expected: null,
-    },
-  ];
-
-  tests.forEach((t) => {
-    assertEquals(isoToDateInfo(t.input), t.expected);
   });
 });

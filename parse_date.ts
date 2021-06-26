@@ -244,9 +244,12 @@ export function parseISO(isoString: string): ParseResult {
         return parseDateStr(trimStr, "YYYY'W'WWw");
       }
       return INVALID_DATE;
-    // e.g.: 2021-W20-1 (Year and ISO Week Date and Week number)
+    // e.g.: 2021-07-21 or 2021-W20-1 (Year and ISO Week Date and Week number)
     case 10:
-      return parseDateStr(trimStr, "YYYY-'W'WW-w");
+      if (trimStr.match(/\d{4}W\d{2}-\d/)) {
+        return parseDateStr(trimStr, "YYYY'W'WWw");
+      }
+      return parseDateStr(trimStr, "YYYY-MM-dd");
     // e.g.: 2021-07-21T13
     case 13:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hh");
@@ -266,6 +269,6 @@ export function parseISO(isoString: string): ParseResult {
     case 23:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss.S");
     default:
-      return INVALID_DATE;
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss.S");
   }
 }

@@ -1,20 +1,12 @@
 import { DateFormatType, DateInfo, isFormatDateType, Option } from "./types.ts";
 import { Locale } from "./locale.ts";
-import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import {
   formatToThreeDigits,
   formatToTwoDigits,
-  isValidOrdinalDate,
   millisecToMin,
-  parseInteger,
   weeksOfYear,
 } from "./utils.ts";
-import {
-  dateToDayOfYear,
-  dateToTS,
-  dateToWeekNumber,
-  ordinalToDate,
-} from "./convert.ts";
+import { dateToDayOfYear, dateToTS, dateToWeekNumber } from "./convert.ts";
 
 export function formatDateInfo(
   dateInfo: DateInfo,
@@ -192,85 +184,4 @@ function isoWeekNumber(dateInfo: DateInfo) {
   if (weekNumber > weeksOfYear(dateInfo.year)) return 1;
 
   return weekNumber;
-}
-
-const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;
-const isoDateRegex = /(\d{4})-?(\d{2})-?(\d{2})/;
-const isoTimeRegex = /(\d{2}):?(\d{2}):?(\d{2})(?:.)?(\d{3})?/;
-const isoOffsetRegex = /(Z)|([+-]\d{2})(?::?(\d{2})?)/;
-
-function extractIsoDate(
-  isoFormat: string,
-): { year?: number; month?: number; day?: number } {
-  const matches = isoDateRegex.exec(isoFormat);
-  const year = parseInteger(matches?.[1]);
-  const month = parseInteger(matches?.[2]);
-  const day = parseInteger(matches?.[3]);
-  return { year, month, day };
-}
-
-function extractIsoTime(
-  isoFormat: string,
-): {
-  hours?: number;
-  minutes?: number;
-  seconds?: number;
-  milliseconds?: number;
-} {
-  const matches = isoTimeRegex.exec(isoFormat);
-  const hours = parseInteger(matches?.[1]);
-  const minutes = parseInteger(matches?.[2]);
-  const seconds = parseInteger(matches?.[3]);
-  const milliseconds = parseInteger(matches?.[4]);
-  return { hours, minutes, seconds, milliseconds };
-}
-
-export function extractIsoOffset(isoFormat: string): number {
-  const matches = isoOffsetRegex.exec(isoFormat);
-  const isUTC = matches?.[1] === "Z";
-  const offsetHours = parseInteger(matches?.[2]) ?? 0;
-  const offsetMinutes = parseInteger(matches?.[3]) ?? 0;
-  return isUTC ? 0 : toMillisecondsOffset(offsetHours, offsetMinutes);
-}
-
-function isoOrdinalToDateInfo(isoFormat: string): DateInfo | null {
-  const matches = isoOrdinalDateRegex.exec(isoFormat);
-  const year = parseInteger(matches?.[1]);
-  const ordinalDate = parseInteger(matches?.[2]);
-  if (!year) return null;
-  if (!ordinalDate) return null;
-  if (!isValidOrdinalDate(year, ordinalDate)) return null;
-  return ordinalToDate(year, ordinalDate);
-}
-
-function toMillisecondsOffset(
-  offsetHours: number,
-  offsetMinutes: number,
-): number {
-  const isNegative = offsetHours < 0;
-  const offset = Math.abs(offsetHours) * MILLISECONDS_IN_HOUR +
-    offsetMinutes * MILLISECONDS_IN_MINUTE;
-  return isNegative ? -offset : offset;
-}
-
-export function isoToDateInfo(isoFormat: string): DateInfo | null {
-  const isoDate = extractIsoDate(isoFormat);
-  const isoTime = extractIsoTime(isoFormat);
-
-  if (isoDate && isoDate.year) {
-    return {
-      year: isoDate.year,
-      month: isoDate.month ?? 1,
-      day: isoDate.day ?? 1,
-      hours: isoTime.hours ?? 0,
-      minutes: isoTime.minutes ?? 0,
-      seconds: isoTime.seconds ?? 0,
-      milliseconds: isoTime.milliseconds ?? 0,
-    };
-  }
-
-  const fromISOOrdinal = isoOrdinalToDateInfo(isoFormat);
-  if (fromISOOrdinal) return fromISOOrdinal;
-
-  return null;
 }

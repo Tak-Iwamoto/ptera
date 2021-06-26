@@ -715,13 +715,13 @@ Deno.test("diffInMillisec", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
-      compareDate: "2021-02-01T23:00:50:999",
+      compareDate: "2021-02-01T23:00:50.999",
       expected: 50999,
     },
     {
       baseDate: "2021-02-01T00:00:00",
-      compareDate: "2021-02-01T00:30:100",
-      expected: 1810000,
+      compareDate: "2021-02-01T00:30:00.100",
+      expected: 1800100,
     },
   ];
   tests.forEach((t) => {
