@@ -4,6 +4,7 @@ import {
   DateFormatType,
   DateInfo,
   isFormatDateType,
+  Option,
   TIMEZONE,
   Timezone,
 } from "./types.ts";
@@ -83,11 +84,13 @@ function formatToRegexAndProperty(
   }
 }
 
+type ParseResult = DateInfo & Option;
+
 export function parseDateStr(
   dateStr: string,
   format: string,
   option?: { locale: string },
-) {
+): ParseResult {
   const locale = new Locale(option?.locale ?? "en");
   const hash = dateStrToHash(dateStr, format, locale);
   return hashToDate(hash, locale);
@@ -129,7 +132,7 @@ function dateStrToHash(
 function hashToDate(
   hash: { [key: string]: string },
   locale: Locale,
-): DateInfo & { offsetMillisec: number; timezone?: Timezone } {
+): ParseResult {
   const year = parseInteger(hash["year"]);
   const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
@@ -183,6 +186,7 @@ function hashToDate(
     milliseconds: milliseconds ?? 0,
     offsetMillisec: offsetMillisec ?? 0,
     timezone: timezone,
+    locale: locale.locale,
   };
 }
 
@@ -208,4 +212,30 @@ function parseOffsetMillisec(offsetStr: string): number {
   const result = minToMillisec(hours * 60 + minutes);
   if (parts[0] === "-") return result * (-1);
   return result;
+}
+
+export function parseISO(isoString: string): ParseResult {
+  const trimStr = isoString.trim();
+  switch (isoString.length) {
+    // e.g.: 2021
+    case 4:
+      return parseDateStr(trimStr, "YYYY");
+    // e.g.: 202107
+    case 6:
+      return parseDateStr(trimStr, "YYYYMM");
+    // e.g.: 2021-07 or 2021215 (Year and Day of Year)
+    case 7:
+      return trimStr.match(/\d{4}-\d{2}/)
+        ? parseDateStr(trimStr, "YYYYMM")
+        : parseDateStr(trimStr, "YYYYDDD");
+    case 8:
+      if (trimStr.match(/\d{8}/)) {
+        return parseDateStr(trimStr, 'YYYYMMdd')
+      }
+      if (trimStr.match(/\d{4}-\d{3}/)) {
+        return parseDateStr(trimStr, 'YYYY-DDD')
+      }
+    default:
+      return parseDateStr(trimStr, "YYYY");
+  }
 }

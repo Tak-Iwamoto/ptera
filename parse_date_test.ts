@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { parseDateStr } from "./parse_date.ts";
+import { parseDateStr, parseISO } from "./parse_date.ts";
 import { INVALID_DATE } from "./utils.ts";
 
 Deno.test("parseDateStr valid", () => {
@@ -17,6 +17,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -32,6 +33,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -47,6 +49,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -62,6 +65,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -77,6 +81,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -92,6 +97,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 32400000,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -107,6 +113,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: -32400000,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -122,6 +129,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -137,6 +145,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -152,6 +161,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -167,6 +177,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -182,6 +193,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -197,6 +209,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 4,
         offsetMillisec: 3600000,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -212,6 +225,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 32400000,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -227,6 +241,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 4,
         offsetMillisec: -3600000,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -242,6 +257,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'en'
       },
     },
     {
@@ -257,6 +273,7 @@ Deno.test("parseDateStr valid", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: "Asia/Tokyo",
+        locale: 'en'
       },
     },
   ];
@@ -313,6 +330,7 @@ Deno.test("parseDateStr locale", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'ja'
       },
     },
     {
@@ -329,12 +347,39 @@ Deno.test("parseDateStr locale", () => {
         milliseconds: 0,
         offsetMillisec: 0,
         timezone: undefined,
+        locale: 'uk'
       },
     },
   ];
   tests.forEach((t) => {
     assertEquals(
       parseDateStr(t.dateStr, t.format, { locale: t.locale }),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("parseISO", () => {
+  const tests = [
+    {
+      dateStr: "2021",
+      expected: {
+        year: 2021,
+        month: 0,
+        day: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        offsetMillisec: 0,
+        locale: 'en',
+        timezone: undefined,
+      },
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(
+      parseISO(t.dateStr),
       t.expected,
     );
   });
