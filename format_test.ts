@@ -1711,7 +1711,7 @@ Deno.test("formatDate", () => {
 Deno.test("isoToDateInfo", () => {
   type Test = {
     input: string;
-    expected: DateInfo | undefined;
+    expected: DateInfo | null;
   };
   const tests: Test[] = [
     {
@@ -1800,7 +1800,7 @@ Deno.test("isoToDateInfo", () => {
     },
     {
       input: "2021-366",
-      expected: undefined,
+      expected: null,
     },
   ];
 

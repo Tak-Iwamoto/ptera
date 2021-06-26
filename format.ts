@@ -201,13 +201,12 @@ const isoOffsetRegex = /(Z)|([+-]\d{2})(?::?(\d{2})?)/;
 
 function extractIsoDate(
   isoFormat: string,
-): { year: number; month: number; day?: number } | undefined {
+): { year?: number; month?: number; day?: number } {
   const matches = isoDateRegex.exec(isoFormat);
   const year = parseInteger(matches?.[1]);
   const month = parseInteger(matches?.[2]);
-  if (!year) return undefined;
-  if (!month) return undefined;
-  return { year, month, day: parseInteger(matches?.[3]) };
+  const day = parseInteger(matches?.[3]);
+  return { year, month, day };
 }
 
 function extractIsoTime(
@@ -234,13 +233,13 @@ export function extractIsoOffset(isoFormat: string): number {
   return isUTC ? 0 : toMillisecondsOffset(offsetHours, offsetMinutes);
 }
 
-function isoOrdinalToDateInfo(isoFormat: string): DateInfo | undefined {
+function isoOrdinalToDateInfo(isoFormat: string): DateInfo | null {
   const matches = isoOrdinalDateRegex.exec(isoFormat);
   const year = parseInteger(matches?.[1]);
   const ordinalDate = parseInteger(matches?.[2]);
-  if (!year) return undefined;
-  if (!ordinalDate) return undefined;
-  if (!isValidOrdinalDate(year, ordinalDate)) return undefined;
+  if (!year) return null;
+  if (!ordinalDate) return null;
+  if (!isValidOrdinalDate(year, ordinalDate)) return null;
   return ordinalToDate(year, ordinalDate);
 }
 
@@ -254,21 +253,24 @@ function toMillisecondsOffset(
   return isNegative ? -offset : offset;
 }
 
-export function isoToDateInfo(isoFormat: string): DateInfo | undefined {
-  const fromISOOrdinal = isoOrdinalToDateInfo(isoFormat);
-  if (fromISOOrdinal) return fromISOOrdinal;
-
+export function isoToDateInfo(isoFormat: string): DateInfo | null {
   const isoDate = extractIsoDate(isoFormat);
   const isoTime = extractIsoTime(isoFormat);
 
-  if (!isoDate) return undefined;
-  return {
-    year: isoDate.year,
-    month: isoDate.month,
-    day: isoDate.day ?? 1,
-    hours: isoTime.hours ?? 0,
-    minutes: isoTime.minutes ?? 0,
-    seconds: isoTime.seconds ?? 0,
-    milliseconds: isoTime.milliseconds ?? 0,
-  };
+  if (isoDate && isoDate.year) {
+    return {
+      year: isoDate.year,
+      month: isoDate.month ?? 1,
+      day: isoDate.day ?? 1,
+      hours: isoTime.hours ?? 0,
+      minutes: isoTime.minutes ?? 0,
+      seconds: isoTime.seconds ?? 0,
+      milliseconds: isoTime.milliseconds ?? 0,
+    };
+  }
+
+  const fromISOOrdinal = isoOrdinalToDateInfo(isoFormat);
+  if (fromISOOrdinal) return fromISOOrdinal;
+
+  return null;
 }
