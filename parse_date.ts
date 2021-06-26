@@ -4,8 +4,8 @@ import {
   DateFormatType,
   DateInfo,
   isFormatDateType,
+  Option,
   TIMEZONE,
-  Timezone,
 } from "./types.ts";
 import {
   INVALID_DATE,
@@ -15,7 +15,7 @@ import {
 } from "./utils.ts";
 
 const formatsRegex =
-  /([-:/.()\s\_]+)|(YYYY|YY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|WW?|ZZ?|z|a)/g;
+  /([-:/.()\s\_]+)|(YYYY|YY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|WW?|ZZ?|z|a|'.')/g;
 
 const oneDigitRegex = /\d/;
 const fourDigitsRegex = /\d\d\d\d/;
@@ -83,11 +83,13 @@ function formatToRegexAndProperty(
   }
 }
 
+type ParseResult = DateInfo & Option;
+
 export function parseDateStr(
   dateStr: string,
   format: string,
   option?: { locale: string },
-) {
+): ParseResult {
   const locale = new Locale(option?.locale ?? "en");
   const hash = dateStrToHash(dateStr, format, locale);
   return hashToDate(hash, locale);
@@ -118,6 +120,8 @@ function dateStrToHash(
         } else {
           return {};
         }
+      } else if (f.match(/'.'/)) {
+        cursor += f.length - 2;
       } else {
         cursor += f.length;
       }
@@ -126,10 +130,11 @@ function dateStrToHash(
   return hash;
 }
 
+// TODO: convert isoweek
 function hashToDate(
   hash: { [key: string]: string },
   locale: Locale,
-): DateInfo & { offsetMillisec: number; timezone?: Timezone } {
+): ParseResult {
   const year = parseInteger(hash["year"]);
   const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
@@ -183,6 +188,7 @@ function hashToDate(
     milliseconds: milliseconds ?? 0,
     offsetMillisec: offsetMillisec ?? 0,
     timezone: timezone,
+    locale: locale.locale,
   };
 }
 
@@ -208,4 +214,58 @@ function parseOffsetMillisec(offsetStr: string): number {
   const result = minToMillisec(hours * 60 + minutes);
   if (parts[0] === "-") return result * (-1);
   return result;
+}
+
+export function parseISO(isoString: string): ParseResult {
+  const trimStr = isoString.trim();
+  switch (trimStr.length) {
+    // e.g.: 2021
+    case 4:
+      return parseDateStr(trimStr, "YYYY");
+    // e.g.: 202107
+    case 6:
+      return parseDateStr(trimStr, "YYYYMM");
+    // e.g.: 2021-07 or 2021215 (Year and Day of Year)
+    case 7:
+      return trimStr.match(/\d{4}-\d{2}/)
+        ? parseDateStr(trimStr, "YYYY-MM")
+        : parseDateStr(trimStr, "YYYYDDD");
+    case 8:
+      // e.g.: 20210721
+      if (trimStr.match(/\d{8}/)) {
+        return parseDateStr(trimStr, "YYYYMMdd");
+      }
+      // e.g.: 2021215 (Year and Day of Year)
+      if (trimStr.match(/\d{4}-\d{3}/)) {
+        return parseDateStr(trimStr, "YYYY-DDD");
+      }
+      // e.g.: 2021W201 (Year and ISO Week Date and Week number)
+      if (trimStr.match(/\d{4}W\d{3}/)) {
+        return parseDateStr(trimStr, "YYYY'W'WWw");
+      }
+      return INVALID_DATE;
+    // e.g.: 2021-W20-1 (Year and ISO Week Date and Week number)
+    case 10:
+      return parseDateStr(trimStr, "YYYY-'W'WW-w");
+    // e.g.: 2021-07-21T13
+    case 13:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hh");
+    // e.g.: 2021-07-21T1325
+    case 15:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hhmm");
+    // e.g.: 2021-07-21T13:25
+    case 16:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm");
+    // e.g.: 2021-07-21T13:25:30
+    case 17:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hhmmss");
+    case 19:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss");
+    case 21:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hhmmss.S");
+    case 23:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss.S");
+    default:
+      return INVALID_DATE;
+  }
 }

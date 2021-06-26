@@ -75,9 +75,9 @@ export function isValidDate(dateInfo: Partial<DateInfo>): boolean {
 
   if (!year) return false;
 
-  if (!month || !isValidMonth(month)) return false;
+  if (month && !isValidMonth(month)) return false;
 
-  if (day) {
+  if (month && day) {
     if (!isValidDay(day, year, month)) return false;
   }
 
