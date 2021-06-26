@@ -1,10 +1,4 @@
-import {
-  DateFormatType,
-  DateInfo,
-  isFormatDateType,
-  Option,
-  OptionalNumber,
-} from "./types.ts";
+import { DateFormatType, DateInfo, isFormatDateType, Option } from "./types.ts";
 import { Locale } from "./locale.ts";
 import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_MINUTE } from "./constants.ts";
 import {
@@ -201,15 +195,13 @@ function isoWeekNumber(dateInfo: DateInfo) {
 }
 
 const isoOrdinalDateRegex = /(\d{4})-(\d{3})/;
-// const isoWeekRegex = /(\d{4})-W(\d{2})/;
-// const weekDayRegex = /[1-7]/;
 const isoDateRegex = /(\d{4})-?(\d{2})-?(\d{2})/;
 const isoTimeRegex = /(\d{2}):?(\d{2}):?(\d{2})(?:.)?(\d{3})?/;
-const isoOffsetRegex = /(Z)|([+-]\d{2})(?::?(\d{2}))/;
+const isoOffsetRegex = /(Z)|([+-]\d{2})(?::?(\d{2})?)/;
 
 function extractIsoDate(
   isoFormat: string,
-): { year: number; month: number; day: OptionalNumber } | undefined {
+): { year: number; month: number; day?: number } | undefined {
   const matches = isoDateRegex.exec(isoFormat);
   const year = parseInteger(matches?.[1]);
   const month = parseInteger(matches?.[2]);
@@ -221,10 +213,10 @@ function extractIsoDate(
 function extractIsoTime(
   isoFormat: string,
 ): {
-  hours: OptionalNumber;
-  minutes: OptionalNumber;
-  seconds: OptionalNumber;
-  milliseconds: OptionalNumber;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
 } {
   const matches = isoTimeRegex.exec(isoFormat);
   const hours = parseInteger(matches?.[1]);

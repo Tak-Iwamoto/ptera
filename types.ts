@@ -23,8 +23,6 @@ export type DateDiff = Partial<DateInfo> & {
   weeks?: number;
 };
 
-export type OptionalNumber = number | undefined;
-
 export type Option = {
   timezone?: Timezone;
   offsetMillisec?: number;
