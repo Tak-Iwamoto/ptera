@@ -315,6 +315,18 @@ export class DateTime {
     return this.#localeClass.dtfFormatToParts(this.toJSDate(), options);
   }
 
+  setOption(option: DateTimeOption) {
+    return new DateTime(this.toDateInfo(), { ...this.#option, ...option });
+  }
+
+  setLocale(locale: string) {
+    return new DateTime(this.toDateInfo(), { ...this.#option, locale });
+  }
+
+  setTimezone(timezone: Timezone) {
+    return new DateTime(this.toDateInfo(), { ...this.#option, timezone });
+  }
+
   #option(): Option {
     return {
       offsetMillisec: this.offsetMillisec(),

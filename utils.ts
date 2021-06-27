@@ -73,7 +73,7 @@ function isValidMillisec(milliseconds: number): boolean {
 export function isValidDate(dateInfo: Partial<DateInfo>): boolean {
   const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
 
-  if (!year) return false;
+  if (!year || isNaN(year)) return false;
 
   if (month && !isValidMonth(month)) return false;
 
