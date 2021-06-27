@@ -26,7 +26,7 @@ import {
 } from "./constants.ts";
 import { parseDateStr, parseISO } from "./parse_date.ts";
 
-type DateArg = Partial<DateInfo> | Date | number[] | string | number;
+export type DateArg = Partial<DateInfo> | Date | number[] | string | number;
 
 function isDateInfo(arg: DateArg): arg is DateInfo {
   return (arg as DateInfo).year !== undefined;
@@ -55,14 +55,13 @@ function parseArg(date: DateArg): DateInfo {
 
   if (typeof date === "string") {
     const parsed = parseISO(date);
-    if (!parsed) throw new Error("Invalid format");
     return parsed;
   }
 
   return INVALID_DATE;
 }
 
-type DateTimeOption = Omit<Option, "offsetMillisec">;
+export type DateTimeOption = Omit<Option, "offsetMillisec">;
 
 export class DateTime {
   readonly year: number;
