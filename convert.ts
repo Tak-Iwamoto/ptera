@@ -92,11 +92,11 @@ export function dayOfYearToDate(dayOfYear: number, year: number) {
   return tsToDate(ts);
 }
 
-export function dateToWeekNumber(dateInfo: DateInfo): number {
+export function dateToWeekDay(dateInfo: DateInfo): number {
   const jsDate = dateToJSDate(dateInfo);
-  const jsWeekNumber = jsDate.getUTCDay();
-  if (jsWeekNumber === 0) return 7;
-  return jsWeekNumber;
+  const jsWeekDay = jsDate.getUTCDay();
+  if (jsWeekDay === 0) return 7;
+  return jsWeekDay;
 }
 
 export function dateToDayOfYear(dateInfo: DateInfo): number {

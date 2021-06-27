@@ -63,7 +63,7 @@ function formatToRegexAndProperty(
     case "S":
       return [oneToThreeDigitRegex, "milliseconds", 3];
     case "w":
-      return [oneDigitRegex, "weekNumber", 1];
+      return [oneDigitRegex, "weekDay", 1];
     case "www":
       return [arrayToRegex(locale.weekList("short")), "week", null];
     case "wwww":
@@ -262,10 +262,16 @@ export function parseISO(isoString: string): ParseResult {
     // e.g.: 2021-07-21T13:25:30
     case 17:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hhmmss");
+    // e.g.: 2021-07-21 13:25:30
+    case 18:
+      return parseDateStr(trimStr, "YYYY-MM-ddhh:mm:ss");
+    // e.g.: 2021-07-21T13:25:30
     case 19:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss");
+    // e.g.: 2021-07-21T132530.200
     case 21:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hhmmss.S");
+    // e.g.: 2021-07-21T13:25:30.200
     case 23:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss.S");
     default:

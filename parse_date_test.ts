@@ -531,6 +531,22 @@ Deno.test("parseISO", () => {
         timezone: undefined,
       },
     },
+    // length 18
+    {
+      dateStr: "2021-04-15 09:24:15",
+      expected: {
+        year: 2021,
+        month: 4,
+        day: 15,
+        hours: 9,
+        minutes: 24,
+        seconds: 15,
+        milliseconds: 0,
+        offsetMillisec: 0,
+        locale: "en",
+        timezone: undefined,
+      },
+    },
     // length 19
     {
       dateStr: "2021-06-30T21:15:30",
@@ -566,6 +582,36 @@ Deno.test("parseISO", () => {
     // length 23
     {
       dateStr: "2021-06-30T21:15:30.200",
+      expected: {
+        year: 2021,
+        month: 6,
+        day: 30,
+        hours: 21,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 200,
+        offsetMillisec: 0,
+        locale: "en",
+        timezone: undefined,
+      },
+    },
+    {
+      dateStr: "2021-06-30T21:15:30.200Z",
+      expected: {
+        year: 2021,
+        month: 6,
+        day: 30,
+        hours: 21,
+        minutes: 15,
+        seconds: 30,
+        milliseconds: 200,
+        offsetMillisec: 0,
+        locale: "en",
+        timezone: undefined,
+      },
+    },
+    {
+      dateStr: "2021-06-30T21:15:30.200+09:00",
       expected: {
         year: 2021,
         month: 6,
