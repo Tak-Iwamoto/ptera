@@ -14,13 +14,8 @@ Heavily inspired by the great libraries Luxon, Dayjs, Moment.js.
 
 ### API
 
-You can use `datetime` or `DateTime`.
-
-`datetime` is wrapper function returns `DateTime` class.
-
 ```typescript
 datetime("2021-06-30T21:15:30.200"); // parse iso8601 format
-new DateTime("2021-06-30T21:15:30.200");
 
 datetime().setTimezone("Asia/Tokyo"); // timezone
 datetime().setLocale("fr"); // locale
