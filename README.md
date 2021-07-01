@@ -14,19 +14,19 @@ Heavily inspired by the great libraries Luxon, Dayjs, Moment.js.
 
 ### API
 
-You can use `ptera` or `DateTime`.
+You can use `datetime` or `DateTime`.
 
-`ptera` is wrapper function returns `DateTime` class.
+`datetime` is wrapper function returns `DateTime` class.
 
 ```typescript
-ptera("2021-06-30T21:15:30.200"); // parse iso8601 format
+datetime("2021-06-30T21:15:30.200"); // parse iso8601 format
 new DateTime("2021-06-30T21:15:30.200");
 
-ptera().setTimezone("Asia/Tokyo"); // timezone
-ptera().setLocale("fr"); // locale
+datetime().setTimezone("Asia/Tokyo"); // timezone
+datetime().setLocale("fr"); // locale
 
-ptera().add({ year: 1 }); // add Date
-ptera().substract({ day: 1 }); // substract Date
+datetime().add({ year: 1 }); // add Date
+datetime().substract({ day: 1 }); // substract Date
 ```
 
 ### Doc

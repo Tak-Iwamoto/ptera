@@ -63,6 +63,65 @@ function parseArg(date: DateArg): DateInfo {
 
 export type DateTimeOption = Omit<Option, "offsetMillisec">;
 
+export function parse(
+  dateStr: string,
+  formatStr: string,
+  option?: DateTimeOption,
+): DateTime {
+  const {
+    year,
+    month,
+    day,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    timezone,
+  } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
+
+  const tz = timezone ?? option?.timezone;
+  return new DateTime({
+    year,
+    month,
+    day,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+  }, { ...option, timezone: tz });
+}
+
+export function diffInMillisec(
+  baseDate: DateTime,
+  compareDate: DateTime,
+): number {
+  return Math.abs(
+    baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
+  );
+}
+
+export function diffInSec(baseDate: DateTime, compareDate: DateTime): number {
+  return Math.floor(diffInMillisec(baseDate, compareDate) / 1000);
+}
+
+export function diffInMin(baseDate: DateTime, compareDate: DateTime): number {
+  return Math.floor(
+    diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
+  );
+}
+
+export function diffInHours(baseDate: DateTime, compareDate: DateTime): number {
+  return Math.floor(
+    diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
+  );
+}
+
+export function diffInDays(baseDate: DateTime, compareDate: DateTime): number {
+  return Math.floor(
+    diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_DAY,
+  );
+}
+
 export class DateTime {
   readonly year: number;
   readonly month: number;
@@ -104,32 +163,6 @@ export class DateTime {
     this.#localeClass = new Locale(this.locale);
   }
 
-  static parse(
-    dateStr: string,
-    formatStr: string,
-    option?: DateTimeOption,
-  ): DateTime {
-    const {
-      year,
-      month,
-      day,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      timezone,
-    } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
-    return new DateTime({
-      year,
-      month,
-      day,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-    }, { ...option, timezone: timezone });
-  }
-
   static now(option?: Option): DateTime {
     const utcTime = new DateTime(new Date().getTime());
     if (option?.timezone) {
@@ -143,37 +176,9 @@ export class DateTime {
     });
   }
 
-  static diffInMillisec(baseDate: DateTime, compareDate: DateTime): number {
-    return Math.abs(
-      baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
-    );
-  }
-
-  static diffInSec(baseDate: DateTime, compareDate: DateTime): number {
-    return Math.floor(this.diffInMillisec(baseDate, compareDate) / 1000);
-  }
-
-  static diffInMin(baseDate: DateTime, compareDate: DateTime): number {
-    return Math.floor(
-      this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
-    );
-  }
-
-  static diffInHours(baseDate: DateTime, compareDate: DateTime): number {
-    return Math.floor(
-      this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
-    );
-  }
-
-  static diffInDays(baseDate: DateTime, compareDate: DateTime): number {
-    return Math.floor(
-      this.diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_DAY,
-    );
-  }
-
-  static isValidZone(tz: string): boolean {
+  isValidZone(): boolean {
     try {
-      new Intl.DateTimeFormat("en-US", { timeZone: tz }).format();
+      new Intl.DateTimeFormat("en-US", { timeZone: this.timezone }).format();
       return true;
     } catch {
       return false;

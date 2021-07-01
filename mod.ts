@@ -7,9 +7,9 @@ export {
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
 
-export function ptera(date?: DateArg, option?: DateTimeOption) {
+export function datetime(date?: DateArg, option?: DateTimeOption) {
   if (date) {
     return new DateTime(date, option);
   }
-  return DateTime.now();
+  return DateTime.now(option);
 }

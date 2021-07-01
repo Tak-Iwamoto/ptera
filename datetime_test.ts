@@ -1,5 +1,12 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { DateTime } from "./datetime.ts";
+import {
+  DateTime,
+  diffInDays,
+  diffInHours,
+  diffInMillisec,
+  diffInMin,
+  diffInSec,
+} from "./datetime.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { Timezone } from "./types.ts";
 
@@ -13,7 +20,10 @@ Deno.test("isValidZone", () => {
   ];
 
   tests.forEach((t) => {
-    assertEquals(DateTime.isValidZone(t.input), t.expected);
+    assertEquals(
+      new DateTime("202101", { timezone: t.input }).isValidZone(),
+      t.expected,
+    );
   });
 });
 
@@ -605,7 +615,7 @@ Deno.test("diffInDays", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      DateTime.diffInDays(
+      diffInDays(
         new DateTime(t.baseDate),
         new DateTime(t.compareDate),
       ),
@@ -639,7 +649,7 @@ Deno.test("diffInHours", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      DateTime.diffInHours(
+      diffInHours(
         new DateTime(t.baseDate),
         new DateTime(t.compareDate),
       ),
@@ -673,7 +683,7 @@ Deno.test("diffInMin", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      DateTime.diffInMin(
+      diffInMin(
         new DateTime(t.baseDate),
         new DateTime(t.compareDate),
       ),
@@ -702,7 +712,7 @@ Deno.test("diffInSec", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      DateTime.diffInSec(
+      diffInSec(
         new DateTime(t.baseDate),
         new DateTime(t.compareDate),
       ),
@@ -726,7 +736,7 @@ Deno.test("diffInMillisec", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      DateTime.diffInMillisec(
+      diffInMillisec(
         new DateTime(t.baseDate),
         new DateTime(t.compareDate),
       ),
