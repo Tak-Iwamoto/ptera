@@ -122,6 +122,13 @@ export function diffInDays(baseDate: DateTime, compareDate: DateTime): number {
   );
 }
 
+export function datetime(date?: DateArg, option?: DateTimeOption) {
+  if (date) {
+    return new DateTime(date, option);
+  }
+  return DateTime.now(option);
+}
+
 export class DateTime {
   readonly year: number;
   readonly month: number;
