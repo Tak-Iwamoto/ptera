@@ -72,6 +72,22 @@ Deno.test("toDateInfo", () => {
   });
 });
 
+Deno.test("now", () => {
+  const tests = [
+    {
+      input: DateTime.now(),
+      jsDate: new Date(),
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      (t.input.toJSDate().getTime() - t.jsDate.getTime()) < 1000,
+      true,
+    );
+  });
+});
+
 Deno.test("toUTC", () => {
   const tests = [
     {

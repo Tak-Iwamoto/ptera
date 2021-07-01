@@ -176,9 +176,17 @@ export class DateTime {
       return utcTime.toZonedTime(option?.timezone, option);
     }
 
-    const localDate = utcToLocalTime(utcTime.toDateInfo());
-    return new DateTime(localDate, {
+    return new DateTime(utcTime.toDateInfo(), {
       ...option,
+    });
+  }
+
+  toLocal(): DateTime {
+    const tz = getLocalName() as Timezone;
+    const zonedTime = this.toZonedTime(
+      tz,
+    );
+    return new DateTime(zonedTime.toDateInfo(), {
       timezone: getLocalName() as Timezone,
     });
   }
