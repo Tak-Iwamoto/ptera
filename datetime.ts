@@ -292,6 +292,14 @@ export class DateTime {
     return Math.ceil(this.month / 3);
   }
 
+  isBefore(): boolean {
+    return this.toTimestamp() < new Date().getTime();
+  }
+
+  isAfter(): boolean {
+    return this.toTimestamp() > new Date().getTime();
+  }
+
   isLeapYear(): boolean {
     return isLeapYear(this.year);
   }
