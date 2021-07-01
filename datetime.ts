@@ -1,6 +1,6 @@
 import { adjustedUnixTimeStamp } from "./diff.ts";
 import { formatDate } from "./format.ts";
-import { getLocalName, utcToLocalTime } from "./local_time.ts";
+import { getLocalName } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
 import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
@@ -97,6 +97,18 @@ export function diffInMillisec(
 ): number {
   return Math.abs(
     baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
+  );
+}
+
+export function maxDateTime(datetimes: DateTime[]) {
+  return datetimes.reduce((a, b) =>
+    a.toUTC().toTimestamp() > b.toUTC().toTimestamp() ? a : b
+  );
+}
+
+export function minDateTime(datetimes: DateTime[]) {
+  return datetimes.reduce((a, b) =>
+    a.toUTC().toTimestamp() < b.toUTC().toTimestamp() ? a : b
   );
 }
 

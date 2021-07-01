@@ -6,6 +6,8 @@ import {
   diffInMillisec,
   diffInMin,
   diffInSec,
+  maxDateTime,
+  minDateTime,
 } from "./datetime.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { Timezone } from "./types.ts";
@@ -757,6 +759,52 @@ Deno.test("diffInMillisec", () => {
         new DateTime(t.compareDate),
       ),
       t.expected,
+    );
+  });
+});
+
+Deno.test("minDateTime", () => {
+  const tests = [
+    {
+      first: "2021-02-01T10:00:00",
+      second: "2021-02-01T20:00:50.999",
+      third: "2021-02-01T23:00:50.999",
+    },
+  ];
+  tests.forEach((t) => {
+    const min = minDateTime(
+      [
+        new DateTime(t.first),
+        new DateTime(t.second),
+        new DateTime(t.third),
+      ],
+    );
+    assertEquals(
+      min.toDateInfo(),
+      new DateTime(t.first).toDateInfo(),
+    );
+  });
+});
+
+Deno.test("maxDateTime", () => {
+  const tests = [
+    {
+      first: "2021-02-01T10:00:00",
+      second: "2021-02-01T20:00:50.999",
+      third: "2021-02-01T23:00:50.999",
+    },
+  ];
+  tests.forEach((t) => {
+    const max = maxDateTime(
+      [
+        new DateTime(t.first),
+        new DateTime(t.second),
+        new DateTime(t.third),
+      ],
+    );
+    assertEquals(
+      max.toDateInfo(),
+      new DateTime(t.third).toDateInfo(),
     );
   });
 });
