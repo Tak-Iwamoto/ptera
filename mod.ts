@@ -1,4 +1,15 @@
-export { DateTime, datetime } from "./datetime.ts";
+export {
+  DateTime,
+  datetime,
+  diffInDays,
+  diffInHours,
+  diffInMillisec,
+  diffInMin,
+  diffInSec,
+  maxDateTime,
+  minDateTime,
+  parse,
+} from "./datetime.ts";
 export type { TIMEZONE, Timezone } from "./types.ts";
 export {
   MILLISECONDS_IN_DAY,
