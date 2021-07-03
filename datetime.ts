@@ -184,7 +184,7 @@ export class DateTime {
   static now(option?: Option): DateTime {
     const utcTime = new DateTime(new Date().getTime());
     if (option?.timezone) {
-      return utcTime.toZonedTime(option?.timezone, option);
+      return utcTime.toZonedTime(option?.timezone).setOption(option);
     }
 
     return new DateTime(utcTime.toDateInfo(), {
@@ -258,13 +258,13 @@ export class DateTime {
     return new DateTime(utcDateInfo, { ...this.#option(), timezone: "UTC" });
   }
 
-  toZonedTime(tz: Timezone, option?: DateTimeOption): DateTime {
+  toZonedTime(tz: Timezone): DateTime {
     const zonedDateInfo = toOtherZonedTime(
       this.toDateInfo(),
       this.timezone,
       tz,
     );
-    return new DateTime(zonedDateInfo, { ...option, timezone: tz });
+    return new DateTime(zonedDateInfo, { timezone: tz });
   }
 
   toJSDate(): Date {
