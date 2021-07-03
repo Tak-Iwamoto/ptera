@@ -2,8 +2,10 @@
 
 ## datetime
 
-The main function is `datetime` returns `DateTime` class. You can get the
-current time by calling the `datetime` function with no arguments.
+The main function is `datetime` returns `DateTime` class.
+
+You can get the current time by calling the `datetime` function with no
+arguments.
 
 ```typescript
 import { datetime } from "https://deno.land/x/ptera/mod.ts";
@@ -12,8 +14,8 @@ import { datetime } from "https://deno.land/x/ptera/mod.ts";
 const dt = datetime();
 ```
 
-`datetime` takes several types of arguments, string, Date, Object, number, array
-of number.
+`datetime` takes several types of arguments, string, Date, Object, number,
+array.
 
 ```typescript
 // parse ISO 8601
