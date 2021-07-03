@@ -1,3 +1,9 @@
+---
+layout: default
+title: Format
+nav_order: 3
+---
+
 # Format
 
 ## ISO 8601

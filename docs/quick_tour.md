@@ -1,3 +1,9 @@
+---
+layout: default
+title: Quick Tour
+nav_order: 1
+---
+
 # Quick Tour
 
 ## datetime

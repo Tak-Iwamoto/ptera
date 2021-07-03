@@ -1,3 +1,9 @@
+---
+layout: default
+title: Math
+nav_order: 5
+---
+
 # Math
 
 ## add, substract
