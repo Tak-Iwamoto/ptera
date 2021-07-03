@@ -1,8 +1,13 @@
 # Ptera
 
-Ptera is datetime library for Deno. Wrttiten in 100% Deno.
+Ptera is DateTime library for Deno.
 
-Heavily inspired by the great libraries Luxon, Dayjs, Moment.js.
+Fully Written in Deno.
+
+Heavily inspired by the great libraries
+[Luxon](https://github.com/moment/luxon),
+[Day.js](https://github.com/iamkun/dayjs),
+[Moment.js](https://github.com/moment/moment).
 
 ## Features
 
@@ -24,6 +29,6 @@ datetime().add({ year: 1 }); // add Date
 datetime().substract({ day: 1 }); // substract Date
 ```
 
-### Doc
+### Documentation
 
-WIP
+https://tak-iwamoto.github.io/ptera/
