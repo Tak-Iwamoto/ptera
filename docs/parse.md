@@ -58,11 +58,11 @@ parse("2021 лютий 03", "YYYY MMMM dd", { locale: "uk" });
 | Z      | offset with colon                         | +03:00     |
 | ZZ     | short offset                              | +0300      |
 
-## Unixtime
+## Unix Timestamp
 
-Ptera supports milliseconds Unix timestamp.
+Ptera supports milliseconds Unix Timestamp.
 
-If you want to parse seconds Unix timestamp, please convert to milliseconds
+If you want to parse seconds Unix Timestamp, please convert to milliseconds
 (timestamp * 1000).
 
 ```typescript
@@ -70,8 +70,6 @@ datetime(1625238137000);
 ```
 
 ## Date
-
-With Javascript Date.
 
 ```typescript
 const jsDate = new Date(2021, 3, 10);

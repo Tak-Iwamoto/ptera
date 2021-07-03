@@ -47,7 +47,13 @@ const dt = datetime("2021-06-30T21:15:30.200");
 dt.year; // 2021
 dt.month; // 6
 dt.day; // 30
-// more...
+dt.hour; // 21
+dt.minute; // 15
+dt.second; // 30
+dt.millisecond; // 200
+// default timezone is UTC
+dt.timezone; // 'UTC'
+dt.locale; // 'en
 ```
 
 ### Utilities
@@ -57,7 +63,6 @@ const dt = datetime();
 dt.isLeapYear();
 dt.isBefore();
 dt.dayOfYear();
-// more...
 ```
 
 ### Format
