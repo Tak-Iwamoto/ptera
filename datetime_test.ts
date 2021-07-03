@@ -6,8 +6,8 @@ import {
   diffInMillisec,
   diffInMin,
   diffInSec,
-  maxDateTime,
-  minDateTime,
+  latestDateTime,
+  oldestDateTime,
 } from "./datetime.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { Timezone } from "./types.ts";
@@ -763,7 +763,7 @@ Deno.test("diffInMillisec", () => {
   });
 });
 
-Deno.test("minDateTime", () => {
+Deno.test("oldestDateTime", () => {
   const tests = [
     {
       first: "2021-02-01T10:00:00",
@@ -772,7 +772,7 @@ Deno.test("minDateTime", () => {
     },
   ];
   tests.forEach((t) => {
-    const min = minDateTime(
+    const min = oldestDateTime(
       [
         new DateTime(t.first),
         new DateTime(t.second),
@@ -786,7 +786,7 @@ Deno.test("minDateTime", () => {
   });
 });
 
-Deno.test("maxDateTime", () => {
+Deno.test("latestDateTime", () => {
   const tests = [
     {
       first: "2021-02-01T10:00:00",
@@ -795,7 +795,7 @@ Deno.test("maxDateTime", () => {
     },
   ];
   tests.forEach((t) => {
-    const max = maxDateTime(
+    const max = latestDateTime(
       [
         new DateTime(t.first),
         new DateTime(t.second),

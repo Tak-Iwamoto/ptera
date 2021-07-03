@@ -1,5 +1,5 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
-import { adjustedUnixTimeStamp } from "./diff.ts";
+import { adjustedTS } from "./diff.ts";
 import { DateInfo } from "./types.ts";
 import { isLeapYear } from "./utils.ts";
 
@@ -78,7 +78,7 @@ export function tsToDate(ts: number): DateInfo {
 }
 
 export function dayOfYearToDate(dayOfYear: number, year: number) {
-  const ts = adjustedUnixTimeStamp({
+  const ts = adjustedTS({
     year,
     month: 1,
     day: 1,

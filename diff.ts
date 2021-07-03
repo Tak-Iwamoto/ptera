@@ -2,7 +2,7 @@ import { DateDiff, DateInfo } from "./types.ts";
 import { daysInMonth, truncNumber } from "./utils.ts";
 import { dateToTS } from "./convert.ts";
 
-export function adjustedUnixTimeStamp(
+export function adjustedTS(
   baseDateInfo: DateInfo,
   diff: DateDiff,
   option: {

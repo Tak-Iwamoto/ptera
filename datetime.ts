@@ -1,4 +1,4 @@
-import { adjustedUnixTimeStamp } from "./diff.ts";
+import { adjustedTS } from "./diff.ts";
 import { formatDate } from "./format.ts";
 import { getLocalName } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
@@ -91,24 +91,24 @@ export function parse(
   }, { ...option, timezone: tz });
 }
 
+export function latestDateTime(datetimes: DateTime[]) {
+  return datetimes.reduce((a, b) =>
+    a.toUTC().toTimestamp() > b.toUTC().toTimestamp() ? a : b
+  );
+}
+
+export function oldestDateTime(datetimes: DateTime[]) {
+  return datetimes.reduce((a, b) =>
+    a.toUTC().toTimestamp() < b.toUTC().toTimestamp() ? a : b
+  );
+}
+
 export function diffInMillisec(
   baseDate: DateTime,
   compareDate: DateTime,
 ): number {
   return Math.abs(
     baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
-  );
-}
-
-export function maxDateTime(datetimes: DateTime[]) {
-  return datetimes.reduce((a, b) =>
-    a.toUTC().toTimestamp() > b.toUTC().toTimestamp() ? a : b
-  );
-}
-
-export function minDateTime(datetimes: DateTime[]) {
-  return datetimes.reduce((a, b) =>
-    a.toUTC().toTimestamp() < b.toUTC().toTimestamp() ? a : b
   );
 }
 
@@ -184,7 +184,7 @@ export class DateTime {
   static now(option?: Option): DateTime {
     const utcTime = new DateTime(new Date().getTime());
     if (option?.timezone) {
-      return utcTime.toZonedTime(option?.timezone, option);
+      return utcTime.toZonedTime(option?.timezone).setOption(option);
     }
 
     return new DateTime(utcTime.toDateInfo(), {
@@ -258,13 +258,13 @@ export class DateTime {
     return new DateTime(utcDateInfo, { ...this.#option(), timezone: "UTC" });
   }
 
-  toZonedTime(tz: Timezone, option?: DateTimeOption): DateTime {
+  toZonedTime(tz: Timezone): DateTime {
     const zonedDateInfo = toOtherZonedTime(
       this.toDateInfo(),
       this.timezone,
       tz,
     );
-    return new DateTime(zonedDateInfo, { ...option, timezone: tz });
+    return new DateTime(zonedDateInfo, { timezone: tz });
   }
 
   toJSDate(): Date {
@@ -305,7 +305,7 @@ export class DateTime {
 
   add(addDateDiff: DateDiff): DateTime {
     const dt = new DateTime(
-      adjustedUnixTimeStamp(this.toDateInfo(), addDateDiff, { positive: true }),
+      adjustedTS(this.toDateInfo(), addDateDiff, { positive: true }),
       this.#option(),
     );
     return dt;
@@ -313,7 +313,7 @@ export class DateTime {
 
   substract(subDateInfo: Partial<DateInfo>): DateTime {
     return new DateTime(
-      adjustedUnixTimeStamp(this.toDateInfo(), subDateInfo, {
+      adjustedTS(this.toDateInfo(), subDateInfo, {
         positive: false,
       }),
       this.#option(),
