@@ -15,15 +15,15 @@ export function dateToArray(
   number,
   number,
 ] {
-  const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
+  const { year, month, day, hour, minute, second, millisecond } = dateInfo;
   return [
     year,
     option?.jsMonth ? month - 1 : month,
     day ?? 0,
-    hours ?? 0,
-    minutes ?? 0,
-    seconds ?? 0,
-    milliseconds ?? 0,
+    hour ?? 0,
+    minute ?? 0,
+    second ?? 0,
+    millisecond ?? 0,
   ];
 }
 
@@ -42,10 +42,10 @@ export function jsDateToDate(jsDate: Date): DateInfo {
     year: jsDate.getUTCFullYear(),
     month: jsDate.getUTCMonth() + 1,
     day: jsDate.getUTCDate(),
-    hours: jsDate.getUTCHours(),
-    minutes: jsDate.getUTCMinutes(),
-    seconds: jsDate.getUTCSeconds(),
-    milliseconds: jsDate.getUTCMilliseconds(),
+    hour: jsDate.getUTCHours(),
+    minute: jsDate.getUTCMinutes(),
+    second: jsDate.getUTCSeconds(),
+    millisecond: jsDate.getUTCMilliseconds(),
   };
 }
 
@@ -57,11 +57,11 @@ export function arrayToDate(dateArray: number[]): DateInfo {
   const year = result[0];
   const month = result[1];
   const day = result[2];
-  const hours = result[3];
-  const minutes = result[4];
-  const seconds = result[5];
-  const milliseconds = result[6];
-  return { year, month, day, hours, minutes, seconds, milliseconds };
+  const hour = result[3];
+  const minute = result[4];
+  const second = result[5];
+  const millisecond = result[6];
+  return { year, month, day, hour, minute, second, millisecond };
 }
 
 export function tsToDate(ts: number): DateInfo {
@@ -70,10 +70,10 @@ export function tsToDate(ts: number): DateInfo {
     year: date.getUTCFullYear(),
     month: date.getUTCMonth() + 1,
     day: date.getUTCDate(),
-    hours: date.getUTCHours(),
-    minutes: date.getUTCMinutes(),
-    seconds: date.getUTCSeconds(),
-    milliseconds: date.getUTCMilliseconds(),
+    hour: date.getUTCHours(),
+    minute: date.getUTCMinutes(),
+    second: date.getUTCSeconds(),
+    millisecond: date.getUTCMilliseconds(),
   };
 }
 
@@ -82,10 +82,10 @@ export function dayOfYearToDate(dayOfYear: number, year: number) {
     year,
     month: 1,
     day: 1,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    milliseconds: 0,
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
   }, {
     day: dayOfYear - 1,
   }, { positive: true });
@@ -149,9 +149,9 @@ export function ordinalToDate(year: number, ordinal: number): DateInfo {
     year,
     month: monthIndex + 1,
     day,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    milliseconds: 0,
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
   };
 }

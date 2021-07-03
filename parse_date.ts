@@ -53,15 +53,15 @@ function formatToRegexAndProperty(
     case "HH":
     case "h":
     case "hh":
-      return [oneToTwoDigitRegex, "hours", 2];
+      return [oneToTwoDigitRegex, "hour", 2];
     case "m":
     case "mm":
-      return [oneToTwoDigitRegex, "minutes", 2];
+      return [oneToTwoDigitRegex, "minute", 2];
     case "s":
     case "ss":
-      return [oneToTwoDigitRegex, "seconds", 2];
+      return [oneToTwoDigitRegex, "second", 2];
     case "S":
-      return [oneToThreeDigitRegex, "milliseconds", 3];
+      return [oneToThreeDigitRegex, "millisecond", 3];
     case "w":
       return [oneDigitRegex, "weekDay", 1];
     case "www":
@@ -162,13 +162,13 @@ function hashToDate(
     day = date?.day;
   }
 
-  const hours = parseInteger((hash["hours"]));
-  const minutes = parseInteger((hash["minutes"]));
-  const seconds = parseInteger((hash["seconds"]));
-  const milliseconds = parseInteger((hash["milliseconds"]));
+  const hour = parseInteger((hash["hour"]));
+  const minute = parseInteger((hash["minute"]));
+  const second = parseInteger((hash["second"]));
+  const millisecond = parseInteger((hash["millisecond"]));
 
   if (
-    !isValidDate({ year, month, day, hours, minutes, seconds, milliseconds })
+    !isValidDate({ year, month, day, hour, minute, second, millisecond })
   ) {
     return INVALID_DATE;
   }
@@ -182,26 +182,26 @@ function hashToDate(
     year: year as number,
     month: month ?? 0,
     day: day ?? 0,
-    hours: normalizeHours(hours ?? 0, isPM),
-    minutes: minutes ?? 0,
-    seconds: seconds ?? 0,
-    milliseconds: milliseconds ?? 0,
+    hour: normalizehour(hour ?? 0, isPM),
+    minute: minute ?? 0,
+    second: second ?? 0,
+    millisecond: millisecond ?? 0,
     offsetMillisec: offsetMillisec ?? 0,
     timezone: timezone,
     locale: locale.locale,
   };
 }
 
-function normalizeHours(hours: number, isPM: boolean) {
+function normalizehour(hour: number, isPM: boolean) {
   if (isPM) {
-    if (hours < 12) {
-      return hours + 12;
+    if (hour < 12) {
+      return hour + 12;
     }
-    if (hours === 12) {
+    if (hour === 12) {
       return 0;
     }
   }
-  return hours;
+  return hour;
 }
 
 function parseOffsetMillisec(offsetStr: string): number {
@@ -209,9 +209,9 @@ function parseOffsetMillisec(offsetStr: string): number {
   const parts = offsetStr.match(/([-+]|\d\d)/g);
   if (!parts) return 0;
 
-  const hours = parseInteger(parts[1]) ?? 0;
-  const minutes = parseInteger(parts[2]) ?? 0;
-  const result = minToMillisec(hours * 60 + minutes);
+  const hour = parseInteger(parts[1]) ?? 0;
+  const minute = parseInteger(parts[2]) ?? 0;
+  const result = minToMillisec(hour * 60 + minute);
   if (parts[0] === "-") return result * (-1);
   return result;
 }

@@ -2,10 +2,10 @@ export type DateInfo = {
   year: number;
   month: number;
   day: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  milliseconds: number;
+  hour: number;
+  minute: number;
+  second: number;
+  millisecond: number;
 };
 
 export type DateInfoArray = [
