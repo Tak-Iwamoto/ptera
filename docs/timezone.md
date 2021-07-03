@@ -25,13 +25,17 @@ datetime().setTimezone("America/New_York").offsetMillisec(); // -14400000
 `toUTC` converts to UTC datetime
 
 ```typescript
-const dt = datetime("2021-07-21T21:30:00").setTimezone("America/New_York"); // { year: 2021, month: 7, day: 21, hour: 21, minute: 30, second: 0, millisecond: 0, }
-const utc = dt.toUTC(); // { year: 2021, month: 7, day: 22, hour: 1, minute: 30, second: 0, millisecond: 0,}
+// { year: 2021, month: 7, day: 21, hour: 21, minute: 30, second: 0, millisecond: 0, }
+const dt = datetime("2021-07-21T21:30:00").setTimezone("America/New_York");
+// { year: 2021, month: 7, day: 22, hour: 1, minute: 30, second: 0, millisecond: 0,}
+const utc = dt.toUTC();
 ```
 
 ## Convert to zoned time
 
 ```typescript
-const NewYork = datetime("2021-07-21T21:30:00").setTimezone("America/New_York"); // { year: 2021, month: 7, day: 21, hour: 21, minute: 30, second: 0, millisecond: 0, }
-const Tokyo = dt.toZonedTime("Asia/Tokyo"); // { year: 2021, month: 7, day: 22, hour: 10, minute: 30, second: 0, millisecond: 0, }
+// { year: 2021, month: 7, day: 21, hour: 21, minute: 30, second: 0, millisecond: 0, }
+const NewYork = datetime("2021-07-21T21:30:00").setTimezone("America/New_York");
+// { year: 2021, month: 7, day: 22, hour: 10, minute: 30, second: 0, millisecond: 0, }
+const Tokyo = dt.toZonedTime("Asia/Tokyo");
 ```

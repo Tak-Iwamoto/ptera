@@ -39,6 +39,7 @@ Ptera supports these functions to calculate diff between two datetime
 - `diffInDays`
 
 ```typescript
+import { diffInDays, diffInMillisec } from "https://deno.land/x/ptera/mod.ts";
 const dt1 = datetime("2021-08-21:13:30:00");
 const dt2 = datetime("2021-01-30:21:30:00");
 
@@ -51,6 +52,11 @@ diffInDays(dt1, dt2); // 202
 Extracts the latest or oldest date
 
 ```typescript
+import {
+  latestDateTime,
+  oldestDateTime,
+} from "https://deno.land/x/ptera/mod.ts";
+
 const dt1 = datetime("2021-08-21");
 const dt2 = datetime("2021-01-30");
 const dt3 = datetime("2021-04-30");
