@@ -12,10 +12,9 @@ Ptera is DateTime library for Deno
 [Get Started](https://tak-iwamoto.github.io/ptera/quick_tour.html){: .btn
 .btn-blue }
 
-## Immutable and Chainable
+## Features
 
-## Parsing and Formatting
-
-## Timezone and Intl support
-
-## Fully Written In Deno
+- Immutable and Chainable
+- Parsing and Formatting
+- Timezone and Intl support
+- Fully Written In Deno
