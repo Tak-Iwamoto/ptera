@@ -1,3 +1,9 @@
+---
+layout: default
+title: Timezone
+nav_order: 4
+---
+
 # Timezone
 
 Timezone can be set by using `datetime` option or `setTimezone`
