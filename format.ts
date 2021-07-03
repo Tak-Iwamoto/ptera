@@ -13,8 +13,8 @@ export function formatDateInfo(
   formatStr: DateFormatType,
   option?: Option,
 ): string {
-  const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
-  const twelveHours = (hours || 0) % 12;
+  const { year, month, day, hour, minute, second, millisecond } = dateInfo;
+  const twelveHours = (hour || 0) % 12;
 
   const locale = new Locale(option?.locale ?? "en");
   switch (formatStr) {
@@ -39,24 +39,24 @@ export function formatDateInfo(
     case "DDD":
       return formatToThreeDigits(dateToDayOfYear(dateInfo));
     case "H":
-      return String(hours);
+      return String(hour);
     case "HH":
-      return hours ? formatToTwoDigits(hours) : "00";
+      return hour ? formatToTwoDigits(hour) : "00";
     case "h":
       return (twelveHours || 12).toString();
     case "hh":
       return formatToTwoDigits(twelveHours || 12).toString();
     case "m":
-      return minutes ? minutes.toString() : "0";
+      return minute ? minute.toString() : "0";
     case "mm":
-      return minutes ? formatToTwoDigits(minutes).toString() : "00";
+      return minute ? formatToTwoDigits(minute).toString() : "00";
     case "s":
-      return seconds ? seconds.toString() : "0";
+      return second ? second.toString() : "0";
     case "ss":
-      return seconds ? formatToTwoDigits(seconds).toString() : "00";
+      return second ? formatToTwoDigits(second).toString() : "00";
     case "S":
-      return milliseconds
-        ? milliseconds <= 99 ? "0${milliseconds}" : milliseconds.toString()
+      return millisecond
+        ? millisecond <= 99 ? "0${millisecond}" : millisecond.toString()
         : "000";
     case "w":
       return dateToWeekDay(dateInfo).toString();
@@ -69,7 +69,7 @@ export function formatDateInfo(
     case "WW":
       return formatToTwoDigits(isoWeekNumber(dateInfo));
     case "a":
-      return (hours || 0) / 12 <= 1 ? "AM" : "PM";
+      return (hour || 0) / 12 <= 1 ? "AM" : "PM";
     case "X":
       return (dateToTS(dateInfo) / 1000).toString();
     case "x":

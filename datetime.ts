@@ -72,10 +72,10 @@ export function parse(
     year,
     month,
     day,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
+    hour,
+    minute,
+    second,
+    millisecond,
     timezone,
   } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
 
@@ -84,10 +84,10 @@ export function parse(
     year,
     month,
     day,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
+    hour,
+    minute,
+    second,
+    millisecond,
   }, { ...option, timezone: tz });
 }
 
@@ -145,10 +145,10 @@ export class DateTime {
   readonly year: number;
   readonly month: number;
   readonly day: number;
-  readonly hours: number;
-  readonly minutes: number;
-  readonly seconds: number;
-  readonly milliseconds: number;
+  readonly hour: number;
+  readonly minute: number;
+  readonly second: number;
+  readonly millisecond: number;
   readonly timezone: Timezone;
   readonly valid: boolean;
   readonly locale: string;
@@ -156,26 +156,25 @@ export class DateTime {
 
   constructor(date: DateArg, option?: DateTimeOption) {
     const dateInfo = parseArg(date);
-    const { year, month, day, hours, minutes, seconds, milliseconds } =
-      dateInfo;
+    const { year, month, day, hour, minute, second, millisecond } = dateInfo;
     this.valid = isValidDate(dateInfo);
 
     if (this.valid) {
       this.year = year;
       this.month = month;
       this.day = day ?? 1;
-      this.hours = hours ?? 0;
-      this.minutes = minutes ?? 0;
-      this.seconds = seconds ?? 0;
-      this.milliseconds = milliseconds ?? 0;
+      this.hour = hour ?? 0;
+      this.minute = minute ?? 0;
+      this.second = second ?? 0;
+      this.millisecond = millisecond ?? 0;
     } else {
       this.year = NaN;
       this.month = NaN;
       this.day = NaN;
-      this.hours = NaN;
-      this.minutes = NaN;
-      this.seconds = NaN;
-      this.milliseconds = NaN;
+      this.hour = NaN;
+      this.minute = NaN;
+      this.second = NaN;
+      this.millisecond = NaN;
     }
     this.timezone = option?.timezone ?? "UTC";
     this.locale = option?.locale ?? "en";
@@ -217,15 +216,15 @@ export class DateTime {
   }
 
   toDateInfo(): DateInfo {
-    const { year, month, day, hours, minutes, seconds, milliseconds } = this;
+    const { year, month, day, hour, minute, second, millisecond } = this;
     return {
       year,
       month,
       day,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
+      hour,
+      minute,
+      second,
+      millisecond,
     };
   }
 
@@ -328,10 +327,10 @@ export class DateTime {
           this.year,
           this.month - 1,
           this.day ?? 0,
-          this.hours ?? 0,
-          this.minutes ?? 0,
-          this.seconds ?? 0,
-          this.milliseconds ?? 0,
+          this.hour ?? 0,
+          this.minute ?? 0,
+          this.second ?? 0,
+          this.millisecond ?? 0,
         ),
         this?.timezone ?? "UTC",
       );

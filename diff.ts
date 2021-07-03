@@ -13,10 +13,10 @@ export function adjustedUnixTimeStamp(
     year: baseYear,
     month: baseMonth,
     day: baseDay,
-    hours: baseHours,
-    minutes: baseMinutes,
-    seconds: baseSeconds,
-    milliseconds: baseMilliseconds,
+    hour: basehour,
+    minute: baseminute,
+    second: basesecond,
+    millisecond: baseMillisecond,
   } = baseDateInfo;
 
   const sign = option.positive ? 1 : -1;
@@ -32,10 +32,10 @@ export function adjustedUnixTimeStamp(
   const diffDay = diff.day && diff.weeks
     ? truncNumber(diff.day + diff.weeks * 7)
     : truncNumber(diff.day);
-  const diffHours = truncNumber(diff.hours);
-  const diffMinutes = truncNumber(diff.minutes);
-  const diffSeconds = truncNumber(diff.seconds);
-  const diffMilliSeconds = truncNumber(diff.milliseconds);
+  const diffhour = truncNumber(diff.hour);
+  const diffminute = truncNumber(diff.minute);
+  const diffsecond = truncNumber(diff.second);
+  const diffMillisecond = truncNumber(diff.millisecond);
 
   return dateToTS({
     year: adjustedYear,
@@ -44,15 +44,11 @@ export function adjustedUnixTimeStamp(
       ? Math.min(baseDay, daysInMonth(adjustedYear, adjustedMonth)) +
         (sign * diffDay)
       : (sign * diffDay),
-    hours: baseHours ? baseHours + (sign * diffHours) : (sign * diffHours),
-    minutes: baseMinutes
-      ? baseMinutes + (sign * diffMinutes)
-      : (sign * diffMinutes),
-    seconds: baseSeconds
-      ? baseSeconds + (sign * diffSeconds)
-      : (sign * diffSeconds),
-    milliseconds: baseMilliseconds
-      ? baseMilliseconds + (sign * diffMilliSeconds)
-      : (sign * diffMilliSeconds),
+    hour: basehour ? basehour + (sign * diffhour) : (sign * diffhour),
+    minute: baseminute ? baseminute + (sign * diffminute) : (sign * diffminute),
+    second: basesecond ? basesecond + (sign * diffsecond) : (sign * diffsecond),
+    millisecond: baseMillisecond
+      ? baseMillisecond + (sign * diffMillisecond)
+      : (sign * diffMillisecond),
   });
 }

@@ -5,10 +5,10 @@ export const INVALID_DATE = {
   year: NaN,
   month: NaN,
   day: NaN,
-  hours: NaN,
-  minutes: NaN,
-  seconds: NaN,
-  milliseconds: NaN,
+  hour: NaN,
+  minute: NaN,
+  second: NaN,
+  millisecond: NaN,
   offsetMillisec: NaN,
 } as const;
 
@@ -54,24 +54,24 @@ function isValidDay(day: number, year: number, month: number): boolean {
   return isBetween(day, 1, daysInMonth(year, month));
 }
 
-function isValidHour(hours: number): boolean {
-  return isBetween(hours, 1, 23);
+function isValidHour(hour: number): boolean {
+  return isBetween(hour, 1, 23);
 }
 
-function isValidMinutes(minutes: number): boolean {
-  return isBetween(minutes, 0, 59);
+function isValidMinute(minute: number): boolean {
+  return isBetween(minute, 0, 59);
 }
 
 function isValidSec(sec: number): boolean {
   return isBetween(sec, 0, 59);
 }
 
-function isValidMillisec(milliseconds: number): boolean {
-  return isBetween(milliseconds, 0, 999);
+function isValidMillisec(millisecond: number): boolean {
+  return isBetween(millisecond, 0, 999);
 }
 
 export function isValidDate(dateInfo: Partial<DateInfo>): boolean {
-  const { year, month, day, hours, minutes, seconds, milliseconds } = dateInfo;
+  const { year, month, day, hour, minute, second, millisecond } = dateInfo;
 
   if (!year || isNaN(year)) return false;
 
@@ -81,22 +81,22 @@ export function isValidDate(dateInfo: Partial<DateInfo>): boolean {
     if (!isValidDay(day, year, month)) return false;
   }
 
-  if (hours) {
-    const isValid = isValidHour(hours) ||
-      (hours === 24 && minutes === 0 && seconds === 0 && milliseconds === 0);
+  if (hour) {
+    const isValid = isValidHour(hour) ||
+      (hour === 24 && minute === 0 && second === 0 && millisecond === 0);
     if (!isValid) return false;
   }
 
-  if (minutes) {
-    if (!isValidMinutes(minutes)) return false;
+  if (minute) {
+    if (!isValidMinute(minute)) return false;
   }
 
-  if (seconds) {
-    if (!isValidSec(seconds)) return false;
+  if (second) {
+    if (!isValidSec(second)) return false;
   }
 
-  if (milliseconds) {
-    if (!isValidMillisec(milliseconds)) return false;
+  if (millisecond) {
+    if (!isValidMillisec(millisecond)) return false;
   }
 
   return true;
