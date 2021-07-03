@@ -45,6 +45,8 @@ datetime().format("'Year is: 'YYYY"); // Year is: 2021
 | MMMM   | long month string                         | August                |
 | d      | day, one or two digits                    | 8                     |
 | dd     | day, two digits                           | 08                    |
+| D      | day of year, between one and three digits | 29                    |
+| DDD    | day of year, between one and three digits | 365                   |
 | H      | 24hour, one or two digits                 | 9                     |
 | HH     | 24hour, two digits                        | 13                    |
 | h      | 12hour, one or two digits                 | 02                    |
@@ -57,6 +59,8 @@ datetime().format("'Year is: 'YYYY"); // Year is: 2021
 | w      | day of the week, 1 is Monday, 7 is Sunday | 7                     |
 | www    | short week string                         | Fri                   |
 | wwww   | long week string                          | Friday                |
+| W      | iso week number, one or two digits        | 52                    |
+| WW     | iso week number, two digits               | 52                    |
 | a      | AM or PM                                  | AM                    |
 | X      | Unix timestamp seconds                    | 1609507800            |
 | x      | Unix timestamp milliseconds               | 1609507800000         |
@@ -65,5 +69,3 @@ datetime().format("'Year is: 'YYYY"); // Year is: 2021
 | ZZ     | short offset                              | +0300                 |
 | ZZZ    | short offset name                         | UTC-5                 |
 | ZZZZ   | long offset name                          | Eastern Standard Time |
-| D      | day of year, between one and three digits | 29                    |
-| DDD    | day of year, between one and three digits | 365                   |

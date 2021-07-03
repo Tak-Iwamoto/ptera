@@ -15,7 +15,7 @@ import {
 } from "./utils.ts";
 
 const formatsRegex =
-  /([-:/.()\s\_]+)|(YYYY|YY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|WW?|ZZ?|z|a|'.')/g;
+  /([-:/.()\s\_]+)|(YYYY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|ZZ?|z|a|'.')/g;
 
 const oneDigitRegex = /\d/;
 const fourDigitsRegex = /\d\d\d\d/;
@@ -68,9 +68,6 @@ function formatToRegexAndProperty(
       return [arrayToRegex(locale.weekList("short")), "week", null];
     case "wwww":
       return [arrayToRegex(locale.weekList("long")), "week", null];
-    case "W":
-    case "WW":
-      return [oneToTwoDigitRegex, "isoweek", 2];
     case "a":
       return [literalRegex, "AMPM", 2];
     case "z":
