@@ -11,7 +11,7 @@ datetime("2021-06-30T21:15:30.200");
 
 You can also parse custom format by using `parse`.
 
-Ptera supports parsing intl string.
+Ptera also supports parsing intl string.
 
 ```typescript
 import { parse } from "https://deno.land/x/ptera/mod.ts";

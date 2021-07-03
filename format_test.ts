@@ -1640,6 +1640,20 @@ Deno.test("format: ZZZZ", () => {
       locale: "fr",
       expected: "heure normale de l’Est nord-américain",
     },
+    {
+      input: {
+        year: 2021,
+        month: 1,
+        day: 4,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      tz: "America/New_York",
+      locale: "en",
+      expected: "Eastern Standard Time",
+    },
   ];
   tests.forEach((t) => {
     assertEquals(
