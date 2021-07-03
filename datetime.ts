@@ -91,24 +91,24 @@ export function parse(
   }, { ...option, timezone: tz });
 }
 
+export function latestDateTime(datetimes: DateTime[]) {
+  return datetimes.reduce((a, b) =>
+    a.toUTC().toTimestamp() > b.toUTC().toTimestamp() ? a : b
+  );
+}
+
+export function oldestDateTime(datetimes: DateTime[]) {
+  return datetimes.reduce((a, b) =>
+    a.toUTC().toTimestamp() < b.toUTC().toTimestamp() ? a : b
+  );
+}
+
 export function diffInMillisec(
   baseDate: DateTime,
   compareDate: DateTime,
 ): number {
   return Math.abs(
     baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
-  );
-}
-
-export function maxDateTime(datetimes: DateTime[]) {
-  return datetimes.reduce((a, b) =>
-    a.toUTC().toTimestamp() > b.toUTC().toTimestamp() ? a : b
-  );
-}
-
-export function minDateTime(datetimes: DateTime[]) {
-  return datetimes.reduce((a, b) =>
-    a.toUTC().toTimestamp() < b.toUTC().toTimestamp() ? a : b
   );
 }
 
