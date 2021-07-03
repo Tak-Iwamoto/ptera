@@ -1,4 +1,4 @@
-import { adjustedUnixTimeStamp } from "./diff.ts";
+import { adjustedTS } from "./diff.ts";
 import { formatDate } from "./format.ts";
 import { getLocalName } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
@@ -305,7 +305,7 @@ export class DateTime {
 
   add(addDateDiff: DateDiff): DateTime {
     const dt = new DateTime(
-      adjustedUnixTimeStamp(this.toDateInfo(), addDateDiff, { positive: true }),
+      adjustedTS(this.toDateInfo(), addDateDiff, { positive: true }),
       this.#option(),
     );
     return dt;
@@ -313,7 +313,7 @@ export class DateTime {
 
   substract(subDateInfo: Partial<DateInfo>): DateTime {
     return new DateTime(
-      adjustedUnixTimeStamp(this.toDateInfo(), subDateInfo, {
+      adjustedTS(this.toDateInfo(), subDateInfo, {
         positive: false,
       }),
       this.#option(),
