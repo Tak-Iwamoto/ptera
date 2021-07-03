@@ -2,7 +2,7 @@
 
 ## isBefore
 
-Check the DateTime instance is in the past
+Check the datetime is in the past
 
 ```typescript
 datetime("1992-01-01").isBefore(); // true
@@ -11,7 +11,7 @@ datetime("2045-01-01").isBefore(); // false
 
 ## isAfter
 
-Check the DateTime instance is in the future
+Check the datetime is in the future
 
 ```typescript
 datetime("1992-01-01").isAfter(); // false
@@ -20,7 +20,7 @@ datetime("2045-01-01").isAfter(); // true
 
 ## isLeapYear
 
-Check the DateTime instance is in leap year
+Check the datetime is in leap year
 
 ```typescript
 datetime("2020-01-01").isLeapYear(); // true

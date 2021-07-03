@@ -28,7 +28,7 @@ function arrayToRegex(array: string[]) {
   return new RegExp(array.join("|"), "g");
 }
 
-function formatToRegexAndProperty(
+function parseFormatStr(
   formatStr: DateFormatType,
   locale: Locale,
 ): [RegExp, string, number | null] {
@@ -103,7 +103,7 @@ function dateStrToHash(
   if (parsedFormat) {
     for (const f of parsedFormat) {
       if (isFormatDateType(f)) {
-        const [regex, property, formatCursor] = formatToRegexAndProperty(
+        const [regex, property, formatCursor] = parseFormatStr(
           f,
           locale,
         );
@@ -127,7 +127,6 @@ function dateStrToHash(
   return hash;
 }
 
-// TODO: convert isoweek
 function hashToDate(
   hash: { [key: string]: string },
   locale: Locale,
