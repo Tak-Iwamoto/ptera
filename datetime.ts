@@ -264,7 +264,7 @@ export class DateTime {
       this.timezone,
       tz,
     );
-    return new DateTime(zonedDateInfo, { timezone: tz });
+    return new DateTime(zonedDateInfo, { ...this.#option, timezone: tz });
   }
 
   toJSDate(): Date {
@@ -359,10 +359,6 @@ export class DateTime {
 
   setLocale(locale: string) {
     return new DateTime(this.toDateInfo(), { ...this.#option, locale });
-  }
-
-  setTimezone(timezone: Timezone) {
-    return new DateTime(this.toDateInfo(), { ...this.#option, timezone });
   }
 
   #option(): Option {

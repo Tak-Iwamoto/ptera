@@ -22,7 +22,7 @@ Heavily inspired by the great libraries
 ```typescript
 datetime("2021-06-30T21:15:30.200"); // parse iso8601 format
 
-datetime().setTimezone("Asia/Tokyo"); // timezone
+datetime().toZonedTime("Asia/Tokyo"); // timezone
 datetime().setLocale("fr"); // locale
 
 datetime().add({ year: 1 }); // add Date
