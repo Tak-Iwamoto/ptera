@@ -1,4 +1,4 @@
-export type DateInfo = {
+export type DateObj = {
   year: number;
   month: number;
   day: number;
@@ -8,7 +8,7 @@ export type DateInfo = {
   millisecond: number;
 };
 
-export type DateInfoArray = [
+export type DateArray = [
   number,
   number,
   number,
@@ -18,7 +18,7 @@ export type DateInfoArray = [
   number,
 ];
 
-export type DateDiff = Partial<DateInfo> & {
+export type DateDiff = Partial<DateObj> & {
   quarter?: number;
   weeks?: number;
 };

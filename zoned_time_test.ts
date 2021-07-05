@@ -5,14 +5,14 @@ import {
   zonedTimeToUTC,
 } from "./zoned_time.ts";
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { DateInfo, Timezone } from "./types.ts";
+import { DateObj, Timezone } from "./types.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 
 Deno.test("utcToZonedTime", () => {
   type Test = {
-    date: DateInfo;
+    date: DateObj;
     tz: Timezone;
-    expected: DateInfo;
+    expected: DateObj;
   };
   const tests: Test[] = [
     {
@@ -108,9 +108,9 @@ Deno.test("utcToZonedTime", () => {
 
 Deno.test("zonedTimeToUTC", () => {
   type Test = {
-    date: DateInfo;
+    date: DateObj;
     tz: Timezone;
-    expected: DateInfo;
+    expected: DateObj;
   };
 
   const tests: Test[] = [
@@ -207,7 +207,7 @@ Deno.test("zonedTimeToUTC", () => {
 
 Deno.test("diffOffset", () => {
   type Test = {
-    date: DateInfo;
+    date: DateObj;
     baseTZ: Timezone;
     compareTZ: Timezone;
     expected: number;
@@ -254,10 +254,10 @@ Deno.test("diffOffset", () => {
 
 Deno.test("toOtherZonedTime", () => {
   type Test = {
-    date: DateInfo;
+    date: DateObj;
     baseTZ: Timezone;
     compareTZ: Timezone;
-    expected: DateInfo;
+    expected: DateObj;
   };
 
   const tests: Test[] = [

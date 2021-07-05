@@ -1,9 +1,9 @@
-import { DateDiff, DateInfo } from "./types.ts";
+import { DateDiff, DateObj } from "./types.ts";
 import { daysInMonth, truncNumber } from "./utils.ts";
 import { dateToTS } from "./convert.ts";
 
 export function adjustedTS(
-  baseDateInfo: DateInfo,
+  baseDateObj: DateObj,
   diff: DateDiff,
   option: {
     positive: boolean;
@@ -17,7 +17,7 @@ export function adjustedTS(
     minute: baseminute,
     second: basesecond,
     millisecond: baseMillisecond,
-  } = baseDateInfo;
+  } = baseDateObj;
 
   const sign = option.positive ? 1 : -1;
 

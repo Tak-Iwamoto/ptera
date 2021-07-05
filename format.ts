@@ -1,4 +1,4 @@
-import { DateFormatType, DateInfo, isFormatDateType, Option } from "./types.ts";
+import { DateFormatType, DateObj, isFormatDateType, Option } from "./types.ts";
 import { Locale } from "./locale.ts";
 import {
   formatToThreeDigits,
@@ -8,12 +8,12 @@ import {
 } from "./utils.ts";
 import { dateToDayOfYear, dateToTS, dateToWeekDay } from "./convert.ts";
 
-export function formatDateInfo(
-  dateInfo: DateInfo,
+export function formatDateObj(
+  dateObj: DateObj,
   formatStr: DateFormatType,
   option?: Option,
 ): string {
-  const { year, month, day, hour, minute, second, millisecond } = dateInfo;
+  const { year, month, day, hour, minute, second, millisecond } = dateObj;
   const twelveHours = (hour || 0) % 12;
 
   const locale = new Locale(option?.locale ?? "en");
@@ -35,9 +35,9 @@ export function formatDateInfo(
     case "dd":
       return day ? formatToTwoDigits(day) : "00";
     case "D":
-      return dateToDayOfYear(dateInfo).toString();
+      return dateToDayOfYear(dateObj).toString();
     case "DDD":
-      return formatToThreeDigits(dateToDayOfYear(dateInfo));
+      return formatToThreeDigits(dateToDayOfYear(dateObj));
     case "H":
       return String(hour);
     case "HH":
@@ -59,21 +59,21 @@ export function formatDateInfo(
         ? millisecond <= 99 ? "0${millisecond}" : millisecond.toString()
         : "000";
     case "w":
-      return dateToWeekDay(dateInfo).toString();
+      return dateToWeekDay(dateObj).toString();
     case "www":
-      return locale.weekList("short")[dateToWeekDay(dateInfo) - 1];
+      return locale.weekList("short")[dateToWeekDay(dateObj) - 1];
     case "wwww":
-      return locale.weekList("long")[dateToWeekDay(dateInfo) - 1];
+      return locale.weekList("long")[dateToWeekDay(dateObj) - 1];
     case "W":
-      return isoWeekNumber(dateInfo).toString();
+      return isoWeekNumber(dateObj).toString();
     case "WW":
-      return formatToTwoDigits(isoWeekNumber(dateInfo));
+      return formatToTwoDigits(isoWeekNumber(dateObj));
     case "a":
       return (hour || 0) / 12 <= 1 ? "AM" : "PM";
     case "X":
-      return (dateToTS(dateInfo) / 1000).toString();
+      return (dateToTS(dateObj) / 1000).toString();
     case "x":
-      return dateToTS(dateInfo).toString();
+      return dateToTS(dateObj).toString();
     case "z":
       return option?.timezone ?? "";
     case "Z":
@@ -86,13 +86,13 @@ export function formatDateInfo(
         : "";
     case "ZZZ":
       return locale.offsetName(
-        new Date(dateToTS(dateInfo)),
+        new Date(dateToTS(dateObj)),
         "short",
         option?.timezone,
       ) ?? "";
     case "ZZZZ":
       return locale.offsetName(
-        new Date(dateToTS(dateInfo)),
+        new Date(dateToTS(dateObj)),
         "long",
         option?.timezone,
       ) ?? "";
@@ -155,7 +155,7 @@ function parseFormat(
 }
 
 export function formatDate(
-  dateInfo: DateInfo,
+  dateObj: DateObj,
   formatStr: string,
   option?: Option,
 ) {
@@ -166,7 +166,7 @@ export function formatDate(
     if (f.isLiteral) {
       result += f.value;
     } else if (isFormatDateType(f.value)) {
-      result += formatDateInfo(dateInfo, f.value, option);
+      result += formatDateObj(dateObj, f.value, option);
     } else {
       result += f.value;
     }
@@ -174,14 +174,14 @@ export function formatDate(
   return result;
 }
 
-function isoWeekNumber(dateInfo: DateInfo) {
-  const ordinalDate = dateToDayOfYear(dateInfo);
-  const weekIndex = dateToWeekDay(dateInfo);
+function isoWeekNumber(dateObj: DateObj) {
+  const ordinalDate = dateToDayOfYear(dateObj);
+  const weekIndex = dateToWeekDay(dateObj);
 
   const weekNumber = Math.floor((ordinalDate - weekIndex + 10) / 7);
 
-  if (weekNumber < 1) return weeksOfYear(dateInfo.year - 1);
-  if (weekNumber > weeksOfYear(dateInfo.year)) return 1;
+  if (weekNumber < 1) return weeksOfYear(dateObj.year - 1);
+  if (weekNumber > weeksOfYear(dateObj.year)) return 1;
 
   return weekNumber;
 }

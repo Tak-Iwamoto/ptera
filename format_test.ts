@@ -1,7 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
-import { formatDate, formatDateInfo } from "./format.ts";
+import { formatDate, formatDateObj } from "./format.ts";
 import { Locale } from "./locale.ts";
-import { DateInfo, Option, Timezone } from "./types.ts";
+import { DateObj, Option, Timezone } from "./types.ts";
 
 const defaultLocale = new Locale("en");
 Deno.test("format: YY", () => {
@@ -32,7 +32,7 @@ Deno.test("format: YY", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "YY", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "YY", defaultLocale), t.expected);
   });
 });
 
@@ -64,7 +64,7 @@ Deno.test("format: YYYY", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "YYYY", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "YYYY", defaultLocale), t.expected);
   });
 });
 
@@ -108,7 +108,7 @@ Deno.test("format: M", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "M", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "M", defaultLocale), t.expected);
   });
 });
 
@@ -152,7 +152,7 @@ Deno.test("format: MM", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "MM", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "MM", defaultLocale), t.expected);
   });
 });
 
@@ -196,7 +196,7 @@ Deno.test("format: MMM", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "MMM", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "MMM", defaultLocale), t.expected);
   });
 });
 
@@ -241,7 +241,7 @@ Deno.test("format: MMM ja", () => {
   ];
   const locale = new Locale("ja");
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "MMM", locale), t.expected);
+    assertEquals(formatDateObj(t.input, "MMM", locale), t.expected);
   });
 });
 
@@ -285,7 +285,7 @@ Deno.test("format: MMMM", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "MMMM", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "MMMM", defaultLocale), t.expected);
   });
 });
 
@@ -330,7 +330,7 @@ Deno.test("format: MMMM ja", () => {
   ];
   const locale = new Locale("ja");
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "MMMM", locale), t.expected);
+    assertEquals(formatDateObj(t.input, "MMMM", locale), t.expected);
   });
 });
 
@@ -362,7 +362,7 @@ Deno.test("format: d", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "d", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "d", defaultLocale), t.expected);
   });
 });
 
@@ -394,7 +394,7 @@ Deno.test("format: dd", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "dd", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "dd", defaultLocale), t.expected);
   });
 });
 
@@ -438,7 +438,7 @@ Deno.test("format: D", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "D", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "D", defaultLocale), t.expected);
   });
 });
 
@@ -494,7 +494,7 @@ Deno.test("format: DDD", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "DDD", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "DDD", defaultLocale), t.expected);
   });
 });
 
@@ -550,7 +550,7 @@ Deno.test("format: H", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "H", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "H", defaultLocale), t.expected);
   });
 });
 
@@ -606,7 +606,7 @@ Deno.test("format: HH", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "HH", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "HH", defaultLocale), t.expected);
   });
 });
 
@@ -662,7 +662,7 @@ Deno.test("format: h", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "h", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "h", defaultLocale), t.expected);
   });
 });
 
@@ -718,7 +718,7 @@ Deno.test("format: hh", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "hh", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "hh", defaultLocale), t.expected);
   });
 });
 
@@ -774,7 +774,7 @@ Deno.test("format: m", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "m", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "m", defaultLocale), t.expected);
   });
 });
 
@@ -830,7 +830,7 @@ Deno.test("format: mm", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "mm", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "mm", defaultLocale), t.expected);
   });
 });
 
@@ -886,7 +886,7 @@ Deno.test("format: a", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "a", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "a", defaultLocale), t.expected);
   });
 });
 
@@ -942,7 +942,7 @@ Deno.test("format: w", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "w", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "w", defaultLocale), t.expected);
   });
 });
 
@@ -998,7 +998,7 @@ Deno.test("format: www", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "www", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "www", defaultLocale), t.expected);
   });
 });
 
@@ -1055,7 +1055,7 @@ Deno.test("format: www ja", () => {
   ];
   const locale = new Locale("ja");
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "www", locale), t.expected);
+    assertEquals(formatDateObj(t.input, "www", locale), t.expected);
   });
 });
 
@@ -1111,7 +1111,7 @@ Deno.test("format: wwww", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "wwww", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "wwww", defaultLocale), t.expected);
   });
 });
 
@@ -1168,7 +1168,7 @@ Deno.test("format: wwww ja", () => {
   ];
   const locale = new Locale("ja");
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "wwww", locale), t.expected);
+    assertEquals(formatDateObj(t.input, "wwww", locale), t.expected);
   });
 });
 
@@ -1248,7 +1248,7 @@ Deno.test("format: W", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "W", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "W", defaultLocale), t.expected);
   });
 });
 
@@ -1328,7 +1328,7 @@ Deno.test("format: WW", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "WW", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "WW", defaultLocale), t.expected);
   });
 });
 
@@ -1372,7 +1372,7 @@ Deno.test("format: X", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "X", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "X", defaultLocale), t.expected);
   });
 });
 
@@ -1416,7 +1416,7 @@ Deno.test("format: x", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(formatDateInfo(t.input, "x", defaultLocale), t.expected);
+    assertEquals(formatDateObj(t.input, "x", defaultLocale), t.expected);
   });
 });
 
@@ -1451,7 +1451,7 @@ Deno.test("format: z", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      formatDateInfo(t.input, "z", { timezone: t.timezone as Timezone }),
+      formatDateObj(t.input, "z", { timezone: t.timezone as Timezone }),
       t.expected,
     );
   });
@@ -1501,7 +1501,7 @@ Deno.test("format: Z", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      formatDateInfo(t.input, "Z", { offsetMillisec: t.offset }),
+      formatDateObj(t.input, "Z", { offsetMillisec: t.offset }),
       t.expected,
     );
   });
@@ -1551,7 +1551,7 @@ Deno.test("format: ZZ", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      formatDateInfo(t.input, "ZZ", { offsetMillisec: t.offset }),
+      formatDateObj(t.input, "ZZ", { offsetMillisec: t.offset }),
       t.expected,
     );
   });
@@ -1559,7 +1559,7 @@ Deno.test("format: ZZ", () => {
 
 Deno.test("format: ZZZ", () => {
   type Test = {
-    input: DateInfo;
+    input: DateObj;
     tz?: Timezone;
     locale: string;
     expected: string;
@@ -1597,7 +1597,7 @@ Deno.test("format: ZZZ", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      formatDateInfo(t.input, "ZZZ", { locale: t.locale, timezone: t.tz }),
+      formatDateObj(t.input, "ZZZ", { locale: t.locale, timezone: t.tz }),
       t.expected,
     );
   });
@@ -1605,7 +1605,7 @@ Deno.test("format: ZZZ", () => {
 
 Deno.test("format: ZZZZ", () => {
   type Test = {
-    input: DateInfo;
+    input: DateObj;
     tz: Timezone;
     locale: string;
     expected: string;
@@ -1657,7 +1657,7 @@ Deno.test("format: ZZZZ", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      formatDateInfo(t.input, "ZZZZ", { locale: t.locale, timezone: t.tz }),
+      formatDateObj(t.input, "ZZZZ", { locale: t.locale, timezone: t.tz }),
       t.expected,
     );
   });
@@ -1665,7 +1665,7 @@ Deno.test("format: ZZZZ", () => {
 
 Deno.test("formatDate", () => {
   type Test = {
-    input: DateInfo;
+    input: DateObj;
     formatStr: string;
     option?: Option;
     expected: string;

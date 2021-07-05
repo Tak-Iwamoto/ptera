@@ -1,10 +1,10 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
 import { adjustedTS } from "./diff.ts";
-import { DateInfo } from "./types.ts";
+import { DateObj } from "./types.ts";
 import { isLeapYear } from "./utils.ts";
 
 export function dateToArray(
-  dateInfo: DateInfo,
+  dateObj: DateObj,
   option?: { jsMonth: boolean },
 ): [
   number,
@@ -15,7 +15,7 @@ export function dateToArray(
   number,
   number,
 ] {
-  const { year, month, day, hour, minute, second, millisecond } = dateInfo;
+  const { year, month, day, hour, minute, second, millisecond } = dateObj;
   return [
     year,
     option?.jsMonth ? month - 1 : month,
@@ -27,17 +27,17 @@ export function dateToArray(
   ];
 }
 
-export function dateToTS(dateInfo: DateInfo): number {
-  return Date.UTC(...dateToArray(dateInfo, { jsMonth: true }));
+export function dateToTS(dateObj: DateObj): number {
+  return Date.UTC(...dateToArray(dateObj, { jsMonth: true }));
 }
 
 export function dateToJSDate(
-  date: DateInfo,
+  date: DateObj,
 ): Date {
   return new Date(dateToTS(date));
 }
 
-export function jsDateToDate(jsDate: Date): DateInfo {
+export function jsDateToDate(jsDate: Date): DateObj {
   return {
     year: jsDate.getUTCFullYear(),
     month: jsDate.getUTCMonth() + 1,
@@ -49,7 +49,7 @@ export function jsDateToDate(jsDate: Date): DateInfo {
   };
 }
 
-export function arrayToDate(dateArray: number[]): DateInfo {
+export function arrayToDate(dateArray: number[]): DateObj {
   const result = [NaN, 1, 1, 0, 0, 0, 0];
   for (const [i, v] of dateArray.entries()) {
     result[i] = v;
@@ -64,7 +64,7 @@ export function arrayToDate(dateArray: number[]): DateInfo {
   return { year, month, day, hour, minute, second, millisecond };
 }
 
-export function tsToDate(ts: number): DateInfo {
+export function tsToDate(ts: number): DateObj {
   const date = new Date(ts);
   return {
     year: date.getUTCFullYear(),
@@ -92,15 +92,15 @@ export function dayOfYearToDate(dayOfYear: number, year: number) {
   return tsToDate(ts);
 }
 
-export function dateToWeekDay(dateInfo: DateInfo): number {
-  const jsDate = dateToJSDate(dateInfo);
+export function dateToWeekDay(dateObj: DateObj): number {
+  const jsDate = dateToJSDate(dateObj);
   const jsWeekDay = jsDate.getUTCDay();
   if (jsWeekDay === 0) return 7;
   return jsWeekDay;
 }
 
-export function dateToDayOfYear(dateInfo: DateInfo): number {
-  const jsDate = dateToJSDate(dateInfo);
+export function dateToDayOfYear(dateObj: DateObj): number {
+  const jsDate = dateToJSDate(dateObj);
   const utc = jsDate.getTime();
 
   jsDate.setUTCMonth(0, 1);
@@ -111,7 +111,7 @@ export function dateToDayOfYear(dateInfo: DateInfo): number {
   return Math.floor(diff / MILLISECONDS_IN_DAY) + 1;
 }
 
-export function ordinalToDate(year: number, ordinal: number): DateInfo {
+export function ordinalToDate(year: number, ordinal: number): DateObj {
   const nonLeapFirstDayOfMonth = [
     0,
     31,
