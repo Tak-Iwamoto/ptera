@@ -12,13 +12,7 @@ import {
   isValidDate,
   weeksInWeekYear,
 } from "./utils.ts";
-import {
-  DateDiff,
-  DateInfo,
-  DateInfoArray,
-  Option,
-  Timezone,
-} from "./types.ts";
+import { DateArray, DateDiff, DateObj, Option, Timezone } from "./types.ts";
 import {
   MILLISECONDS_IN_DAY,
   MILLISECONDS_IN_HOUR,
@@ -26,17 +20,17 @@ import {
 } from "./constants.ts";
 import { parseDateStr, parseISO } from "./parse_date.ts";
 
-export type DateArg = Partial<DateInfo> | Date | number[] | string | number;
+export type DateArg = Partial<DateObj> | Date | number[] | string | number;
 
-function isDateInfo(arg: DateArg): arg is DateInfo {
-  return (arg as DateInfo).year !== undefined;
+function isDateObj(arg: DateArg): arg is DateObj {
+  return (arg as DateObj).year !== undefined;
 }
 
 function isArray(arg: DateArg): arg is number[] {
   return (Array.isArray(arg));
 }
 
-function parseArg(date: DateArg): DateInfo {
+function parseArg(date: DateArg): DateObj {
   if (typeof date === "number") {
     return tsToDate(date);
   }
@@ -45,7 +39,7 @@ function parseArg(date: DateArg): DateInfo {
     return tsToDate(date.getTime());
   }
 
-  if (isDateInfo(date)) {
+  if (isDateObj(date)) {
     return date;
   }
 
@@ -155,9 +149,9 @@ export class DateTime {
   readonly #localeClass: Locale;
 
   constructor(date: DateArg, option?: DateTimeOption) {
-    const dateInfo = parseArg(date);
-    const { year, month, day, hour, minute, second, millisecond } = dateInfo;
-    this.valid = isValidDate(dateInfo);
+    const dateObj = parseArg(date);
+    const { year, month, day, hour, minute, second, millisecond } = dateObj;
+    this.valid = isValidDate(dateObj);
 
     if (this.valid) {
       this.year = year;
@@ -187,7 +181,7 @@ export class DateTime {
       return utcTime.toZonedTime(option?.timezone).setOption(option);
     }
 
-    return new DateTime(utcTime.toDateInfo(), {
+    return new DateTime(utcTime.toDateObj(), {
       ...option,
     });
   }
@@ -197,7 +191,7 @@ export class DateTime {
     const zonedTime = this.toZonedTime(
       tz,
     );
-    return new DateTime(zonedTime.toDateInfo(), {
+    return new DateTime(zonedTime.toDateObj(), {
       timezone: getLocalName() as Timezone,
     });
   }
@@ -212,10 +206,10 @@ export class DateTime {
   }
 
   isValid(): boolean {
-    return isValidDate(this.toDateInfo());
+    return isValidDate(this.toDateObj());
   }
 
-  toDateInfo(): DateInfo {
+  toDateObj(): DateObj {
     const { year, month, day, hour, minute, second, millisecond } = this;
     return {
       year,
@@ -229,58 +223,58 @@ export class DateTime {
   }
 
   toISO(): string {
-    const offset = formatDate(this.toDateInfo(), "Z", this.#option());
+    const offset = formatDate(this.toDateObj(), "Z", this.#option());
     const tz = this.timezone === "UTC" ? "Z" : offset;
     return `${this.toISODate()}T${this.toISOTime()}${tz}`;
   }
 
   toISODate(): string {
-    return formatDate(this.toDateInfo(), "YYYY-MM-dd");
+    return formatDate(this.toDateObj(), "YYYY-MM-dd");
   }
 
   toISOWeekDate(): string {
-    return formatDate(this.toDateInfo(), "YYYY-'W'WW-w");
+    return formatDate(this.toDateObj(), "YYYY-'W'WW-w");
   }
 
   toISOTime(): string {
-    return formatDate(this.toDateInfo(), "HH:mm:ss.S");
+    return formatDate(this.toDateObj(), "HH:mm:ss.S");
   }
 
   format(formatStr: string) {
-    return formatDate(this.toDateInfo(), formatStr, this.#option());
+    return formatDate(this.toDateObj(), formatStr, this.#option());
   }
 
   toUTC(): DateTime {
-    const utcDateInfo = zonedTimeToUTC(
-      this.toDateInfo(),
+    const utcDateObj = zonedTimeToUTC(
+      this.toDateObj(),
       this.timezone,
     );
-    return new DateTime(utcDateInfo, { ...this.#option(), timezone: "UTC" });
+    return new DateTime(utcDateObj, { ...this.#option(), timezone: "UTC" });
   }
 
   toZonedTime(tz: Timezone): DateTime {
-    const zonedDateInfo = toOtherZonedTime(
-      this.toDateInfo(),
+    const zonedDateObj = toOtherZonedTime(
+      this.toDateObj(),
       this.timezone,
       tz,
     );
-    return new DateTime(zonedDateInfo, { ...this.#option, timezone: tz });
+    return new DateTime(zonedDateObj, { ...this.#option, timezone: tz });
   }
 
   toJSDate(): Date {
-    return dateToJSDate(this.toDateInfo());
+    return dateToJSDate(this.toDateObj());
   }
 
-  toArray(): DateInfoArray {
-    return dateToArray(this.toDateInfo());
+  toArray(): DateArray {
+    return dateToArray(this.toDateObj());
   }
 
   toTimestamp(): number {
-    return dateToTS(this.toDateInfo());
+    return dateToTS(this.toDateObj());
   }
 
   dayOfYear(): number {
-    return dateToDayOfYear(this.toDateInfo());
+    return dateToDayOfYear(this.toDateObj());
   }
 
   weeksInWeekYear(): number {
@@ -305,15 +299,15 @@ export class DateTime {
 
   add(addDateDiff: DateDiff): DateTime {
     const dt = new DateTime(
-      adjustedTS(this.toDateInfo(), addDateDiff, { positive: true }),
+      adjustedTS(this.toDateObj(), addDateDiff, { positive: true }),
       this.#option(),
     );
     return dt;
   }
 
-  substract(subDateInfo: Partial<DateInfo>): DateTime {
+  substract(subDateObj: Partial<DateObj>): DateTime {
     return new DateTime(
-      adjustedTS(this.toDateInfo(), subDateInfo, {
+      adjustedTS(this.toDateObj(), subDateObj, {
         positive: false,
       }),
       this.#option(),
@@ -354,11 +348,11 @@ export class DateTime {
   }
 
   setOption(option: DateTimeOption) {
-    return new DateTime(this.toDateInfo(), { ...this.#option, ...option });
+    return new DateTime(this.toDateObj(), { ...this.#option, ...option });
   }
 
   setLocale(locale: string) {
-    return new DateTime(this.toDateInfo(), { ...this.#option, locale });
+    return new DateTime(this.toDateObj(), { ...this.#option, locale });
   }
 
   #option(): Option {

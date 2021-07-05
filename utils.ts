@@ -1,5 +1,5 @@
 import { MILLISECONDS_IN_MINUTE } from "./constants.ts";
-import { DateInfo } from "./types.ts";
+import { DateObj } from "./types.ts";
 
 export const INVALID_DATE = {
   year: NaN,
@@ -70,8 +70,8 @@ function isValidMillisec(millisecond: number): boolean {
   return isBetween(millisecond, 0, 999);
 }
 
-export function isValidDate(dateInfo: Partial<DateInfo>): boolean {
-  const { year, month, day, hour, minute, second, millisecond } = dateInfo;
+export function isValidDate(dateObj: Partial<DateObj>): boolean {
+  const { year, month, day, hour, minute, second, millisecond } = dateObj;
 
   if (!year || isNaN(year)) return false;
 

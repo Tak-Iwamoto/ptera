@@ -2,7 +2,7 @@ import { dayOfYearToDate } from "./convert.ts";
 import { Locale } from "./locale.ts";
 import {
   DateFormatType,
-  DateInfo,
+  DateObj,
   isFormatDateType,
   Option,
   TIMEZONE,
@@ -80,7 +80,7 @@ function parseFormatStr(
   }
 }
 
-type ParseResult = DateInfo & Option;
+type ParseResult = DateObj & Option;
 
 export function parseDateStr(
   dateStr: string,

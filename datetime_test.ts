@@ -43,11 +43,11 @@ Deno.test("isValid", () => {
   });
 });
 
-Deno.test("toDateInfo", () => {
+Deno.test("toDateObj", () => {
   const tests = [
     {
       stringInput: new DateTime("2021-01-01T12:30:30.000Z"),
-      dateInfoInput: new DateTime({
+      dateObjInput: new DateTime({
         year: 2021,
         month: 1,
         day: 1,
@@ -69,8 +69,8 @@ Deno.test("toDateInfo", () => {
   ];
 
   tests.forEach((t) => {
-    assertEquals(t.stringInput.toDateInfo(), t.expected);
-    assertEquals(t.dateInfoInput.toDateInfo(), t.expected);
+    assertEquals(t.stringInput.toDateObj(), t.expected);
+    assertEquals(t.dateObjInput.toDateObj(), t.expected);
   });
 });
 
@@ -151,7 +151,7 @@ Deno.test("toUTC", () => {
   ];
 
   tests.forEach((t) => {
-    assertEquals(t.input.toUTC().toDateInfo(), t.expected);
+    assertEquals(t.input.toUTC().toDateObj(), t.expected);
   });
 });
 
@@ -227,8 +227,8 @@ Deno.test("toZonedTime", () => {
   tests.forEach((t) => {
     assertEquals(t.input.toZonedTime(t.tz).timezone, t.expected.timezone);
     assertEquals(
-      t.input.toZonedTime(t.tz).toDateInfo(),
-      t.expected.toDateInfo(),
+      t.input.toZonedTime(t.tz).toDateObj(),
+      t.expected.toDateObj(),
     );
   });
 });
@@ -552,7 +552,7 @@ Deno.test("add", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      new DateTime(t.initialDate).add(t.addDate).toDateInfo(),
+      new DateTime(t.initialDate).add(t.addDate).toDateObj(),
       t.expected,
     );
   });
@@ -602,7 +602,7 @@ Deno.test("substract", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      new DateTime(t.initialDate).substract(t.subDate).toDateInfo(),
+      new DateTime(t.initialDate).substract(t.subDate).toDateObj(),
       t.expected,
     );
   });
@@ -780,8 +780,8 @@ Deno.test("oldestDateTime", () => {
       ],
     );
     assertEquals(
-      min.toDateInfo(),
-      new DateTime(t.first).toDateInfo(),
+      min.toDateObj(),
+      new DateTime(t.first).toDateObj(),
     );
   });
 });
@@ -803,8 +803,8 @@ Deno.test("latestDateTime", () => {
       ],
     );
     assertEquals(
-      max.toDateInfo(),
-      new DateTime(t.third).toDateInfo(),
+      max.toDateObj(),
+      new DateTime(t.third).toDateObj(),
     );
   });
 });

@@ -1,21 +1,21 @@
 import { tzOffset } from "./timezone.ts";
-import { DateInfo, Timezone } from "./types.ts";
+import { DateObj, Timezone } from "./types.ts";
 import { dateToJSDate, dateToTS, jsDateToDate } from "./convert.ts";
 
-export function utcToZonedTime(date: DateInfo, tz: Timezone): DateInfo {
+export function utcToZonedTime(date: DateObj, tz: Timezone): DateObj {
   const offset = tzOffset(dateToJSDate(date), tz);
   const d = new Date(dateToTS(date) + offset);
   return jsDateToDate(d);
 }
 
-export function zonedTimeToUTC(date: DateInfo, tz: Timezone): DateInfo {
+export function zonedTimeToUTC(date: DateObj, tz: Timezone): DateObj {
   const offset = tzOffset(dateToJSDate(date), tz);
   const d = new Date(dateToTS(date) - offset);
   return jsDateToDate(d);
 }
 
 export function diffOffset(
-  date: DateInfo,
+  date: DateObj,
   baseTZ: Timezone,
   compareTZ: Timezone,
 ): number {
@@ -26,10 +26,10 @@ export function diffOffset(
 }
 
 export function toOtherZonedTime(
-  date: DateInfo,
+  date: DateObj,
   baseTZ: Timezone,
   compareTZ: Timezone,
-): DateInfo {
+): DateObj {
   const d = new Date(dateToTS(date) - diffOffset(date, baseTZ, compareTZ));
   return jsDateToDate(d);
 }
