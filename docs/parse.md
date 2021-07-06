@@ -72,8 +72,7 @@ datetime(1625238137000);
 ## Date
 
 ```typescript
-const jsDate = new Date(2021, 3, 10);
-datetime(jsDate);
+datetime(new Date(2021, 3, 10));
 ```
 
 ## Array

@@ -30,7 +30,7 @@ const dt = datetime("2021-07-21T21:30:00", { timezone: "America/New_York" });
 const utc = dt.toUTC();
 ```
 
-## Convert to zoned time
+## Convert to other zoned time
 
 ```typescript
 // { year: 2021, month: 7, day: 21, hour: 21, minute: 30, second: 0, millisecond: 0, }

@@ -9,10 +9,18 @@ nav_order: 3
 ## ISO 8601
 
 ```typescript
-datetime().toISO(); // 2021-07-21T23:30:59.000+09:00
-datetime().toISODate(); // 2021-07-21
-datetime().toISOWeekDateDate(); // 2021-W29-3
-datetime().toISOTime(); // 23:30:59.000
+const dt = datetime({
+  year: 2021,
+  month: 7,
+  day: 21,
+  hour: 23,
+  minute: 30,
+  second: 59,
+});
+dt.toISO(); // 2021-07-21T23:30:59.000Z
+dt.toISODate(); // 2021-07-21
+dt.toISOWeekDateDate(); // 2021-W29-3
+dt.toISOTime(); // 23:30:59.000
 ```
 
 ## Intl
@@ -20,7 +28,7 @@ datetime().toISOTime(); // 23:30:59.000
 Ptera supports native Intl.DateTimeFormat
 
 ```typescript
-const dt = datetime().setLocale("fr");
+const dt = datetime("2021-07-03").setLocale("fr");
 dt.toDateTimeFormat({ dateStyle: "full" }); // samedi 3 juillet 2021;
 ```
 
@@ -29,14 +37,14 @@ dt.toDateTimeFormat({ dateStyle: "full" }); // samedi 3 juillet 2021;
 Ptera supports custom format.
 
 ```typescript
-datetime().format("YYYY/MMMM/dd"); // 2021/July/03
-datetime().setLocale("fr").format("YYYY/MMMM/dd"); // 2021/juillet/03
+datetime("2021-07-03").format("YYYY/MMMM/dd"); // 2021/July/03
+datetime("2021-07-03").setLocale("fr").format("YYYY/MMMM/dd"); // 2021/juillet/03
 ```
 
 You can escape string by using single quotes.
 
 ```typescript
-datetime().format("'Year is: 'YYYY"); // Year is: 2021
+datetime("2021-07-03").format("'Year is: 'YYYY"); // Year is: 2021
 ```
 
 ### Available formats
