@@ -15,8 +15,11 @@ datetime().toZonedTime("America/New_York");
 ## Offset
 
 ```typescript
-datetime().toZonedTime("America/New_York").offsetHour(); // -4
-datetime().toZonedTime("America/New_York").offsetMillisec(); // -14400000
+const dt = datetime().toZonedTime("America/New_York");
+dt.offsetHour(); // -4
+dt.offsetMin(); // -240
+dt.offsetSec(); // -14400
+dt.offsetMillisec(); // -14400000
 ```
 
 ## UTC
