@@ -86,7 +86,7 @@ export function parse(
   } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
 
   const tz = timezone ?? option?.timezone;
-  return new DateTime({
+  return datetime({
     year,
     month,
     day,
@@ -188,12 +188,12 @@ export class DateTime {
   }
 
   static now(option?: Option): DateTime {
-    const utcTime = new DateTime(new Date().getTime());
+    const utcTime = datetime(new Date().getTime());
     if (option?.timezone) {
       return utcTime.toZonedTime(option?.timezone).setOption(option);
     }
 
-    return new DateTime(utcTime.toDateObj(), {
+    return datetime(utcTime.toDateObj(), {
       ...option,
     });
   }
@@ -203,7 +203,7 @@ export class DateTime {
     const zonedTime = this.toZonedTime(
       tz,
     );
-    return new DateTime(zonedTime.toDateObj(), {
+    return datetime(zonedTime.toDateObj(), {
       timezone: getLocalName() as Timezone,
     });
   }
@@ -261,7 +261,7 @@ export class DateTime {
       this.toDateObj(),
       this.timezone,
     );
-    return new DateTime(utcDateObj, { ...this.#option(), timezone: "UTC" });
+    return datetime(utcDateObj, { ...this.#option(), timezone: "UTC" });
   }
 
   toZonedTime(tz: Timezone): DateTime {
@@ -270,7 +270,7 @@ export class DateTime {
       this.timezone,
       tz,
     );
-    return new DateTime(zonedDateObj, { ...this.#option, timezone: tz });
+    return datetime(zonedDateObj, { ...this.#option, timezone: tz });
   }
 
   toJSDate(): Date {
@@ -310,7 +310,7 @@ export class DateTime {
   }
 
   add(addDateDiff: DateDiff): DateTime {
-    const dt = new DateTime(
+    const dt = datetime(
       adjustedTS(this.toDateObj(), addDateDiff, { positive: true }),
       this.#option(),
     );
@@ -318,7 +318,7 @@ export class DateTime {
   }
 
   substract(subDateObj: Partial<DateObj>): DateTime {
-    return new DateTime(
+    return datetime(
       adjustedTS(this.toDateObj(), subDateObj, {
         positive: false,
       }),
@@ -360,11 +360,11 @@ export class DateTime {
   }
 
   setOption(option: DateTimeOption) {
-    return new DateTime(this.toDateObj(), { ...this.#option, ...option });
+    return datetime(this.toDateObj(), { ...this.#option, ...option });
   }
 
   setLocale(locale: string) {
-    return new DateTime(this.toDateObj(), { ...this.#option, locale });
+    return datetime(this.toDateObj(), { ...this.#option, locale });
   }
 
   #option(): Option {

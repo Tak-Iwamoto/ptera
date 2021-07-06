@@ -72,7 +72,7 @@ Deno.test("isValidZone", () => {
 
   tests.forEach((t) => {
     assertEquals(
-      new DateTime("202101", { timezone: t.input }).isValidZone(),
+      datetime("202101", { timezone: t.input }).isValidZone(),
       t.expected,
     );
   });
@@ -88,15 +88,15 @@ Deno.test("isValid", () => {
   ];
 
   tests.forEach((t) => {
-    assertEquals(new DateTime(t.input).isValid(), t.expected);
+    assertEquals(datetime(t.input).isValid(), t.expected);
   });
 });
 
 Deno.test("toDateObj", () => {
   const tests = [
     {
-      stringInput: new DateTime("2021-01-01T12:30:30.000Z"),
-      dateObjInput: new DateTime({
+      stringInput: datetime("2021-01-01T12:30:30.000Z"),
+      dateObjInput: datetime({
         year: 2021,
         month: 1,
         day: 1,
@@ -142,7 +142,7 @@ Deno.test("now", () => {
 Deno.test("toUTC", () => {
   const tests = [
     {
-      input: new DateTime("2021-01-01T12:30:30.000Z", {
+      input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "Asia/Tokyo",
       }),
       expected: {
@@ -156,7 +156,7 @@ Deno.test("toUTC", () => {
       },
     },
     {
-      input: new DateTime("2021-01-01T12:30:30.000Z", {
+      input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "America/New_York",
       }),
       expected: {
@@ -170,7 +170,7 @@ Deno.test("toUTC", () => {
       },
     },
     {
-      input: new DateTime("2021-05-15T12:30:30.000Z", {
+      input: datetime("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
       }),
       expected: {
@@ -184,7 +184,7 @@ Deno.test("toUTC", () => {
       },
     },
     {
-      input: new DateTime("2021-05-15T12:30:30.000Z", {
+      input: datetime("2021-05-15T12:30:30.000Z", {
         timezone: "UTC",
       }),
       expected: {
@@ -207,35 +207,35 @@ Deno.test("toUTC", () => {
 Deno.test("offsetMillisec", () => {
   const tests = [
     {
-      input: new DateTime("2021-01-01T12:30:30.000Z", {
+      input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "Asia/Tokyo",
       })
         .offsetMillisec(),
       expected: 9,
     },
     {
-      input: new DateTime("2021-01-01T12:30:30.000Z", {
+      input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "America/New_York",
       })
         .offsetMillisec(),
       expected: -5,
     },
     {
-      input: new DateTime("2021-05-15T12:30:30.000Z", {
+      input: datetime("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
       })
         .offsetMillisec(),
       expected: -4,
     },
     {
-      input: new DateTime("2021-05-15T12:30:30.000Z", {
+      input: datetime("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
       })
         .offsetMillisec(),
       expected: -4,
     },
     {
-      input: new DateTime("2021-05-15T12:30:30.000Z", { timezone: "UTC" })
+      input: datetime("2021-05-15T12:30:30.000Z", { timezone: "UTC" })
         .offsetMillisec(),
       expected: 0,
     },
@@ -254,20 +254,20 @@ Deno.test("toZonedTime", () => {
   };
   const tests: Test[] = [
     {
-      input: new DateTime("2021-01-01T12:30:30.000Z", {
+      input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "Asia/Tokyo",
       }),
       tz: "America/New_York",
-      expected: new DateTime("2020-12-31T22:30:30.000Z", {
+      expected: datetime("2020-12-31T22:30:30.000Z", {
         timezone: "America/New_York",
       }),
     },
     {
-      input: new DateTime("2021-01-01T12:30:30.000Z", {
+      input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "UTC",
       }),
       tz: "Asia/Tokyo",
-      expected: new DateTime("2021-01-01T21:30:30.000Z", {
+      expected: datetime("2021-01-01T21:30:30.000Z", {
         timezone: "Asia/Tokyo",
       }),
     },
@@ -289,11 +289,11 @@ Deno.test("toJSDate", () => {
   };
   const tests: Test[] = [
     {
-      input: new DateTime("2021-01-01T12:30:30.000Z"),
+      input: datetime("2021-01-01T12:30:30.000Z"),
       expected: new Date(Date.UTC(2021, 0, 1, 12, 30, 30, 0)),
     },
     {
-      input: new DateTime("2021-05-15T21:30:30.000Z"),
+      input: datetime("2021-05-15T21:30:30.000Z"),
       expected: new Date(Date.UTC(2021, 4, 15, 21, 30, 30, 0)),
     },
   ];
@@ -310,7 +310,7 @@ Deno.test("toISODate", () => {
   };
   const tests: Test[] = [
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 5,
         day: 15,
@@ -322,7 +322,7 @@ Deno.test("toISODate", () => {
       expected: "2021-05-15",
     },
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 7,
         day: 21,
@@ -347,7 +347,7 @@ Deno.test("toISOWeekDate", () => {
   };
   const tests: Test[] = [
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 5,
         day: 15,
@@ -359,7 +359,7 @@ Deno.test("toISOWeekDate", () => {
       expected: "2021-W19-6",
     },
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 7,
         day: 21,
@@ -371,7 +371,7 @@ Deno.test("toISOWeekDate", () => {
       expected: "2021-W29-3",
     },
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 1,
         day: 1,
@@ -383,7 +383,7 @@ Deno.test("toISOWeekDate", () => {
       expected: "2021-W53-5",
     },
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 12,
         day: 31,
@@ -408,7 +408,7 @@ Deno.test("toISOTime", () => {
   };
   const tests: Test[] = [
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 5,
         day: 15,
@@ -420,7 +420,7 @@ Deno.test("toISOTime", () => {
       expected: "12:30:30.999",
     },
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 7,
         day: 21,
@@ -445,7 +445,7 @@ Deno.test("toISO", () => {
   };
   const tests: Test[] = [
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 5,
         day: 15,
@@ -457,7 +457,7 @@ Deno.test("toISO", () => {
       expected: "2021-05-15T12:30:30.999Z",
     },
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 7,
         day: 21,
@@ -469,7 +469,7 @@ Deno.test("toISO", () => {
       expected: "2021-07-21T23:00:59.000+09:00",
     },
     {
-      input: new DateTime({
+      input: datetime({
         year: 2021,
         month: 7,
         day: 21,
@@ -505,7 +505,7 @@ Deno.test("toArray", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(new DateTime(t.input).toArray(), t.expected);
+    assertEquals(datetime(t.input).toArray(), t.expected);
   });
 });
 
@@ -518,7 +518,7 @@ Deno.test("toTimestamp", () => {
     { input: "2021-07-21T23:00:59", expected: 1626908459000 },
   ];
   tests.forEach((t) => {
-    assertEquals(new DateTime(t.input).toTimestamp(), t.expected);
+    assertEquals(datetime(t.input).toTimestamp(), t.expected);
   });
 });
 
@@ -528,7 +528,7 @@ Deno.test("weeksInWeekYear", () => {
     { input: "2020-12-31", expected: 53 },
   ];
   tests.forEach((t) => {
-    assertEquals(new DateTime(t.input).weeksInWeekYear(), t.expected);
+    assertEquals(datetime(t.input).weeksInWeekYear(), t.expected);
   });
 });
 
@@ -540,7 +540,7 @@ Deno.test("dayOfYear", () => {
     { input: "2020-12-31", expected: 366 },
   ];
   tests.forEach((t) => {
-    assertEquals(new DateTime(t.input).dayOfYear(), t.expected);
+    assertEquals(datetime(t.input).dayOfYear(), t.expected);
   });
 });
 
@@ -601,7 +601,7 @@ Deno.test("add", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      new DateTime(t.initialDate).add(t.addDate).toDateObj(),
+      datetime(t.initialDate).add(t.addDate).toDateObj(),
       t.expected,
     );
   });
@@ -651,7 +651,7 @@ Deno.test("substract", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      new DateTime(t.initialDate).substract(t.subDate).toDateObj(),
+      datetime(t.initialDate).substract(t.subDate).toDateObj(),
       t.expected,
     );
   });
@@ -683,8 +683,8 @@ Deno.test("diffInDays", () => {
   tests.forEach((t) => {
     assertEquals(
       diffInDays(
-        new DateTime(t.baseDate),
-        new DateTime(t.compareDate),
+        datetime(t.baseDate),
+        datetime(t.compareDate),
       ),
       t.expected,
     );
@@ -717,8 +717,8 @@ Deno.test("diffInHours", () => {
   tests.forEach((t) => {
     assertEquals(
       diffInHours(
-        new DateTime(t.baseDate),
-        new DateTime(t.compareDate),
+        datetime(t.baseDate),
+        datetime(t.compareDate),
       ),
       t.expected,
     );
@@ -751,8 +751,8 @@ Deno.test("diffInMin", () => {
   tests.forEach((t) => {
     assertEquals(
       diffInMin(
-        new DateTime(t.baseDate),
-        new DateTime(t.compareDate),
+        datetime(t.baseDate),
+        datetime(t.compareDate),
       ),
       t.expected,
     );
@@ -780,8 +780,8 @@ Deno.test("diffInSec", () => {
   tests.forEach((t) => {
     assertEquals(
       diffInSec(
-        new DateTime(t.baseDate),
-        new DateTime(t.compareDate),
+        datetime(t.baseDate),
+        datetime(t.compareDate),
       ),
       t.expected,
     );
@@ -804,8 +804,8 @@ Deno.test("diffInMillisec", () => {
   tests.forEach((t) => {
     assertEquals(
       diffInMillisec(
-        new DateTime(t.baseDate),
-        new DateTime(t.compareDate),
+        datetime(t.baseDate),
+        datetime(t.compareDate),
       ),
       t.expected,
     );
@@ -823,14 +823,14 @@ Deno.test("oldestDateTime", () => {
   tests.forEach((t) => {
     const min = oldestDateTime(
       [
-        new DateTime(t.first),
-        new DateTime(t.second),
-        new DateTime(t.third),
+        datetime(t.first),
+        datetime(t.second),
+        datetime(t.third),
       ],
     );
     assertEquals(
       min.toDateObj(),
-      new DateTime(t.first).toDateObj(),
+      datetime(t.first).toDateObj(),
     );
   });
 });
@@ -846,14 +846,14 @@ Deno.test("latestDateTime", () => {
   tests.forEach((t) => {
     const max = latestDateTime(
       [
-        new DateTime(t.first),
-        new DateTime(t.second),
-        new DateTime(t.third),
+        datetime(t.first),
+        datetime(t.second),
+        datetime(t.third),
       ],
     );
     assertEquals(
       max.toDateObj(),
-      new DateTime(t.third).toDateObj(),
+      datetime(t.third).toDateObj(),
     );
   });
 });
