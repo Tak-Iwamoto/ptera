@@ -28,53 +28,123 @@ function arrayToRegex(array: string[]) {
   return new RegExp(array.join("|"), "g");
 }
 
+type ParsedFormat = {
+  regex: RegExp;
+  property: string;
+  cursor: number | null;
+};
+
 function parseFormatStr(
   formatStr: DateFormatType,
   locale: Locale,
-): [RegExp, string, number | null] {
+): ParsedFormat {
   switch (formatStr) {
     case "YY":
     case "YYYY":
-      return [fourDigitsRegex, "year", 4];
+      return {
+        regex: fourDigitsRegex,
+        property: "year",
+        cursor: 4,
+      };
     case "M":
     case "MM":
-      return [oneToTwoDigitRegex, "month", 2];
+      return {
+        regex: oneToTwoDigitRegex,
+        property: "month",
+        cursor: 2,
+      };
     case "MMM":
-      return [arrayToRegex(locale.monthList("short")), "shortMonthStr", null];
+      return {
+        regex: arrayToRegex(locale.monthList("short")),
+        property: "shortMonthStr",
+        cursor: null,
+      };
     case "MMMM":
-      return [arrayToRegex(locale.monthList("long")), "monthStr", null];
+      return {
+        regex: arrayToRegex(locale.monthList("long")),
+        property: "monthStr",
+        cursor: null,
+      };
     case "d":
     case "dd":
-      return [oneToTwoDigitRegex, "day", 2];
+      return {
+        regex: oneToTwoDigitRegex,
+        property: "day",
+        cursor: 2,
+      };
     case "D":
     case "DDD":
-      return [oneToThreeDigitRegex, "dayOfYear", 3];
+      return {
+        regex: oneToThreeDigitRegex,
+        property: "dayOfYear",
+        cursor: 3,
+      };
     case "H":
     case "HH":
     case "h":
     case "hh":
-      return [oneToTwoDigitRegex, "hour", 2];
+      return {
+        regex: oneToTwoDigitRegex,
+        property: "hour",
+        cursor: 2,
+      };
     case "m":
     case "mm":
-      return [oneToTwoDigitRegex, "minute", 2];
+      return {
+        regex: oneToTwoDigitRegex,
+        property: "minute",
+        cursor: 2,
+      };
     case "s":
     case "ss":
-      return [oneToTwoDigitRegex, "second", 2];
+      return {
+        regex: oneToTwoDigitRegex,
+        property: "second",
+        cursor: 2,
+      };
     case "S":
-      return [oneToThreeDigitRegex, "millisecond", 3];
+      return {
+        regex: oneToThreeDigitRegex,
+        property: "millisecond",
+        cursor: 3,
+      };
     case "w":
-      return [oneDigitRegex, "weekDay", 1];
+      return {
+        regex: oneDigitRegex,
+        property: "weekDay",
+        cursor: 1,
+      };
     case "www":
-      return [arrayToRegex(locale.weekList("short")), "week", null];
+      return {
+        regex: arrayToRegex(locale.weekList("short")),
+        property: "week",
+        cursor: null,
+      };
     case "wwww":
-      return [arrayToRegex(locale.weekList("long")), "week", null];
+      return {
+        regex: arrayToRegex(locale.weekList("long")),
+        property: "week",
+        cursor: null,
+      };
     case "a":
-      return [literalRegex, "AMPM", 2];
+      return {
+        regex: literalRegex,
+        property: "AMPM",
+        cursor: 2,
+      };
     case "z":
-      return [arrayToRegex(TIMEZONE), "timezone", null];
+      return {
+        regex: arrayToRegex(TIMEZONE),
+        property: "timezone",
+        cursor: null,
+      };
     case "Z":
     case "ZZ":
-      return [offsetRegex, "offset", 6];
+      return {
+        regex: offsetRegex,
+        property: "offset",
+        cursor: 6,
+      };
     default:
       throw new TypeError("Please input valid format.");
   }
@@ -103,7 +173,7 @@ function dateStrToHash(
   if (parsedFormat) {
     for (const f of parsedFormat) {
       if (isFormatDateType(f)) {
-        const [regex, property, formatCursor] = parseFormatStr(
+        const { regex, property, cursor: formatCursor } = parseFormatStr(
           f,
           locale,
         );
