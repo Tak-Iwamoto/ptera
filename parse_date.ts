@@ -270,6 +270,8 @@ export function parseISO(isoString: string): ParseResult {
     // e.g.: 2021-07-21T13:25:30.200
     case 23:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss.S");
+    case 29:
+      return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss.SZZ");
     default:
       return parseDateStr(trimStr, "YYYY-MM-dd'T'hh:mm:ss.S");
   }

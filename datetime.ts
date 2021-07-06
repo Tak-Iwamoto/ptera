@@ -2,10 +2,17 @@ import { adjustedTS } from "./diff.ts";
 import { formatDate } from "./format.ts";
 import { getLocalName } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
-import { dateToDayOfYear, tsToDate } from "./convert.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
-import { arrayToDate, dateToArray, dateToJSDate, dateToTS } from "./convert.ts";
 import { Locale } from "./locale.ts";
+import { parseDateStr, parseISO } from "./parse_date.ts";
+import {
+  arrayToDate,
+  dateToArray,
+  dateToDayOfYear,
+  dateToJSDate,
+  dateToTS,
+  tsToDate,
+} from "./convert.ts";
 import {
   INVALID_DATE,
   isLeapYear,
@@ -18,7 +25,6 @@ import {
   MILLISECONDS_IN_HOUR,
   MILLISECONDS_IN_MINUTE,
 } from "./constants.ts";
-import { parseDateStr, parseISO } from "./parse_date.ts";
 
 export type DateArg = Partial<DateObj> | Date | number[] | string | number;
 
@@ -49,7 +55,13 @@ function parseArg(date: DateArg): DateObj {
 
   if (typeof date === "string") {
     const parsed = parseISO(date);
-    return parsed;
+    const offset = parsed.offsetMillisec;
+    if (!offset || offset === 0) return parsed;
+
+    const normalizeSign = offset > 0 ? false : true;
+    return tsToDate(
+      adjustedTS(parsed, { millisecond: offset }, { positive: normalizeSign }),
+    );
   }
 
   return INVALID_DATE;

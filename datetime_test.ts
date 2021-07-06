@@ -1,6 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 import {
   DateTime,
+  datetime,
   diffInDays,
   diffInHours,
   diffInMillisec,
@@ -11,6 +12,54 @@ import {
 } from "./datetime.ts";
 import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { Timezone } from "./types.ts";
+
+Deno.test("parseISO", () => {
+  const tests = [
+    {
+      input: "2021-01-01",
+      expected: {
+        year: 2021,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+    },
+    {
+      input: "2021-01-01T12:30:30.000Z",
+      expected: {
+        year: 2021,
+        month: 1,
+        day: 1,
+        hour: 12,
+        minute: 30,
+        second: 30,
+        millisecond: 0,
+      },
+    },
+    {
+      input: "2021-01-01T12:30:30.000+09:00",
+      expected: {
+        year: 2021,
+        month: 1,
+        day: 1,
+        hour: 3,
+        minute: 30,
+        second: 30,
+        millisecond: 0,
+      },
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).toDateObj(),
+      t.expected,
+    );
+  });
+});
 
 Deno.test("isValidZone", () => {
   const tests = [
@@ -451,7 +500,7 @@ Deno.test("toArray", () => {
       expected: [2021, 7, 21, 23, 15, 59, 999],
     },
     {
-      input: "2021-07-21T23:00:59.000+09:00",
+      input: "2021-07-21T23:00:59.000Z",
       expected: [2021, 7, 21, 23, 0, 59, 0],
     },
   ];
