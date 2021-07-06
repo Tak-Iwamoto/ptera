@@ -345,7 +345,17 @@ export class DateTime {
     }
   }
 
-  offsetHours(): number {
+  offsetSec(): number {
+    return this.offsetMillisec ? this.offsetMillisec() / 1000 : 0;
+  }
+
+  offsetMin(): number {
+    return this.offsetMillisec
+      ? this.offsetMillisec() / MILLISECONDS_IN_MINUTE
+      : 0;
+  }
+
+  offsetHour(): number {
     return this.offsetMillisec
       ? this.offsetMillisec() / MILLISECONDS_IN_HOUR
       : 0;

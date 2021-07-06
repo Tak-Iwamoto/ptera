@@ -10,7 +10,6 @@ import {
   latestDateTime,
   oldestDateTime,
 } from "./datetime.ts";
-import { MILLISECONDS_IN_HOUR } from "./constants.ts";
 import { Timezone } from "./types.ts";
 
 Deno.test("parseISO", () => {
@@ -209,40 +208,122 @@ Deno.test("offsetMillisec", () => {
     {
       input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "Asia/Tokyo",
-      })
-        .offsetMillisec(),
-      expected: 9,
+      }),
+      expected: 32400000,
     },
     {
       input: datetime("2021-01-01T12:30:30.000Z", {
         timezone: "America/New_York",
-      })
-        .offsetMillisec(),
-      expected: -5,
+      }),
+      expected: -18000000,
     },
     {
       input: datetime("2021-05-15T12:30:30.000Z", {
         timezone: "America/New_York",
-      })
-        .offsetMillisec(),
-      expected: -4,
+      }),
+      expected: -14400000,
     },
     {
-      input: datetime("2021-05-15T12:30:30.000Z", {
-        timezone: "America/New_York",
-      })
-        .offsetMillisec(),
-      expected: -4,
-    },
-    {
-      input: datetime("2021-05-15T12:30:30.000Z", { timezone: "UTC" })
-        .offsetMillisec(),
+      input: datetime("2021-05-15T12:30:30.000Z", { timezone: "UTC" }),
       expected: 0,
     },
   ];
 
   tests.forEach((t) => {
-    assertEquals(t.input / MILLISECONDS_IN_HOUR, t.expected);
+    assertEquals(t.input.offsetMillisec(), t.expected);
+  });
+});
+
+Deno.test("offsetSec", () => {
+  const tests = [
+    {
+      input: datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "Asia/Tokyo",
+      }),
+      expected: 32400,
+    },
+    {
+      input: datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "America/New_York",
+      }),
+      expected: -18000,
+    },
+    {
+      input: datetime("2021-05-15T12:30:30.000Z", {
+        timezone: "America/New_York",
+      }),
+      expected: -14400,
+    },
+    {
+      input: datetime("2021-05-15T12:30:30.000Z", { timezone: "UTC" }),
+      expected: 0,
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(t.input.offsetSec(), t.expected);
+  });
+});
+
+Deno.test("offsetMin", () => {
+  const tests = [
+    {
+      input: datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "Asia/Tokyo",
+      }),
+      expected: 540,
+    },
+    {
+      input: datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "America/New_York",
+      }),
+      expected: -300,
+    },
+    {
+      input: datetime("2021-05-15T12:30:30.000Z", {
+        timezone: "America/New_York",
+      }),
+      expected: -240,
+    },
+    {
+      input: datetime("2021-05-15T12:30:30.000Z", { timezone: "UTC" }),
+      expected: 0,
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(t.input.offsetMin(), t.expected);
+  });
+});
+
+Deno.test("offsetHour", () => {
+  const tests = [
+    {
+      input: datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "Asia/Tokyo",
+      }),
+      expected: 9,
+    },
+    {
+      input: datetime("2021-01-01T12:30:30.000Z", {
+        timezone: "America/New_York",
+      }),
+      expected: -5,
+    },
+    {
+      input: datetime("2021-05-15T12:30:30.000Z", {
+        timezone: "America/New_York",
+      }),
+      expected: -4,
+    },
+    {
+      input: datetime("2021-05-15T12:30:30.000Z", { timezone: "UTC" }),
+      expected: 0,
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(t.input.offsetHour(), t.expected);
   });
 });
 
