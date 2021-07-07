@@ -14,6 +14,7 @@ import {
   tsToDate,
 } from "./convert.ts";
 import {
+  daysInMonth,
   INVALID_DATE,
   isLeapYear,
   isValidDate,
@@ -68,6 +69,15 @@ function parseArg(date: DateArg): DateObj {
 }
 
 export type DateTimeOption = Omit<Option, "offsetMillisec">;
+
+export type DateUnit =
+  | "year"
+  | "month"
+  | "day"
+  | "hour"
+  | "minute"
+  | "second"
+  | "quarter";
 
 export function parse(
   dateStr: string,
@@ -309,6 +319,148 @@ export class DateTime {
     return isLeapYear(this.year);
   }
 
+  startOf(unit: DateUnit): DateTime {
+    const dateObj = this.toDateObj();
+    switch (unit) {
+      case "year": {
+        return datetime({
+          ...dateObj,
+          month: 1,
+          day: 1,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }, this.#option());
+      }
+      case "month": {
+        return datetime({
+          ...dateObj,
+          day: 1,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }, this.#option());
+      }
+      case "day": {
+        return datetime({
+          ...dateObj,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }, this.#option());
+      }
+      case "hour": {
+        return datetime({
+          ...dateObj,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }, this.#option());
+      }
+      case "minute": {
+        return datetime({
+          ...dateObj,
+          second: 0,
+          millisecond: 0,
+        }, this.#option());
+      }
+      case "second": {
+        return datetime({
+          ...dateObj,
+          millisecond: 0,
+        }, this.#option());
+      }
+      case "quarter": {
+        return datetime({
+          ...dateObj,
+          month: 1 + (this.quarter() - 1) * 3,
+          day: 1,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }, this.#option());
+      }
+      default: {
+        throw new Error(`${unit} is invalid unit`);
+      }
+    }
+  }
+
+  endOf(unit: DateUnit): DateTime {
+    const dateObj = this.toDateObj();
+    switch (unit) {
+      case "year": {
+        return datetime({
+          ...dateObj,
+          month: 12,
+          day: 31,
+          hour: 23,
+          minute: 59,
+          second: 59,
+          millisecond: 999,
+        }, this.#option());
+      }
+      case "month": {
+        return datetime({
+          ...dateObj,
+          day: daysInMonth(dateObj.year, dateObj.month),
+          hour: 23,
+          minute: 59,
+          second: 59,
+          millisecond: 999,
+        }, this.#option());
+      }
+      case "day": {
+        return datetime({
+          ...dateObj,
+          hour: 23,
+          minute: 59,
+          second: 59,
+          millisecond: 999,
+        }, this.#option());
+      }
+      case "hour": {
+        return datetime({
+          ...dateObj,
+          minute: 59,
+          second: 59,
+          millisecond: 999,
+        }, this.#option());
+      }
+      case "minute": {
+        return datetime({
+          ...dateObj,
+          second: 59,
+          millisecond: 999,
+        }, this.#option());
+      }
+      case "second": {
+        return datetime({
+          ...dateObj,
+          millisecond: 999,
+        }, this.#option());
+      }
+      case "quarter": {
+        const month = 3 * this.quarter();
+        return datetime({
+          ...dateObj,
+          month,
+          day: daysInMonth(dateObj.year, month),
+          hour: 23,
+          minute: 59,
+          second: 59,
+          millisecond: 999,
+        }, this.#option());
+      }
+      default: {
+        throw new Error(`${unit} is invalid unit`);
+      }
+    }
+  }
   add(addDateDiff: DateDiff): DateTime {
     const dt = datetime(
       adjustedTS(this.toDateObj(), addDateDiff, { positive: true }),
