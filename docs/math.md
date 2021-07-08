@@ -28,6 +28,25 @@ const dt = datetime("2021-08-21:13:30:00"); // { year: 2021, month: 8, day: 21, 
 dt.add({ year: 1 }).substract({ month: 2 }); // { year: 2022, month: 6, day: 21, hour: 13, minute: 30, second: 0, millisecond: 0, }
 ```
 
+## startOf and endOf
+
+`startOf` and `endOf` returns the start and end of the unit time.
+
+### Available Units
+
+- year
+- quarter
+- month
+- day
+- hour
+- minute
+- second
+
+```typescript
+const dt = datetime("2021-08-21:13:30:00").startOf("year");
+// { year: 2021, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0, }
+```
+
 ## diff
 
 Ptera supports these functions to calculate diff between two datetime
