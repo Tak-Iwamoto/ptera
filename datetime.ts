@@ -461,17 +461,18 @@ export class DateTime {
       }
     }
   }
-  add(addDateDiff: DateDiff): DateTime {
+
+  add(diff: DateDiff): DateTime {
     const dt = datetime(
-      adjustedTS(this.toDateObj(), addDateDiff, { positive: true }),
+      adjustedTS(this.toDateObj(), diff, { positive: true }),
       this.#option(),
     );
     return dt;
   }
 
-  substract(subDateObj: Partial<DateObj>): DateTime {
+  substract(diff: DateDiff): DateTime {
     return datetime(
-      adjustedTS(this.toDateObj(), subDateObj, {
+      adjustedTS(this.toDateObj(), diff, {
         positive: false,
       }),
       this.#option(),
