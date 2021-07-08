@@ -938,3 +938,191 @@ Deno.test("latestDateTime", () => {
     );
   });
 });
+
+Deno.test("startOf year", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-01-01T00:00:00.000Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).startOf("year").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("startOf quarter", () => {
+  const tests = [
+    { input: "2021-03-28T12:30:30.800Z", expected: "2021-01-01T00:00:00.000Z" },
+    { input: "2021-05-28T12:30:30.800Z", expected: "2021-04-01T00:00:00.000Z" },
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-01T00:00:00.000Z" },
+    { input: "2021-11-28T12:30:30.800Z", expected: "2021-10-01T00:00:00.000Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).startOf("quarter").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("startOf month", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-01T00:00:00.000Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).startOf("month").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("startOf day", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T00:00:00.000Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).startOf("day").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("startOf hour", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T12:00:00.000Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).startOf("hour").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("startOf minute", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T12:30:00.000Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).startOf("minute").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("startOf second", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T12:30:30.000Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).startOf("second").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("endOf year", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-12-31T23:59:59.999Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).endOf("year").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("endOf quarter", () => {
+  const tests = [
+    { input: "2021-03-28T12:30:30.800Z", expected: "2021-03-31T23:59:59.999Z" },
+    { input: "2021-05-28T12:30:30.800Z", expected: "2021-06-30T23:59:59.999Z" },
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-09-30T23:59:59.999Z" },
+    { input: "2021-11-28T12:30:30.800Z", expected: "2021-12-31T23:59:59.999Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).endOf("quarter").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("endOf month", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-31T23:59:59.999Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).endOf("month").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("endOf day", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T23:59:59.999Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).endOf("day").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("endOf hour", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T12:59:59.999Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).endOf("hour").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("endOf minute", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T12:30:59.999Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).endOf("minute").toISO(),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("endOf second", () => {
+  const tests = [
+    { input: "2021-07-28T12:30:30.800Z", expected: "2021-07-28T12:30:30.999Z" },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).endOf("second").toISO(),
+      t.expected,
+    );
+  });
+});
