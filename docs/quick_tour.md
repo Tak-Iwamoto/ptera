@@ -13,11 +13,41 @@ The main function is `datetime` returns `DateTime` class.
 You can get the current time by calling the `datetime` function with no
 arguments.
 
+The default timezone of datetime is `UTC`. If you want local time, please use
+`toLocal`.
+
 ```typescript
 import { datetime } from "https://deno.land/x/ptera/mod.ts";
 
-// now
+// now in UTC
 const dt = datetime();
+// DateTime {
+//   year: 2021,
+//   month: 7,
+//   day: 8,
+//   hour: 14,
+//   minute: 23,
+//   second: 57,
+//   millisecond: 580,
+//   timezone: "UTC",
+//   valid: true,
+//   locale: "en"
+// }
+
+// local time
+dt.toLocal();
+// DateTime {
+//   year: 2021,
+//   month: 7,
+//   day: 8,
+//   hour: 23,
+//   minute: 23,
+//   second: 57,
+//   millisecond: 580,
+//   timezone: "Asia/Tokyo",
+//   valid: true,
+//   locale: "en"
+// }
 ```
 
 `datetime` takes several types of arguments, string, Date, Object, number,
