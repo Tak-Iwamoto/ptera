@@ -28,22 +28,24 @@ const dt = datetime("2021-08-21:13:30:00"); // { year: 2021, month: 8, day: 21, 
 dt.add({ year: 1 }).substract({ month: 2 }); // { year: 2022, month: 6, day: 21, hour: 13, minute: 30, second: 0, millisecond: 0, }
 ```
 
-## startOf and endOf
+## start and end
 
 `startOf` and `endOf` returns the start and end of the unit time.
 
-### Available Units
+### Available Methods
 
-- year
-- quarter
-- month
-- day
-- hour
-- minute
-- second
+Here is examples of `startOf`, and the same units can be used for endOf
+
+- startOfYear
+- startOfQuarter
+- startOfMonth
+- startOfDay
+- startOfHour
+- startOfMinute
+- startOfSecond
 
 ```typescript
-const dt = datetime("2021-08-21:13:30:00").startOf("year");
+const dt = datetime("2021-08-21:13:30:00").startOfYear();
 // { year: 2021, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0, }
 ```
 

@@ -319,147 +319,145 @@ export class DateTime {
     return isLeapYear(this.year);
   }
 
-  startOf(unit: DateUnit): DateTime {
-    const dateObj = this.toDateObj();
-    switch (unit) {
-      case "year": {
-        return datetime({
-          ...dateObj,
-          month: 1,
-          day: 1,
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-        }, this.#option());
-      }
-      case "month": {
-        return datetime({
-          ...dateObj,
-          day: 1,
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-        }, this.#option());
-      }
-      case "day": {
-        return datetime({
-          ...dateObj,
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-        }, this.#option());
-      }
-      case "hour": {
-        return datetime({
-          ...dateObj,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-        }, this.#option());
-      }
-      case "minute": {
-        return datetime({
-          ...dateObj,
-          second: 0,
-          millisecond: 0,
-        }, this.#option());
-      }
-      case "second": {
-        return datetime({
-          ...dateObj,
-          millisecond: 0,
-        }, this.#option());
-      }
-      case "quarter": {
-        return datetime({
-          ...dateObj,
-          month: 1 + (this.quarter() - 1) * 3,
-          day: 1,
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-        }, this.#option());
-      }
-      default: {
-        throw new Error(`${unit} is invalid unit`);
-      }
-    }
+  startOfYear(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      month: 1,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    }, this.#option());
   }
 
-  endOf(unit: DateUnit): DateTime {
+  startOfMonth(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    }, this.#option());
+  }
+
+  startOfDay(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    }, this.#option());
+  }
+
+  startOfHour(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    }, this.#option());
+  }
+
+  startOfMinute(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      second: 0,
+      millisecond: 0,
+    }, this.#option());
+  }
+
+  startOfSecond(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      millisecond: 0,
+    }, this.#option());
+  }
+
+  startOfQuarter(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      month: 1 + (this.quarter() - 1) * 3,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    }, this.#option());
+  }
+
+  endOfYear(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      month: 12,
+      day: 31,
+      hour: 23,
+      minute: 59,
+      second: 59,
+      millisecond: 999,
+    }, this.#option());
+  }
+
+  endOfMonth(): DateTime {
     const dateObj = this.toDateObj();
-    switch (unit) {
-      case "year": {
-        return datetime({
-          ...dateObj,
-          month: 12,
-          day: 31,
-          hour: 23,
-          minute: 59,
-          second: 59,
-          millisecond: 999,
-        }, this.#option());
-      }
-      case "month": {
-        return datetime({
-          ...dateObj,
-          day: daysInMonth(dateObj.year, dateObj.month),
-          hour: 23,
-          minute: 59,
-          second: 59,
-          millisecond: 999,
-        }, this.#option());
-      }
-      case "day": {
-        return datetime({
-          ...dateObj,
-          hour: 23,
-          minute: 59,
-          second: 59,
-          millisecond: 999,
-        }, this.#option());
-      }
-      case "hour": {
-        return datetime({
-          ...dateObj,
-          minute: 59,
-          second: 59,
-          millisecond: 999,
-        }, this.#option());
-      }
-      case "minute": {
-        return datetime({
-          ...dateObj,
-          second: 59,
-          millisecond: 999,
-        }, this.#option());
-      }
-      case "second": {
-        return datetime({
-          ...dateObj,
-          millisecond: 999,
-        }, this.#option());
-      }
-      case "quarter": {
-        const month = 3 * this.quarter();
-        return datetime({
-          ...dateObj,
-          month,
-          day: daysInMonth(dateObj.year, month),
-          hour: 23,
-          minute: 59,
-          second: 59,
-          millisecond: 999,
-        }, this.#option());
-      }
-      default: {
-        throw new Error(`${unit} is invalid unit`);
-      }
-    }
+    return datetime({
+      ...dateObj,
+      day: daysInMonth(dateObj.year, dateObj.month),
+      hour: 23,
+      minute: 59,
+      second: 59,
+      millisecond: 999,
+    }, this.#option());
+  }
+
+  endOfDay(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      hour: 23,
+      minute: 59,
+      second: 59,
+      millisecond: 999,
+    }, this.#option());
+  }
+
+  endOfHour(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      minute: 59,
+      second: 59,
+      millisecond: 999,
+    }, this.#option());
+  }
+
+  endOfMinute(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      second: 59,
+      millisecond: 999,
+    }, this.#option());
+  }
+
+  endOfSecond(): DateTime {
+    return datetime({
+      ...this.toDateObj(),
+      millisecond: 999,
+    }, this.#option());
+  }
+
+  endOfQuarter(): DateTime {
+    const month = 3 * this.quarter();
+    const dateObj = this.toDateObj();
+    return datetime({
+      ...dateObj,
+      month,
+      day: daysInMonth(dateObj.year, month),
+      hour: 23,
+      minute: 59,
+      second: 59,
+      millisecond: 999,
+    }, this.#option());
   }
 
   add(diff: DateDiff): DateTime {
