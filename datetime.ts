@@ -546,9 +546,3 @@ export class DateTime {
     };
   }
 }
-
-const dt1 = datetime("2021-08-21:13:30:00");
-const dt2 = datetime("2021-01-30:21:30:00");
-
-console.log(diffInDays(dt1, dt2)); // 202
-console.log(diffInDays(dt1, dt2, { showDecimal: true }));
