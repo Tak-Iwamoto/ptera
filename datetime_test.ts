@@ -742,32 +742,44 @@ Deno.test("diffInDays", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
-      compareDate: "2021-02-02T23:00:00",
-      expected: 1,
+      otherDate: "2021-02-02T23:00:00",
+      nonDecimalExpected: 1,
+      decimalExpected: 1,
     },
     {
       baseDate: "2021-02-01T23:00:00",
-      compareDate: "2021-03-01T23:00:00",
-      expected: 28,
+      otherDate: "2021-03-01T23:00:00",
+      nonDecimalExpected: 28,
+      decimalExpected: 28,
+    },
+    {
+      baseDate: "2021-02-01T14:00:00",
+      otherDate: "2021-02-02T23:00:00",
+      nonDecimalExpected: 1,
+      decimalExpected: 1.375,
     },
     {
       baseDate: "2021-01-01T23:00:00",
-      compareDate: "2021-12-31T23:00:00",
-      expected: 364,
-    },
-    {
-      baseDate: "2020-01-01T23:00:00",
-      compareDate: "2020-12-31T23:00:00",
-      expected: 365,
+      otherDate: "2021-10-31T22:50:00",
+      nonDecimalExpected: 302,
+      decimalExpected: 302.99305555555554,
     },
   ];
   tests.forEach((t) => {
     assertEquals(
       diffInDays(
         datetime(t.baseDate),
-        datetime(t.compareDate),
+        datetime(t.otherDate),
       ),
-      t.expected,
+      t.nonDecimalExpected,
+    );
+    assertEquals(
+      diffInDays(
+        datetime(t.baseDate),
+        datetime(t.otherDate),
+        { showDecimal: true },
+      ),
+      t.decimalExpected,
     );
   });
 });
@@ -776,32 +788,38 @@ Deno.test("diffInHours", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
-      compareDate: "2021-02-02T23:00:00",
-      expected: 24,
+      otherDate: "2021-02-02T23:00:00",
+      nonDecimalExpected: 24,
+      decimalExpected: 24,
     },
     {
       baseDate: "2021-02-01T00:00:00",
-      compareDate: "2021-02-03T02:00:00",
-      expected: 50,
+      otherDate: "2021-02-03T02:30:00",
+      nonDecimalExpected: 50,
+      decimalExpected: 50.5,
     },
     {
       baseDate: "2021-01-01T00:00:00",
-      compareDate: "2021-01-01T02:00:00",
-      expected: 2,
-    },
-    {
-      baseDate: "2021-01-01T00:00:00",
-      compareDate: "2021-01-01T00:30:00",
-      expected: 0,
+      otherDate: "2021-08-29T02:20:00",
+      nonDecimalExpected: 5762,
+      decimalExpected: 5762.333333333333,
     },
   ];
   tests.forEach((t) => {
     assertEquals(
       diffInHours(
         datetime(t.baseDate),
-        datetime(t.compareDate),
+        datetime(t.otherDate),
       ),
-      t.expected,
+      t.nonDecimalExpected,
+    );
+    assertEquals(
+      diffInHours(
+        datetime(t.baseDate),
+        datetime(t.otherDate),
+        { showDecimal: true },
+      ),
+      t.decimalExpected,
     );
   });
 });
@@ -810,32 +828,44 @@ Deno.test("diffInMin", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
-      compareDate: "2021-02-02T23:00:00",
-      expected: 1440,
+      otherDate: "2021-02-02T23:00:00",
+      nonDecimalExpected: 1440,
+      decimalExpected: 1440,
     },
     {
       baseDate: "2021-02-01T00:00:00",
-      compareDate: "2021-02-01T02:30:00",
-      expected: 150,
+      otherDate: "2021-02-01T02:30:00",
+      nonDecimalExpected: 150,
+      decimalExpected: 150,
     },
     {
       baseDate: "2021-01-01T00:00:00",
-      compareDate: "2021-01-01T00:30:59",
-      expected: 30,
+      otherDate: "2021-01-01T00:30:59",
+      nonDecimalExpected: 30,
+      decimalExpected: 30.983333333333334,
     },
     {
       baseDate: "2021-01-01T00:00:00",
-      compareDate: "2021-01-01T02:30:30",
-      expected: 150,
+      otherDate: "2021-01-01T02:30:30",
+      nonDecimalExpected: 150,
+      decimalExpected: 150.5,
     },
   ];
   tests.forEach((t) => {
     assertEquals(
       diffInMin(
         datetime(t.baseDate),
-        datetime(t.compareDate),
+        datetime(t.otherDate),
       ),
-      t.expected,
+      t.nonDecimalExpected,
+    );
+    assertEquals(
+      diffInMin(
+        datetime(t.baseDate),
+        datetime(t.otherDate),
+        { showDecimal: true },
+      ),
+      t.decimalExpected,
     );
   });
 });
@@ -844,17 +874,17 @@ Deno.test("diffInSec", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
-      compareDate: "2021-02-01T23:00:50",
+      otherDate: "2021-02-01T23:00:50",
       expected: 50,
     },
     {
       baseDate: "2021-02-01T00:00:00",
-      compareDate: "2021-02-01T00:30:00",
+      otherDate: "2021-02-01T00:30:00",
       expected: 1800,
     },
     {
       baseDate: "2021-01-01T00:00:00",
-      compareDate: "2021-01-01T00:30:59",
+      otherDate: "2021-01-01T00:30:59",
       expected: 1859,
     },
   ];
@@ -862,7 +892,7 @@ Deno.test("diffInSec", () => {
     assertEquals(
       diffInSec(
         datetime(t.baseDate),
-        datetime(t.compareDate),
+        datetime(t.otherDate),
       ),
       t.expected,
     );
@@ -873,12 +903,12 @@ Deno.test("diffInMillisec", () => {
   const tests = [
     {
       baseDate: "2021-02-01T23:00:00",
-      compareDate: "2021-02-01T23:00:50.999",
+      otherDate: "2021-02-01T23:00:50.999",
       expected: 50999,
     },
     {
       baseDate: "2021-02-01T00:00:00",
-      compareDate: "2021-02-01T00:30:00.100",
+      otherDate: "2021-02-01T00:30:00.100",
       expected: 1800100,
     },
   ];
@@ -886,7 +916,7 @@ Deno.test("diffInMillisec", () => {
     assertEquals(
       diffInMillisec(
         datetime(t.baseDate),
-        datetime(t.compareDate),
+        datetime(t.otherDate),
       ),
       t.expected,
     );

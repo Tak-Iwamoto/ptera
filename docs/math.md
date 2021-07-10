@@ -59,6 +59,8 @@ Ptera supports these functions to calculate diff between two datetime
 - `diffInHours`
 - `diffInDays`
 
+`diffInMin`, `diffInHours`, `diffInDays` support `showDecimal` option.
+
 ```typescript
 import { diffInDays, diffInMillisec } from "https://deno.land/x/ptera/mod.ts";
 const dt1 = datetime("2021-08-21:13:30:00");
@@ -66,6 +68,7 @@ const dt2 = datetime("2021-01-30:21:30:00");
 
 diffInMillisec(dt1, dt2); // 17510400000
 diffInDays(dt1, dt2); // 202
+diffInDays(dt1, dt2, { showDecimal: true }); // 202.66666666666666
 ```
 
 ## latest, oldest
