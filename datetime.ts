@@ -214,7 +214,7 @@ export class DateTime {
       tz,
     );
     return datetime(zonedTime.toDateObj(), {
-      timezone: getLocalName() as Timezone,
+      timezone: tz,
     });
   }
 
@@ -463,11 +463,10 @@ export class DateTime {
   }
 
   add(diff: DateDiff): DateTime {
-    const dt = datetime(
+    return datetime(
       adjustedTS(this.toDateObj(), diff, { positive: true }),
       this.#option(),
     );
-    return dt;
   }
 
   substract(diff: DateDiff): DateTime {

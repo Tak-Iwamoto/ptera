@@ -18,86 +18,119 @@ export function formatDateObj(
 
   const locale = new Locale(option?.locale ?? "en");
   switch (formatStr) {
-    case "YY":
+    case "YY": {
       return year.toString().slice(-2);
-    case "YYYY":
+    }
+    case "YYYY": {
       return year.toString();
-    case "M":
+    }
+    case "M": {
       return month.toString();
-    case "MM":
+    }
+    case "MM": {
       return month <= 9 ? `0${month}` : month.toString();
-    case "MMM":
+    }
+    case "MMM": {
       return locale.monthList("short")[month - 1];
-    case "MMMM":
+    }
+    case "MMMM": {
       return locale.monthList("long")[month - 1];
-    case "d":
+    }
+    case "d": {
       return day ? day.toString() : "0";
-    case "dd":
+    }
+    case "dd": {
       return day ? formatToTwoDigits(day) : "00";
-    case "D":
+    }
+    case "D": {
       return dateToDayOfYear(dateObj).toString();
-    case "DDD":
+    }
+    case "DDD": {
       return formatToThreeDigits(dateToDayOfYear(dateObj));
-    case "H":
+    }
+    case "H": {
       return String(hour);
-    case "HH":
+    }
+    case "HH": {
       return hour ? formatToTwoDigits(hour) : "00";
-    case "h":
+    }
+    case "h": {
       return (twelveHours || 12).toString();
-    case "hh":
+    }
+    case "hh": {
       return formatToTwoDigits(twelveHours || 12).toString();
-    case "m":
+    }
+    case "m": {
       return minute ? minute.toString() : "0";
-    case "mm":
+    }
+    case "mm": {
       return minute ? formatToTwoDigits(minute).toString() : "00";
-    case "s":
+    }
+    case "s": {
       return second ? second.toString() : "0";
-    case "ss":
+    }
+    case "ss": {
       return second ? formatToTwoDigits(second).toString() : "00";
-    case "S":
+    }
+    case "S": {
       return millisecond
         ? millisecond <= 99 ? "0${millisecond}" : millisecond.toString()
         : "000";
-    case "w":
+    }
+    case "w": {
       return dateToWeekDay(dateObj).toString();
-    case "www":
+    }
+    case "www": {
       return locale.weekList("short")[dateToWeekDay(dateObj) - 1];
-    case "wwww":
+    }
+    case "wwww": {
       return locale.weekList("long")[dateToWeekDay(dateObj) - 1];
-    case "W":
+    }
+    case "W": {
       return isoWeekNumber(dateObj).toString();
-    case "WW":
+    }
+    case "WW": {
       return formatToTwoDigits(isoWeekNumber(dateObj));
-    case "a":
+    }
+    case "a": {
       return (hour || 0) / 12 <= 1 ? "AM" : "PM";
-    case "X":
+    }
+    case "X": {
       return (dateToTS(dateObj) / 1000).toString();
-    case "x":
+    }
+    case "x": {
       return dateToTS(dateObj).toString();
-    case "z":
+    }
+    case "z": {
       return option?.timezone ?? "";
-    case "Z":
+    }
+    case "Z": {
       return option?.offsetMillisec
         ? formatOffsetMillisec(option.offsetMillisec, "Z")
         : "";
-    case "ZZ":
+    }
+    case "ZZ": {
       return option?.offsetMillisec
         ? formatOffsetMillisec(option.offsetMillisec, "ZZ")
         : "";
-    case "ZZZ":
+    }
+    case "ZZZ": {
       return locale.offsetName(
         new Date(dateToTS(dateObj)),
         "short",
         option?.timezone,
       ) ?? "";
-    case "ZZZZ":
+    }
+    case "ZZZZ": {
       return locale.offsetName(
         new Date(dateToTS(dateObj)),
         "long",
         option?.timezone,
       ) ?? "";
-    default:
+    }
+    default: {
       throw new TypeError("Please input valid format.");
+    }
   }
 }
 

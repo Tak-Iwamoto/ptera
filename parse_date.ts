@@ -40,113 +40,130 @@ function parseFormatStr(
 ): ParsedFormat {
   switch (formatStr) {
     case "YY":
-    case "YYYY":
+    case "YYYY": {
       return {
         regex: fourDigitsRegex,
         property: "year",
         cursor: 4,
       };
+    }
     case "M":
-    case "MM":
+    case "MM": {
       return {
         regex: oneToTwoDigitRegex,
         property: "month",
         cursor: 2,
       };
-    case "MMM":
+    }
+    case "MMM": {
       return {
         regex: arrayToRegex(locale.monthList("short")),
         property: "shortMonthStr",
         cursor: null,
       };
-    case "MMMM":
+    }
+    case "MMMM": {
       return {
         regex: arrayToRegex(locale.monthList("long")),
         property: "monthStr",
         cursor: null,
       };
+    }
     case "d":
-    case "dd":
+    case "dd": {
       return {
         regex: oneToTwoDigitRegex,
         property: "day",
         cursor: 2,
       };
+    }
     case "D":
-    case "DDD":
+    case "DDD": {
       return {
         regex: oneToThreeDigitRegex,
         property: "dayOfYear",
         cursor: 3,
       };
+    }
     case "H":
     case "HH":
     case "h":
-    case "hh":
+    case "hh": {
       return {
         regex: oneToTwoDigitRegex,
         property: "hour",
         cursor: 2,
       };
+    }
     case "m":
-    case "mm":
+    case "mm": {
       return {
         regex: oneToTwoDigitRegex,
         property: "minute",
         cursor: 2,
       };
+    }
     case "s":
-    case "ss":
+    case "ss": {
       return {
         regex: oneToTwoDigitRegex,
         property: "second",
         cursor: 2,
       };
-    case "S":
+    }
+    case "S": {
       return {
         regex: oneToThreeDigitRegex,
         property: "millisecond",
         cursor: 3,
       };
-    case "w":
+    }
+    case "w": {
       return {
         regex: oneDigitRegex,
         property: "weekDay",
         cursor: 1,
       };
-    case "www":
+    }
+    case "www": {
       return {
         regex: arrayToRegex(locale.weekList("short")),
         property: "week",
         cursor: null,
       };
-    case "wwww":
+    }
+    case "wwww": {
       return {
         regex: arrayToRegex(locale.weekList("long")),
         property: "week",
         cursor: null,
       };
-    case "a":
+    }
+    case "a": {
       return {
         regex: literalRegex,
         property: "AMPM",
         cursor: 2,
       };
-    case "z":
+    }
+    case "z": {
       return {
         regex: arrayToRegex(TIMEZONE),
         property: "timezone",
         cursor: null,
       };
+    }
     case "Z":
-    case "ZZ":
+    case "ZZ": {
       return {
         regex: offsetRegex,
         property: "offset",
         cursor: 6,
       };
-    default:
+    }
+    default: {
       throw new TypeError("Please input valid format.");
+    }
   }
 }
 
