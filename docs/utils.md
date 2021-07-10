@@ -8,11 +8,12 @@ nav_order: 6
 
 ## isBefore
 
-Check the datetime is in the past
+Check the datetime is in the past Compare with now without the argument
 
 ```typescript
 datetime("1992-01-01").isBefore(); // true
 datetime("2045-01-01").isBefore(); // false
+datetime("2045-01-01").isBefore(datetime("2046-01-01")); // true
 ```
 
 ## isAfter
@@ -22,6 +23,7 @@ Check the datetime is in the future
 ```typescript
 datetime("1992-01-01").isAfter(); // false
 datetime("2045-01-01").isAfter(); // true
+datetime("2045-01-01").isAfter(datetime("2030-01-01")); // true
 ```
 
 ## isLeapYear

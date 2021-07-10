@@ -1156,3 +1156,47 @@ Deno.test("endOfSecond", () => {
     );
   });
 });
+
+Deno.test("isBefore", () => {
+  const tests = [
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      other: "2021-03-28T12:30:30.999Z",
+      expected: false,
+    },
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      other: "2021-12-01T12:30:30.999Z",
+      expected: true,
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).isBefore(datetime(t.other)),
+      t.expected,
+    );
+  });
+});
+
+Deno.test("isAfter", () => {
+  const tests = [
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      other: "2021-03-28T12:30:30.999Z",
+      expected: true,
+    },
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      other: "2021-12-01T12:30:30.999Z",
+      expected: false,
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).isAfter(datetime(t.other)),
+      t.expected,
+    );
+  });
+});

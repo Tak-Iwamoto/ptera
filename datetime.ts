@@ -318,12 +318,16 @@ export class DateTime {
     return Math.ceil(this.month / 3);
   }
 
-  isBefore(): boolean {
-    return this.toTimestamp() < new Date().getTime();
+  isBefore(otherDate?: DateTime): boolean {
+    return otherDate
+      ? this.toTimestamp() < otherDate.toTimestamp()
+      : this.toTimestamp() < new Date().getTime();
   }
 
-  isAfter(): boolean {
-    return this.toTimestamp() > new Date().getTime();
+  isAfter(otherDate?: DateTime): boolean {
+    return otherDate
+      ? this.toTimestamp() > otherDate.toTimestamp()
+      : this.toTimestamp() > new Date().getTime();
   }
 
   isLeapYear(): boolean {
