@@ -119,35 +119,46 @@ export function oldestDateTime(datetimes: DateTime[]) {
   );
 }
 
+type DiffOption = { showDecimal: boolean };
+
 export function diffInMillisec(
   baseDate: DateTime,
-  compareDate: DateTime,
+  otherDate: DateTime,
 ): number {
   return Math.abs(
-    baseDate.toUTC().toTimestamp() - compareDate.toUTC().toTimestamp(),
+    baseDate.toUTC().toTimestamp() - otherDate.toUTC().toTimestamp(),
   );
 }
 
-export function diffInSec(baseDate: DateTime, compareDate: DateTime): number {
-  return Math.floor(diffInMillisec(baseDate, compareDate) / 1000);
+export function diffInSec(baseDate: DateTime, otherDate: DateTime): number {
+  return Math.floor(diffInMillisec(baseDate, otherDate) / 1000);
 }
 
-export function diffInMin(baseDate: DateTime, compareDate: DateTime): number {
-  return Math.floor(
-    diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_MINUTE,
-  );
+export function diffInMin(
+  baseDate: DateTime,
+  otherDate: DateTime,
+  option: DiffOption = { showDecimal: false },
+): number {
+  const diff = diffInMillisec(baseDate, otherDate) / MILLISECONDS_IN_MINUTE;
+  return option.showDecimal ? diff : Math.floor(diff);
 }
 
-export function diffInHours(baseDate: DateTime, compareDate: DateTime): number {
-  return Math.floor(
-    diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_HOUR,
-  );
+export function diffInHours(
+  baseDate: DateTime,
+  otherDate: DateTime,
+  option: DiffOption = { showDecimal: false },
+): number {
+  const diff = diffInMillisec(baseDate, otherDate) / MILLISECONDS_IN_HOUR;
+  return option.showDecimal ? diff : Math.floor(diff);
 }
 
-export function diffInDays(baseDate: DateTime, compareDate: DateTime): number {
-  return Math.floor(
-    diffInMillisec(baseDate, compareDate) / MILLISECONDS_IN_DAY,
-  );
+export function diffInDays(
+  baseDate: DateTime,
+  otherDate: DateTime,
+  option: DiffOption = { showDecimal: false },
+): number {
+  const diff = diffInMillisec(baseDate, otherDate) / MILLISECONDS_IN_DAY;
+  return option.showDecimal ? diff : Math.floor(diff);
 }
 
 export function datetime(date?: DateArg, option?: DateTimeOption) {
@@ -535,3 +546,9 @@ export class DateTime {
     };
   }
 }
+
+const dt1 = datetime("2021-08-21:13:30:00");
+const dt2 = datetime("2021-01-30:21:30:00");
+
+console.log(diffInDays(dt1, dt2)); // 202
+console.log(diffInDays(dt1, dt2, { showDecimal: true }));
