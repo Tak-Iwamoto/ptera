@@ -321,6 +321,11 @@ export class DateTime {
       : this.toTimestamp() > new Date().getTime();
   }
 
+  isBetween(startDate: DateTime, endDate: DateTime): boolean {
+    return this.toTimestamp() >= startDate.toTimestamp() &&
+      this.toTimestamp() <= endDate.toTimestamp();
+  }
+
   isLeapYear(): boolean {
     return isLeapYear(this.year);
   }

@@ -1200,3 +1200,39 @@ Deno.test("isAfter", () => {
     );
   });
 });
+
+Deno.test("isBetween", () => {
+  const tests = [
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      startDate: "2021-03-28T12:30:30.999Z",
+      endDate: "2021-11-28T21:30:30.999Z",
+      expected: true,
+    },
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      startDate: "2021-03-28T12:30:30.999Z",
+      endDate: "2021-05-28T21:30:30.999Z",
+      expected: false,
+    },
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      startDate: "2021-07-28T12:30:30.800",
+      endDate: "2021-11-28T21:30:30.999Z",
+      expected: true,
+    },
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      startDate: "2021-04-28T12:30:30.800",
+      endDate: "2021-07-28T12:30:30.800",
+      expected: true,
+    },
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(
+      datetime(t.input).isBetween(datetime(t.startDate), datetime(t.endDate)),
+      t.expected,
+    );
+  });
+});
