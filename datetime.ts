@@ -70,15 +70,6 @@ function parseArg(date: DateArg): DateObj {
 
 export type DateTimeOption = Omit<Option, "offsetMillisec">;
 
-export type DateUnit =
-  | "year"
-  | "month"
-  | "day"
-  | "hour"
-  | "minute"
-  | "second"
-  | "quarter";
-
 export function parse(
   dateStr: string,
   formatStr: string,
