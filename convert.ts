@@ -94,9 +94,7 @@ export function dayOfYearToDate(dayOfYear: number, year: number) {
 
 export function dateToWeekDay(dateObj: DateObj): number {
   const jsDate = dateToJSDate(dateObj);
-  const jsWeekDay = jsDate.getUTCDay();
-  if (jsWeekDay === 0) return 7;
-  return jsWeekDay;
+  return jsDate.getUTCDay();
 }
 
 export function dateToDayOfYear(dateObj: DateObj): number {

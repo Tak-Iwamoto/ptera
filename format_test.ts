@@ -914,7 +914,7 @@ Deno.test("format: w", () => {
         second: 0,
         millisecond: 0,
       },
-      expected: "7",
+      expected: "0",
     },
     {
       input: {

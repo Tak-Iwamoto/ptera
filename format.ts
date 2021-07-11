@@ -81,10 +81,10 @@ export function formatDateObj(
       return dateToWeekDay(dateObj).toString();
     }
     case "www": {
-      return locale.weekList("short")[dateToWeekDay(dateObj) - 1];
+      return locale.weekList("short")[dateToWeekDay(dateObj)];
     }
     case "wwww": {
-      return locale.weekList("long")[dateToWeekDay(dateObj) - 1];
+      return locale.weekList("long")[dateToWeekDay(dateObj)];
     }
     case "W": {
       return isoWeekNumber(dateObj).toString();

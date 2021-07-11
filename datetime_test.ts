@@ -1236,3 +1236,171 @@ Deno.test("isBetween", () => {
     );
   });
 });
+
+Deno.test("weekDay", () => {
+  const tests = [
+    {
+      input: {
+        year: 2021,
+        month: 1,
+        day: 2,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: 6,
+    },
+    {
+      input: {
+        year: 2021,
+        month: 1,
+        day: 3,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: 0,
+    },
+    {
+      input: {
+        year: 2021,
+        month: 5,
+        day: 3,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: 1,
+    },
+    {
+      input: {
+        year: 2021,
+        month: 5,
+        day: 7,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: 5,
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(datetime(t.input).weekDay(), t.expected);
+  });
+});
+
+Deno.test("weekDayShort", () => {
+  const tests = [
+    {
+      input: {
+        year: 2021,
+        month: 1,
+        day: 2,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Sat",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 1,
+        day: 3,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Sun",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 5,
+        day: 3,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Mon",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 5,
+        day: 7,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Fri",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(datetime(t.input).weekDayShort(), t.expected);
+  });
+});
+
+Deno.test("weekDayLong", () => {
+  const tests = [
+    {
+      input: {
+        year: 2021,
+        month: 1,
+        day: 2,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Saturday",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 1,
+        day: 3,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Sunday",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 5,
+        day: 3,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Monday",
+    },
+    {
+      input: {
+        year: 2021,
+        month: 5,
+        day: 7,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      expected: "Friday",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(datetime(t.input).weekDayLong(), t.expected);
+  });
+});

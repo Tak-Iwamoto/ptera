@@ -1,5 +1,5 @@
 import { adjustedTS } from "./diff.ts";
-import { formatDate } from "./format.ts";
+import { formatDate, formatDateObj } from "./format.ts";
 import { getLocalName } from "./local_time.ts";
 import { tzOffset } from "./timezone.ts";
 import { toOtherZonedTime, zonedTimeToUTC } from "./zoned_time.ts";
@@ -11,6 +11,7 @@ import {
   dateToDayOfYear,
   dateToJSDate,
   dateToTS,
+  dateToWeekDay,
   tsToDate,
 } from "./convert.ts";
 import {
@@ -303,6 +304,18 @@ export class DateTime {
 
   weeksInWeekYear(): number {
     return weeksInWeekYear(this.year);
+  }
+
+  weekDay(): number {
+    return dateToWeekDay(this.toDateObj());
+  }
+
+  weekDayShort(): string {
+    return formatDateObj(this.toDateObj(), "www", this.#option());
+  }
+
+  weekDayLong(): string {
+    return formatDateObj(this.toDateObj(), "wwww", this.#option());
   }
 
   quarter(): number {
