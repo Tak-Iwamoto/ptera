@@ -318,6 +318,14 @@ export class DateTime {
     return formatDateObj(this.toDateObj(), "wwww", this.#option());
   }
 
+  monthShort(): string {
+    return formatDateObj(this.toDateObj(), "MMM", this.#option());
+  }
+
+  monthLong(): string {
+    return formatDateObj(this.toDateObj(), "MMMM", this.#option());
+  }
+
   quarter(): number {
     return Math.ceil(this.month / 3);
   }

@@ -1404,3 +1404,43 @@ Deno.test("weekDayLong", () => {
     assertEquals(datetime(t.input).weekDayLong(), t.expected);
   });
 });
+
+Deno.test("monthShort", () => {
+  const tests = [
+    {
+      input: "2021-01-28T12:30:30.800Z",
+      expected: "Jan",
+    },
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      expected: "Jul",
+    },
+    {
+      input: "2021-12-28T12:30:30.800Z",
+      expected: "Dec",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(datetime(t.input).monthShort(), t.expected);
+  });
+});
+
+Deno.test("monthLong", () => {
+  const tests = [
+    {
+      input: "2021-01-28T12:30:30.800Z",
+      expected: "January",
+    },
+    {
+      input: "2021-07-28T12:30:30.800Z",
+      expected: "July",
+    },
+    {
+      input: "2021-12-28T12:30:30.800Z",
+      expected: "December",
+    },
+  ];
+  tests.forEach((t) => {
+    assertEquals(datetime(t.input).monthLong(), t.expected);
+  });
+});
