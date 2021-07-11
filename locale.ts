@@ -109,7 +109,7 @@ export class Locale {
     const weekIndexes = [...Array(7).keys()];
 
     return weekIndexes.map((m) =>
-      this.dtfFormat(new Date(2021, 0, 4 + m), { weekday: format })
+      this.dtfFormat(new Date(2021, 0, 3 + m), { weekday: format })
     );
   }
 
