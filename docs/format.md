@@ -19,7 +19,7 @@ const dt = datetime({
 });
 dt.toISO(); // 2021-07-21T23:30:59.000Z
 dt.toISODate(); // 2021-07-21
-dt.toISOWeekDateDate(); // 2021-W29-3
+dt.toISOWeekDate(); // 2021-W29-3
 dt.toISOTime(); // 23:30:59.000
 ```
 
