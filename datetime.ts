@@ -38,13 +38,14 @@ function isArray(arg: DateArg): arg is number[] {
   return (Array.isArray(arg));
 }
 
-function parseArg(date: DateArg): DateObj {
+function parseArg(date: DateArg, tz: string): DateObj {
+  const isLocal = tz !== "UTC";
   if (typeof date === "number") {
-    return tsToDate(date);
+    return tsToDate(date, { isLocal });
   }
 
   if (date instanceof Date) {
-    return tsToDate(date.getTime());
+    return tsToDate(date.getTime(), { isLocal });
   }
 
   if (isDateObj(date)) {
@@ -174,7 +175,11 @@ export class DateTime {
   readonly #localeClass: Locale;
 
   constructor(date: DateArg, option?: DateTimeOption) {
-    const dateObj = parseArg(date);
+    this.timezone = option?.timezone ?? getLocalName();
+    this.locale = option?.locale ?? "en";
+    this.#localeClass = new Locale(this.locale);
+
+    const dateObj = parseArg(date, this.timezone);
     const { year, month, day, hour, minute, second, millisecond } = dateObj;
     this.valid = isValidDate(dateObj);
 
@@ -195,9 +200,6 @@ export class DateTime {
       this.second = NaN;
       this.millisecond = NaN;
     }
-    this.timezone = option?.timezone ?? "UTC";
-    this.locale = option?.locale ?? "en";
-    this.#localeClass = new Locale(this.locale);
   }
 
   static now(option?: Option): DateTime {
@@ -212,13 +214,7 @@ export class DateTime {
   }
 
   toLocal(): DateTime {
-    const tz = getLocalName() as Timezone;
-    const zonedTime = this.toZonedTime(
-      tz,
-    );
-    return datetime(zonedTime.toDateObj(), {
-      timezone: tz,
-    });
+    return this.toZonedTime(getLocalName());
   }
 
   isValidZone(): boolean {
@@ -287,7 +283,7 @@ export class DateTime {
   }
 
   toJSDate(): Date {
-    return dateToJSDate(this.toDateObj());
+    return dateToJSDate(this.toUTC().toDateObj());
   }
 
   toArray(): DateArray {
@@ -494,14 +490,14 @@ export class DateTime {
 
   add(diff: DateDiff): DateTime {
     return datetime(
-      adjustedTS(this.toDateObj(), diff, { positive: true }),
+      adjustedTS(this.toUTC().toDateObj(), diff, { positive: true }),
       this.#option(),
     );
   }
 
   substract(diff: DateDiff): DateTime {
     return datetime(
-      adjustedTS(this.toDateObj(), diff, {
+      adjustedTS(this.toUTC().toDateObj(), diff, {
         positive: false,
       }),
       this.#option(),
