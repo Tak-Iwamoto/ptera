@@ -64,8 +64,19 @@ export function arrayToDate(dateArray: number[]): DateObj {
   return { year, month, day, hour, minute, second, millisecond };
 }
 
-export function tsToDate(ts: number): DateObj {
+export function tsToDate(ts: number, option?: { isLocal: boolean }): DateObj {
   const date = new Date(ts);
+  if (option && option.isLocal) {
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+      hour: date.getHours(),
+      minute: date.getMinutes(),
+      second: date.getSeconds(),
+      millisecond: date.getMilliseconds(),
+    };
+  }
   return {
     year: date.getUTCFullYear(),
     month: date.getUTCMonth() + 1,
