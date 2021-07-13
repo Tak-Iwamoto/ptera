@@ -594,13 +594,12 @@ Deno.test("toArray", () => {
 Deno.test("toTimestamp", () => {
   const tests = [
     {
-      input: "2021-05-30T06:03:40",
-      expected: 1622354620000,
+      input: "2021-07-21T23:00:59",
+      expected: new Date(2021, 6, 21, 23, 0, 59),
     },
-    { input: "2021-07-21T23:00:59", expected: 1626908459000 },
   ];
   tests.forEach((t) => {
-    assertEquals(datetime(t.input).toTimestamp(), t.expected);
+    assertEquals(datetime(t.input).toTimestamp(), t.expected.getTime());
   });
 });
 

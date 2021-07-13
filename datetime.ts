@@ -38,14 +38,13 @@ function isArray(arg: DateArg): arg is number[] {
   return (Array.isArray(arg));
 }
 
-function parseArg(date: DateArg, tz: string): DateObj {
-  const isLocal = tz !== "UTC";
+function parseArg(date: DateArg): DateObj {
   if (typeof date === "number") {
-    return tsToDate(date, { isLocal });
+    return tsToDate(date, { isLocal: true });
   }
 
   if (date instanceof Date) {
-    return tsToDate(date.getTime(), { isLocal });
+    return tsToDate(date.getTime(), { isLocal: true });
   }
 
   if (isDateObj(date)) {
@@ -179,7 +178,7 @@ export class DateTime {
     this.locale = option?.locale ?? "en";
     this.#localeClass = new Locale(this.locale);
 
-    const dateObj = parseArg(date, this.timezone);
+    const dateObj = parseArg(date);
     const { year, month, day, hour, minute, second, millisecond } = dateObj;
     this.valid = isValidDate(dateObj);
 
