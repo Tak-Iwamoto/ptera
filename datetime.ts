@@ -71,33 +71,6 @@ function parseArg(date: DateArg): DateObj {
 
 export type DateTimeOption = Omit<Option, "offsetMillisec">;
 
-export function parse(
-  dateStr: string,
-  formatStr: string,
-  option?: DateTimeOption,
-): DateTime {
-  const {
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-  } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
-
-  const tz = option?.timezone ?? getLocalName();
-  return datetime({
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-  }, { ...option, timezone: tz });
-}
-
 export function latestDateTime(datetimes: DateTime[]) {
   return datetimes.reduce((a, b) =>
     a.toUTC().toTimestamp() > b.toUTC().toTimestamp() ? a : b
@@ -239,6 +212,33 @@ export class DateTime {
       second,
       millisecond,
     };
+  }
+
+  parse(
+    dateStr: string,
+    formatStr: string,
+    option?: DateTimeOption,
+  ): DateTime {
+    const {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+    } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
+
+    const tz = option?.timezone ?? getLocalName();
+    return new DateTime({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+    }, { ...option, timezone: tz });
   }
 
   toISO(): string {

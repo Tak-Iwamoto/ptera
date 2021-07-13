@@ -20,12 +20,13 @@ You can also parse custom format by using `parse`.
 Ptera also supports parsing intl string.
 
 ```typescript
-import { parse } from "https://deno.land/x/ptera/mod.ts";
-
-const dt = parse("5/Aug/2021:14:15:30 +0900", "d/MMM/YYYY:HH:mm:ss ZZ");
+const dt = datetime().parse(
+  "5/Aug/2021:14:15:30 +0900",
+  "d/MMM/YYYY:HH:mm:ss ZZ",
+);
 
 // support locale
-parse("2021 лютий 03", "YYYY MMMM dd", { locale: "uk" });
+datetime().parse("2021 лютий 03", "YYYY MMMM dd", { locale: "uk" });
 ```
 
 ### Available Formats

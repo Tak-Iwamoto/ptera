@@ -8,7 +8,6 @@ export {
   diffInSec,
   latestDateTime,
   oldestDateTime,
-  parse,
 } from "./datetime.ts";
 export type { TIMEZONE, Timezone } from "./types.ts";
 export {
