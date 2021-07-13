@@ -291,7 +291,7 @@ export class DateTime {
   }
 
   toTimestamp(): number {
-    return dateToTS(this.toDateObj());
+    return dateToTS(this.toUTC().toDateObj());
   }
 
   dayOfYear(): number {
