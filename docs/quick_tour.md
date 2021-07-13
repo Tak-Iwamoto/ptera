@@ -8,34 +8,18 @@ nav_order: 1
 
 ## datetime
 
-The main function is `datetime` returns `DateTime` class.
+The main function is `datetime`.
 
 You can get the current time by calling the `datetime` function with no
 arguments.
 
-The default timezone of datetime is `UTC`. If you want local time, please use
-`toLocal`.
+The default timezone is local time.
 
 ```typescript
 import { datetime } from "https://deno.land/x/ptera/mod.ts";
 
-// now in UTC
+// now in localtime
 const dt = datetime();
-// DateTime {
-//   year: 2021,
-//   month: 7,
-//   day: 8,
-//   hour: 14,
-//   minute: 23,
-//   second: 57,
-//   millisecond: 580,
-//   timezone: "UTC",
-//   valid: true,
-//   locale: "en"
-// }
-
-// local time
-dt.toLocal();
 // DateTime {
 //   year: 2021,
 //   month: 7,
@@ -48,10 +32,25 @@ dt.toLocal();
 //   valid: true,
 //   locale: "en"
 // }
+
+// utc
+dt.toUTC();
+// DateTime {
+//   year: 2021,
+//   month: 7,
+//   day: 8,
+//   hour: 14,
+//   minute: 23,
+//   second: 57,
+//   millisecond: 580,
+//   timezone: "UTC",
+//   valid: true,
+//   locale: "en"
+// }
 ```
 
-`datetime` takes several types of arguments, string, Date, Object, number,
-array.
+`datetime` takes several types of arguments, ISO 8601 string, Date, Object,
+milliseconds unixtime, array.
 
 ```typescript
 // parse ISO 8601
@@ -81,9 +80,8 @@ dt.hour; // 21
 dt.minute; // 15
 dt.second; // 30
 dt.millisecond; // 200
-// default timezone is UTC
-dt.timezone; // 'UTC'
-dt.locale; // 'en
+dt.timezone;
+dt.locale;
 ```
 
 ### Utilities
@@ -105,10 +103,8 @@ dt.format("MMMM ZZZ"); // January JST
 ### Timezone
 
 ```typescript
-const dt = datetime("2021-07-21", { timezone: "America/New_York" });
-dt.timezone; // America/New_York
-
-dt.toZonedTime("Asia/Tokyo"); // change to other zoned time
+const dt = datetime("2021-07-21");
+dt.toZonedTime("America/New_York"); // change to other zoned time
 ```
 
 ### Intl

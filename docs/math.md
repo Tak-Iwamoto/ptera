@@ -8,7 +8,7 @@ nav_order: 5
 
 ## add, substract
 
-You can manipulate datetime by using `add` or `substract`
+You can manipulate datetime by using `add` or `substract`.
 
 ### Support properties
 
@@ -30,11 +30,9 @@ dt.add({ year: 1 }).substract({ month: 2 }); // { year: 2022, month: 6, day: 21,
 
 ## start and end
 
-`startOf` and `endOf` returns the start and end of the unit time.
+These methods return the start and end of the unit time.
 
 ### Available Methods
-
-Here is examples of `startOf`, and the same units can be used for endOf
 
 - startOfYear
 - startOfQuarter
@@ -43,6 +41,13 @@ Here is examples of `startOf`, and the same units can be used for endOf
 - startOfHour
 - startOfMinute
 - startOfSecond
+- endOfYear
+- endOfQuarter
+- endOfMonth
+- endOfDay
+- endOfHour
+- endOfMinute
+- endOfSecond
 
 ```typescript
 const dt = datetime("2021-08-21:13:30:00").startOfYear();
@@ -51,7 +56,7 @@ const dt = datetime("2021-08-21:13:30:00").startOfYear();
 
 ## diff
 
-Ptera supports these functions to calculate diff between two datetime
+Ptera supports these functions to calculate difference between two datetime.
 
 - `diffInMillisec`
 - `diffInSec`
