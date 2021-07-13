@@ -1,12 +1,6 @@
 import { dayOfYearToDate } from "./convert.ts";
 import { Locale } from "./locale.ts";
-import {
-  DateFormatType,
-  DateObj,
-  isFormatDateType,
-  Option,
-  TIMEZONE,
-} from "./types.ts";
+import { DateFormatType, DateObj, isFormatDateType, Option } from "./types.ts";
 import {
   INVALID_DATE,
   isValidDate,
@@ -15,7 +9,7 @@ import {
 } from "./utils.ts";
 
 const formatsRegex =
-  /([-:/.()\s\_]+)|(YYYY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|ZZ?|z|a|'.')/g;
+  /([-:/.()\s\_]+)|(YYYY|MMMM|MMM|MM|M|dd?|DDD|D|HH?|hh?|mm?|ss?|S{1,3}|wwww|www|w|ZZ?|a|'.')/g;
 
 const oneDigitRegex = /\d/;
 const fourDigitsRegex = /\d\d\d\d/;
@@ -146,13 +140,6 @@ function parseFormatStr(
         cursor: 2,
       };
     }
-    case "z": {
-      return {
-        regex: arrayToRegex(TIMEZONE),
-        property: "timezone",
-        cursor: null,
-      };
-    }
     case "Z":
     case "ZZ": {
       return {
@@ -167,7 +154,7 @@ function parseFormatStr(
   }
 }
 
-type ParseResult = DateObj & Option;
+type ParseResult = DateObj & { locale?: string; offsetMillisec?: number };
 
 export function parseDateStr(
   dateStr: string,
@@ -258,7 +245,6 @@ function hashToDate(
   const offsetMillisec = hash["offset"]
     ? parseOffsetMillisec(hash["offset"])
     : null;
-  const timezone = hash["timezone"];
   const isPM = hash["AMPM"] === "PM";
 
   return {
@@ -270,7 +256,6 @@ function hashToDate(
     second: second ?? 0,
     millisecond: millisecond ?? 0,
     offsetMillisec: offsetMillisec ?? 0,
-    timezone: timezone,
     locale: locale.locale,
   };
 }

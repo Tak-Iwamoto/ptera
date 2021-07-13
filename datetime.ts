@@ -84,10 +84,9 @@ export function parse(
     minute,
     second,
     millisecond,
-    timezone,
   } = parseDateStr(dateStr, formatStr, { locale: option?.locale ?? "en" });
 
-  const tz = timezone ?? option?.timezone;
+  const tz = option?.timezone ?? getLocalName();
   return datetime({
     year,
     month,
