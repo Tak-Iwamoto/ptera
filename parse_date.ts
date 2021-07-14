@@ -1,6 +1,6 @@
 import { dayOfYearToDate } from "./convert.ts";
 import { Locale } from "./locale.ts";
-import { DateFormatType, DateObj, isFormatDateType, Option } from "./types.ts";
+import { DateFormatType, DateObj, isFormatDateType } from "./types.ts";
 import {
   INVALID_DATE,
   isValidDate,
