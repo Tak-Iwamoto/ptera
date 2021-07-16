@@ -174,12 +174,12 @@ export class DateTime {
   }
 
   static now(option?: Option): DateTime {
-    const utcTime = datetime(new Date().getTime());
+    const localTime = datetime(new Date().getTime());
     if (option?.timezone) {
-      return utcTime.toZonedTime(option?.timezone).setOption(option);
+      return localTime.toZonedTime(option?.timezone).setOption(option);
     }
 
-    return datetime(utcTime.toDateObj(), {
+    return datetime(localTime.toDateObj(), {
       ...option,
     });
   }
