@@ -1,7 +1,6 @@
 import { MILLISECONDS_IN_DAY } from "./constants.ts";
 import { adjustedTS } from "./diff.ts";
 import { DateObj } from "./types.ts";
-import { isLeapYear } from "./utils.ts";
 
 export function dateToArray(
   dateObj: DateObj,
