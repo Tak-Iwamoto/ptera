@@ -591,7 +591,7 @@ Deno.test("toArray", () => {
   });
 });
 
-Deno.test("toTimestamp", () => {
+Deno.test("toMilliseconds", () => {
   const tests = [
     {
       input: "2021-07-21T23:00:59",
@@ -599,7 +599,7 @@ Deno.test("toTimestamp", () => {
     },
   ];
   tests.forEach((t) => {
-    assertEquals(datetime(t.input).toTimestamp(), t.expected.getTime());
+    assertEquals(datetime(t.input).toMilliseconds(), t.expected.getTime());
   });
 });
 

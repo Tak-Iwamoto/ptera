@@ -73,13 +73,13 @@ export type DateTimeOption = Omit<Option, "offsetMillisec">;
 
 export function latestDateTime(datetimes: DateTime[]) {
   return datetimes.reduce((a, b) =>
-    a.toUTC().toTimestamp() > b.toUTC().toTimestamp() ? a : b
+    a.toUTC().toMilliseconds() > b.toUTC().toMilliseconds() ? a : b
   );
 }
 
 export function oldestDateTime(datetimes: DateTime[]) {
   return datetimes.reduce((a, b) =>
-    a.toUTC().toTimestamp() < b.toUTC().toTimestamp() ? a : b
+    a.toUTC().toMilliseconds() < b.toUTC().toMilliseconds() ? a : b
   );
 }
 
@@ -90,7 +90,7 @@ export function diffInMillisec(
   otherDate: DateTime,
 ): number {
   return Math.abs(
-    baseDate.toUTC().toTimestamp() - otherDate.toUTC().toTimestamp(),
+    baseDate.toUTC().toMilliseconds() - otherDate.toUTC().toMilliseconds(),
   );
 }
 
@@ -286,7 +286,7 @@ export class DateTime {
     return dateToArray(this.toDateObj());
   }
 
-  toTimestamp(): number {
+  toMilliseconds(): number {
     return dateToTS(this.toUTC().toDateObj());
   }
 
@@ -324,19 +324,19 @@ export class DateTime {
 
   isBefore(otherDate?: DateTime): boolean {
     return otherDate
-      ? this.toTimestamp() < otherDate.toTimestamp()
-      : this.toTimestamp() < new Date().getTime();
+      ? this.toMilliseconds() < otherDate.toMilliseconds()
+      : this.toMilliseconds() < new Date().getTime();
   }
 
   isAfter(otherDate?: DateTime): boolean {
     return otherDate
-      ? this.toTimestamp() > otherDate.toTimestamp()
-      : this.toTimestamp() > new Date().getTime();
+      ? this.toMilliseconds() > otherDate.toMilliseconds()
+      : this.toMilliseconds() > new Date().getTime();
   }
 
   isBetween(startDate: DateTime, endDate: DateTime): boolean {
-    return this.toTimestamp() >= startDate.toTimestamp() &&
-      this.toTimestamp() <= endDate.toTimestamp();
+    return this.toMilliseconds() >= startDate.toMilliseconds() &&
+      this.toMilliseconds() <= endDate.toMilliseconds();
   }
 
   isLeapYear(): boolean {
