@@ -1,0 +1,9 @@
+{
+  "deno": {
+    "initialization_options": {
+      "enable": true,
+      "lint": true,
+      "unstable": true
+    }
+  }
+}
