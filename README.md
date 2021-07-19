@@ -3,7 +3,7 @@
 [![ci](https://github.com/Tak-Iwamoto/ptera/actions/workflows/ci.yml/badge.svg)](https://github.com/Tak-Iwamoto/ptera/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<p align="center"><img src="https://user-images.githubusercontent.com/36841033/126178944-af402fc2-4b87-410d-9b37-9a61f8b688f5.png" alt="ptera-log"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36841033/126181352-800b8efb-220e-435c-91e2-2f60e82c44df.png" alt="ptera-log"></p>
 
 Ptera is DateTime library for Deno.
 
