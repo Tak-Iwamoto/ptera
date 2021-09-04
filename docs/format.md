@@ -63,7 +63,7 @@ datetime("2021-07-03").format("'Year is: 'YYYY"); // Year is: 2021
 | DDD    | day of year, between one and three digits | 365                   |
 | H      | 24hour, one or two digits                 | 9                     |
 | HH     | 24hour, two digits                        | 13                    |
-| h      | 12hour, one or two digits                 | 02                    |
+| h      | 12hour, one or two digits                 | 2                     |
 | hh     | 12hour, two digits                        | 11                    |
 | m      | minutes, one or two digits                | 45                    |
 | mm     | minutes, two digits                       | 45                    |
