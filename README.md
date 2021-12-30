@@ -35,9 +35,9 @@ datetime().toZonedTime("Asia/Tokyo");
 // locale
 datetime().setLocale("fr");
 
-// add, substract
+// add, subtract
 datetime().add({ year: 1 });
-datetime().substract({ day: 1 });
+datetime().subtract({ day: 1 });
 ```
 
 ### Documentation
