@@ -688,7 +688,7 @@ Deno.test("add", () => {
   });
 });
 
-Deno.test("substract", () => {
+Deno.test("subtract", () => {
   const tests = [
     {
       initialDate: "2021-02-01T23:00:00",
@@ -732,7 +732,7 @@ Deno.test("substract", () => {
   ];
   tests.forEach((t) => {
     assertEquals(
-      datetime(t.initialDate).substract(t.subDate)
+      datetime(t.initialDate).subtract(t.subDate)
         .toDateObj(),
       t.expected,
     );

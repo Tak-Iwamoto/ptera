@@ -491,7 +491,7 @@ export class DateTime {
     );
   }
 
-  substract(diff: DateDiff): DateTime {
+  subtract(diff: DateDiff): DateTime {
     return datetime(
       adjustedTS(this.toUTC().toDateObj(), diff, {
         positive: false,

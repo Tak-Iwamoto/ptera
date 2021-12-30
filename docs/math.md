@@ -6,9 +6,9 @@ nav_order: 5
 
 # Math
 
-## add, substract
+## add, subtract
 
-You can manipulate datetime by using `add` or `substract`.
+You can manipulate datetime by using `add` or `subtract`.
 
 ### Support properties
 
@@ -25,7 +25,7 @@ You can manipulate datetime by using `add` or `substract`.
 ```typescript
 const dt = datetime("2021-08-21:13:30:00"); // { year: 2021, month: 8, day: 21, hour: 13, minute: 30, second: 0, millisecond: 0, }
 
-dt.add({ year: 1, second: 10 }).substract({ month: 2, minute: 5 }); // { year: 2022, month: 6, day: 21, hour: 13, minute: 25, second: 10, millisecond: 0, }
+dt.add({ year: 1, second: 10 }).subtract({ month: 2, minute: 5 }); // { year: 2022, month: 6, day: 21, hour: 13, minute: 25, second: 10, millisecond: 0, }
 ```
 
 ## start and end
