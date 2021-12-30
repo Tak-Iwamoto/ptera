@@ -16,9 +16,9 @@ You can manipulate datetime by using `add` or `substract`.
 - month
 - day
 - hour
-- minutes
-- seconds
-- milliseconds
+- minute
+- second
+- millisecond
 - quarter
 - weeks
 
