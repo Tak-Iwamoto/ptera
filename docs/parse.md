@@ -58,6 +58,12 @@ datetime().parse("2021 лютий 03", "YYYY MMMM dd", { locale: "uk" });
 | Z      | offset with colon                         | +03:00  |
 | ZZ     | short offset                              | +0300   |
 
+Non-format characters should be wrapped in single quotes when parsing, e.g.
+
+```typescript
+datetime().parse("2021-08-04T12:54:00Z", "YYYY-MM-dd'T'HH:mm:ssZ");
+```
+
 ## Unix Timestamp
 
 Ptera supports milliseconds Unix Timestamp.
